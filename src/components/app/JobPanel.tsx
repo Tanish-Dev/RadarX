@@ -1,4 +1,5 @@
 "use client";
+import { safeHttpUrl } from "@/lib/url";
 import { ArrowUpRight, Check, Send, Star, X } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { markApplied, sendJobToTelegram, starJob } from "@/app/actions";
@@ -126,7 +127,7 @@ export function JobPanel({ job, hasResume }: { job: JobDetail; hasResume: boolea
           </section>
 
           <a
-            href={job.url}
+            href={safeHttpUrl(job.url) ?? "#"}
             target="_blank"
             rel="noreferrer"
             className="mt-6 flex h-14 items-center justify-center gap-2 rounded-[16px] bg-inverse text-[16px] font-medium text-inverse-ink transition-opacity hover:opacity-90"

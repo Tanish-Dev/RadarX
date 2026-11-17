@@ -1,3 +1,4 @@
+import { safeHttpUrl } from "../lib/url";
 import { createHash } from "node:crypto";
 import type { InStatement } from "@libsql/client";
 import pLimit from "p-limit";
@@ -102,7 +103,7 @@ async function storeJobs(src: SourceRow, jobs: RawJob[], now: number): Promise<s
   let changed = false;
 
   for (const j of jobs) {
-    if (!j.externalId || !j.title || !j.url) continue;
+    if (!j.externalId || !j.title || !safeHttpUrl(j.url)) continue; // http(s) links only
     const id = `${src.key}:${j.externalId}`;
     if (fetched.has(id)) continue;
     fetched.add(id);

@@ -1,4 +1,5 @@
 "use client";
+import { safeHttpUrl } from "@/lib/url";
 import { navStart } from "@/components/app/RadarLoader";
 import { Send, Star, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -151,7 +152,7 @@ function ListRow({
       <span className={cn("num w-8 shrink-0 text-right text-[13px] sm:w-10", j.isNew ? "text-good" : "text-ink-2")}>{j.agoShort}</span>
       <div className="flex shrink-0 items-center gap-0.5 sm:gap-1" onClick={(e) => e.stopPropagation()}>
         <a
-          href={j.url}
+          href={safeHttpUrl(j.url) ?? "#"}
           target="_blank"
           rel="noreferrer"
           onClick={onApply}
@@ -261,7 +262,8 @@ export function JobsView({
         setCursor(next);
         document.querySelector(`[data-job="${CSS.escape(jobs[next]?.id ?? "")}"]`)?.scrollIntoView({ block: "nearest" });
       } else if (e.key === "o" && cur) {
-        window.open(cur.url, "_blank", "noopener");
+        const u = safeHttpUrl(cur.url);
+        if (u) window.open(u, "_blank", "noopener");
         actions.applied(cur.id);
       } else if (e.key === "s" && cur) {
         actions.star(cur.id, !cur.starred);

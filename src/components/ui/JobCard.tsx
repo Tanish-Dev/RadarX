@@ -1,4 +1,5 @@
 "use client";
+import { safeHttpUrl } from "@/lib/url";
 import { Send, Star, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CompanyLogo } from "./CompanyLogo";
@@ -94,7 +95,7 @@ export function JobCard({
             {job.company} <span className="mx-0.5">·</span> <span className="num">{job.ago}</span>
           </p>
           <a
-            href={job.url}
+            href={safeHttpUrl(job.url) ?? "#"}
             target="_blank"
             rel="noreferrer"
             onClick={() => onApply?.(job.id)}
