@@ -4,6 +4,7 @@ import { telegramConfigured } from "@/alerts/channels";
 import { FilterBar } from "@/components/app/FilterBar";
 import { HeroSearch } from "@/components/app/HeroSearch";
 import { MapCanvas, MapViewPills, MapZoomControls, NewsTicker } from "@/components/app/HomeMap";
+import type { Spotlight } from "@/components/app/LiveMap";
 import { BriefingCarousel, NewsRow } from "@/components/app/NewsCards";
 import { JobsView } from "@/components/app/JobsView";
 import { PanelSlot } from "@/components/app/PanelSlot";
@@ -56,6 +57,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
     getBriefing(),
     getNewsPoints(48),
   ]);
+  const [map48, arriving] = await Promise.all([
+    getMapPoints(48),
+    getJobs({ level: early, within: "24h", sort: "new", tech: true }, { limit: 40 }),
+  ]);
   const pick = topPick.jobs[0] ?? rec.jobs[0];
   const recommended = pick ? [pick, ...rec.jobs.filter((j) => j.id !== pick.id)].slice(0, 8) : [];
   const telegram = telegramConfigured();
@@ -63,6 +68,28 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
   const updated = programs.filter((v) => v.recentlyChanged && v.status.status !== "closing");
   const indiaOpen = programs.filter((v) => v.p.india && (v.status.status === "open" || v.status.status === "closing")).length;
   const attentionCount = closing.length + updated.length + attention.failing.length + (attention.matchCount ? 1 : 0);
+
+  // ref-01 "Passenger Load": the busiest Indian city in the last 24 h, vs the 24 h before
+  const indiaPts = map.points.filter((p) => p.india).sort((a, b) => b.count - a.count);
+  const indiaTotal = indiaPts.reduce((n, p) => n + p.count, 0);
+  const hot = indiaPts[0];
+  const hotPrev = hot ? (map48.points.find((p) => p.city === hot.city)?.count ?? hot.count) - hot.count : 0;
+  const spotlight: Spotlight | null = hot
+    ? {
+        city: hot.city,
+        lat: hot.lat,
+        lon: hot.lon,
+        label: "Hotspot · 24h",
+        value: hot.count,
+        unit: "new roles",
+        trend: hotPrev > 0 ? Math.round(((hot.count - hotPrev) / hotPrev) * 100) : null,
+        sub: `${Math.round((hot.count / Math.max(1, indiaTotal)) * 100)}% of India's new tech roles`,
+        href: `/feed?within=24h&loc=${encodeURIComponent(hot.city)}`,
+      }
+    : null;
+  const nowMs = Date.now();
+  const last6h = arriving.jobs.filter((j) => j.freshTs != null && nowMs - j.freshTs < 6 * 3_600_000).length;
+  const LEVEL: Record<string, string> = { intern: "Intern", newgrad: "New grad", research: "Research" };
 
   /** Floating glass widget (hero). */
   const G = ({ title, href, note, children, className }: { title: string; href?: string; note?: React.ReactNode; children: React.ReactNode; className?: string }) => (
@@ -210,9 +237,55 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
         )}
       </G>
 
-      <G title="Posting volume" href="/market" note={`${volume.perDay.toLocaleString("en-IN")} / day`}>
-        <VolumeHistogram bars={volume.bars} weeks={volume.weeks} className="h-[78px]" />
-        <p className="text-[11px] text-ink-3">6-hour buckets · 4 weeks · line = weekly total</p>
+    </>
+  );
+
+  // ref-01 bottom row: a live table ("Schedule Offset") + the stepped volume histogram ("Live Passenger Volume")
+  const bottomPanels = (
+    <>
+      <G title="Arriving now" href="/feed?within=24h&sort=new&level=intern,newgrad,research" className="min-h-0">
+        <div className="flex items-baseline gap-2">
+          <span className="num text-[30px] font-light leading-none tracking-[-0.03em]">
+            {last6h}
+            {last6h >= 40 && <span className="text-ink-2">+</span>}
+          </span>
+          <span className="text-[12px] text-ink-2">
+            early-career roles in the last 6 h · {kpis.new24} today{arriving.jobs[0] ? ` · newest ${arriving.jobs[0].agoShort} ago` : ""}
+          </span>
+        </div>
+        <table className="w-full table-fixed text-[12px]">
+          <thead className="text-left text-[11px] text-ink-3">
+            <tr>
+              <th className="pb-1 font-normal">Company · role</th>
+              <th className="hidden w-[110px] pb-1 font-normal md:table-cell">City</th>
+              <th className="w-[70px] pb-1 font-normal">Level</th>
+              <th className="w-[48px] pb-1 text-right font-normal">Match</th>
+              <th className="w-[44px] pb-1 text-right font-normal">Age</th>
+            </tr>
+          </thead>
+          <tbody>
+            {arriving.jobs.slice(0, 4).map((j) => (
+              <tr key={j.id} className="border-t border-line">
+                <td className="truncate py-1.5 pr-2">
+                  <Link href={`/?job=${encodeURIComponent(j.id)}`} className="hover:underline">
+                    {j.company} <span className="text-ink-2">· {j.title}</span>
+                  </Link>
+                </td>
+                <td className="hidden truncate py-1.5 pr-2 text-ink-2 md:table-cell">{j.location.split(/[,;/|]/)[0] || "—"}</td>
+                <td className="py-1.5 text-ink-2">{LEVEL[j.level ?? ""] ?? "—"}</td>
+                <td className={cn("num py-1.5 text-right", (j.score ?? 0) >= 80 ? "text-good" : "text-ink-2")}>{j.score != null ? `${j.score}%` : "—"}</td>
+                <td className={cn("num py-1.5 text-right", j.freshTs != null && nowMs - j.freshTs < 3_600_000 ? "text-good" : "text-ink-2")}>{j.agoShort}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </G>
+      <G title="Posting volume" href="/market" className="min-h-0">
+        <div className="flex items-baseline gap-2">
+          <span className="num text-[30px] font-light leading-none tracking-[-0.03em]">{volume.perDay.toLocaleString("en-IN")}</span>
+          <span className="text-[12px] text-ink-2">tech roles / day · 6-hour buckets, 4 weeks</span>
+        </div>
+        <VolumeHistogram bars={volume.bars} weeks={volume.weeks} className="min-h-[88px] flex-1" />
       </G>
     </>
   );
@@ -233,9 +306,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
         padding + top bar + gap) and every widget floats over it as glass. Below xl the map is a card and
         the widgets flow underneath.
       */}
-      <section className="relative mt-4 xl:h-[calc(100dvh-84px)] xl:min-h-[820px]">
+      <section className="relative mt-4 xl:h-[calc(100dvh-84px)] xl:min-h-[880px]">
         <div className="relative h-[420px] overflow-hidden rounded-card ring-1 ring-line md:h-[520px] xl:absolute xl:-top-[84px] xl:bottom-0 xl:left-[calc(50%-50vw)] xl:z-0 xl:h-auto xl:w-screen xl:rounded-none xl:ring-0">
-          <MapCanvas points={map.points} news={newsPoints} hero />
+          <MapCanvas points={map.points} news={newsPoints} spotlight={spotlight} hero />
           {/* fades: keep the top bar readable and melt the map into the page below */}
           <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] hidden h-44 bg-linear-to-b from-canvas/90 to-transparent xl:block" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] hidden h-28 bg-linear-to-t from-canvas to-transparent xl:block" />
@@ -248,7 +321,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
 
         {/* wide screens: title + pills and controls float in the gap between the columns */}
         <div className="pointer-events-none absolute left-[376px] right-[360px] top-3 z-10 hidden xl:block">{titleAndPills}</div>
-        <div className="absolute bottom-6 left-[376px] right-[360px] z-10 hidden items-center gap-3 xl:flex">
+        <div className="absolute bottom-[262px] left-[376px] right-[360px] z-10 hidden items-center gap-3 xl:flex">
           <MapZoomControls className="[&_button]:!size-10" />
           <NewsTicker items={brief.ticker} className="min-w-0 flex-1" />
         </div>
@@ -256,8 +329,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
         <div className="no-scrollbar relative z-10 mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:absolute xl:bottom-4 xl:left-0 xl:top-2 xl:mt-0 xl:flex xl:w-[352px] xl:flex-col xl:overflow-y-auto">
           {leftWidgets}
         </div>
-        <div className="no-scrollbar relative z-10 mt-3 grid grid-cols-1 gap-3 md:grid-cols-2 xl:absolute xl:bottom-4 xl:right-0 xl:top-2 xl:mt-0 xl:flex xl:w-[336px] xl:flex-col xl:overflow-y-auto">
+        <div className="no-scrollbar relative z-10 mt-3 grid grid-cols-1 gap-3 md:grid-cols-2 xl:absolute xl:bottom-[262px] xl:right-0 xl:top-2 xl:mt-0 xl:flex xl:w-[336px] xl:flex-col xl:overflow-y-auto">
           {rightWidgets}
+        </div>
+        <div className="relative z-10 mt-3 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] xl:absolute xl:bottom-4 xl:left-[364px] xl:right-0 xl:mt-0 xl:h-[234px] xl:[&>section]:h-full">
+          {bottomPanels}
         </div>
       </section>
 

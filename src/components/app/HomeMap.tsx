@@ -8,6 +8,7 @@ import { IconButton, cn } from "@/components/ui/primitives";
 import { MapBackdrop } from "@/components/ui/map";
 import type { NewsItem, NewsPoint } from "@/lib/newsQueries";
 import type { MapPoint } from "@/lib/queries";
+import type { Spotlight } from "./LiveMap";
 import { mapStore, type MapLayer } from "./mapStore";
 
 const LiveMap = dynamic(() => import("./LiveMap").then((m) => m.LiveMap), { ssr: false, loading: () => <MapBackdrop /> });
@@ -16,7 +17,21 @@ const LiveMap = dynamic(() => import("./LiveMap").then((m) => m.LiveMap), { ssr:
  * Map canvas filling its (positioned) parent. `hero` = full-screen background on wide screens:
  * India is framed in the gap between the floating widget columns.
  */
-export function MapCanvas({ points, news, view, panelInset = 380, hero = false }: { points: MapPoint[]; news?: NewsPoint[]; view?: "india" | "world"; panelInset?: number; hero?: boolean }) {
+export function MapCanvas({
+  points,
+  news,
+  view,
+  spotlight,
+  panelInset = 380,
+  hero = false,
+}: {
+  points: MapPoint[];
+  news?: NewsPoint[];
+  view?: "india" | "world";
+  spotlight?: Spotlight | null;
+  panelInset?: number;
+  hero?: boolean;
+}) {
   const [wide, setWide] = useState<boolean | null>(null);
   // the widget columns sit inside the 1920px content column; the hero map spans the whole viewport
   const [gutter, setGutter] = useState(0);
@@ -30,13 +45,15 @@ export function MapCanvas({ points, news, view, panelInset = 380, hero = false }
     mq.addEventListener("change", on);
     return () => mq.removeEventListener("change", on);
   }, []);
-  const pad = useMemo(() => (hero && wide ? { top: 200, bottom: 120, left: 400 + gutter, right: 380 + gutter } : undefined), [hero, wide, gutter]);
+  // hero: India sits between the widget columns and above the bottom panels
+  const pad = useMemo(() => (hero && wide ? { top: 190, bottom: 330, left: 400 + gutter, right: 380 + gutter } : undefined), [hero, wide, gutter]);
   if (wide === null) return <MapBackdrop />;
   return (
     <LiveMap
       key={String(wide)}
       points={points}
       news={news}
+      spotlight={spotlight}
       view={view}
       pad={pad}
       rightInset={wide && !hero ? panelInset : 0}

@@ -153,6 +153,43 @@ function newsPopupHtml(p: NewsPoint) {
   </div>`;
 }
 
+export interface Spotlight {
+  city: string;
+  lat: number;
+  lon: number;
+  label: string;
+  value: number;
+  unit: string;
+  /** % change vs the previous window, null when there's no baseline */
+  trend: number | null;
+  sub: string;
+  href: string;
+}
+
+/**
+ * ref-01 "Passenger Load": a dashed, slowly rotating ring on the hotspot city with a glass card beside it.
+ * Built with createElement/textContent only. Animations live on inner elements (MapLibre owns the
+ * outer element's transform).
+ */
+function spotlightEl(s: Spotlight): HTMLElement {
+  const root = h("a", "group relative block size-0");
+  (root as HTMLAnchorElement).href = s.href;
+  root.setAttribute("aria-label", `${s.label}: ${s.city}, ${s.value} ${s.unit}`);
+  const ring = h("span", "pointer-events-none absolute left-0 top-0 block size-[92px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-ink/50");
+  ring.style.animation = "rx-sweep 18s linear infinite";
+  const dot = h("span", "rx-pulse absolute left-0 top-0 block size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-good ring-2 ring-white/80");
+  const card = h("span", "glass absolute right-[58px] top-0 hidden w-[188px] md:flex -translate-y-1/2 flex-col gap-1 !rounded-[16px] px-3.5 py-3 text-left transition-transform group-hover:-translate-x-0.5");
+  const head = h("span", "flex items-center justify-between gap-2");
+  head.append(h("span", "text-[13px] text-ink", s.label), h("span", "text-[11px] text-ink-2", "↗"));
+  const sub = h("span", "truncate text-[11px] text-ink-2", s.city);
+  const big = h("span", "num mt-1 flex items-baseline gap-1.5");
+  big.append(h("span", "text-[30px] font-light leading-none tracking-[-0.03em] text-ink", String(s.value)), h("span", "text-[12px] text-ink-2", s.unit));
+  if (s.trend != null) big.append(h("span", `ml-1 text-[12px] ${s.trend >= 0 ? "text-good" : "text-bad"}`, `${s.trend >= 0 ? "↑" : "↓"} ${Math.abs(s.trend)}%`));
+  card.append(head, sub, big, h("span", "text-[11px] text-ink-3", s.sub));
+  root.append(ring, dot, card);
+  return root;
+}
+
 const visible = (kind: "jobs" | NewsPoint["kind"], on: Set<MapLayer>) => (kind === "mixed" ? on.has("tech") || on.has("world") : on.has(kind));
 
 /**
@@ -162,6 +199,7 @@ const visible = (kind: "jobs" | NewsPoint["kind"], on: Set<MapLayer>) => (kind =
 export function LiveMap({
   points,
   news = [],
+  spotlight,
   view = "india",
   rightInset = 0,
   pad,
@@ -173,6 +211,8 @@ export function LiveMap({
   points: MapPoint[];
   /** headlines grouped by place (tech + world affairs) */
   news?: NewsPoint[];
+  /** floating hotspot card anchored to a city (Home hero) */
+  spotlight?: Spotlight | null;
   /** initial framing */
   view?: "india" | "world";
   rightInset?: number;
@@ -240,6 +280,7 @@ export function LiveMap({
       for (const m of markers) m.getElement().style.display = visible("jobs", on) ? "" : "none";
       for (const m of newsMarkers) m.el.style.display = visible(m.kind, on) ? "" : "none";
     };
+    const spot = spotlight ? new maplibregl.Marker({ element: spotlightEl(spotlight), anchor: "center" }).setLngLat([spotlight.lon, spotlight.lat]).addTo(map) : null;
     applyLayers(mapStore.layers);
     const offLayers = mapStore.onLayers(applyLayers);
 
@@ -272,10 +313,11 @@ export function LiveMap({
       offLayers();
       markers.forEach((m) => m.remove());
       newsMarkers.forEach((m) => m.marker.remove());
+      spot?.remove();
       mapStore.clear(map);
       map.remove();
     };
-  }, [points, news, view, rightInset, pad, compact, interactive, router]);
+  }, [points, news, spotlight, view, rightInset, pad, compact, interactive, router]);
 
   if (failed) return <MapBackdrop className={className} />;
   // maplibre-gl.css forces `.maplibregl-map { position: relative }`, so positioning lives on a wrapper
