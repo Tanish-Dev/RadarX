@@ -28,9 +28,22 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - name: Poll sources, news, programs, stocks → alerts
-        run: npm run worker -- --once
+      - name: Check database secret
+        id: cfg
+        run: echo "ready=$([ -n "$DATABASE_URL" ] && echo yes || echo no)" >> "$GITHUB_OUTPUT"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - if: steps.cfg.outputs.ready == 'yes'
+        run: npm ci --no-audit --no-fund
+      - if: steps.cfg.outputs.ready == 'yes'
+        name: Poll sources, news, programs, stocks → alerts
+        run: |
+          # until the DATABASE_URL secret exists, a run would poll ~330 sites into a throwaway DB — skip
+          if [ -z "$DATABASE_URL" ] || [[ "$DATABASE_URL" == file:* ]]; then
+            echo "::notice::DATABASE_URL secret not set — skipping. Add it (Turso) under Settings → Secrets → Actions."
+            exit 0
+          fi
+          npm run worker -- --once
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_AUTH_TOKEN: ${{ secrets.DATABASE_AUTH_TOKEN }}
