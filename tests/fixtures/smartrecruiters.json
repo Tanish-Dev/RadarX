@@ -1,0 +1,714 @@
+{
+  "offset": 0,
+  "limit": 100,
+  "totalFound": 5068,
+  "content": [
+    {
+      "id": "744000161888438",
+      "name": "District Sales Manager (MEP Channel) - MT, ID, WY Territory - Diablo Tools",
+      "uuid": "1d7a076a-7e60-4b74-9194-d001533f7ded",
+      "jobAdId": "479000b4-4a19-41f8-85c1-7d3d4f98a8ae",
+      "defaultJobAd": false,
+      "refNumber": "REF292152J",
+      "company": {
+        "identifier": "BoschGroup",
+        "name": "Bosch Group"
+      },
+      "releasedDate": "2026-11-16T18:36:53.932Z",
+      "location": {
+        "city": "Idaho Falls",
+        "region": "ID",
+        "country": "us",
+        "address": "Memorial Drive",
+        "remote": false,
+        "hybrid": true,
+        "hybridDescription": "Outside Sales",
+        "latitude": "43.522864",
+        "longitude": "-112.043295",
+        "fullLocation": "Idaho Falls, ID, United States"
+      },
+      "industry": {
+        "id": "consumer_goods",
+        "label": "Consumer Goods"
+      },
+      "department": {},
+      "function": {
+        "id": "sales",
+        "label": "Sales"
+      },
+      "typeOfEmployment": {
+        "id": "permanent",
+        "label": "Full-time"
+      },
+      "experienceLevel": {
+        "id": "associate",
+        "label": "Associate"
+      },
+      "customField": [
+        {
+          "fieldId": "5abe2a4ab60a5e486a2d9b1d",
+          "fieldLabel": "Contract type",
+          "valueId": "1e46492b-d24f-460c-b095-38cf08a778d8",
+          "valueLabel": "Unlimited"
+        },
+        {
+          "fieldId": "5abe28e96d8bc56863dd9746",
+          "fieldLabel": "Tariff Area",
+          "valueId": "82f1dd4b-de9d-4134-9f1a-8d315be380ae",
+          "valueLabel": "United States Local Grades"
+        },
+        {
+          "fieldId": "586a997ee4b05fd937b86098",
+          "fieldLabel": "Legal Entity(acronym)",
+          "valueId": "PTNF",
+          "valueLabel": "PTNF"
+        },
+        {
+          "fieldId": "586a99b5e4b0daa006ae1079",
+          "fieldLabel": "Working Location",
+          "valueId": "Atlanta, GA",
+          "valueLabel": "Atlanta, GA"
+        },
+        {
+          "fieldId": "5abe295a6d8bc56863dd9747",
+          "fieldLabel": "Global Salary Level",
+          "valueId": "427b1359-5057-4375-a2ae-6c649782296d",
+          "valueLabel": "Experienced/ Middle Tariff"
+        },
+        {
+          "fieldId": "69ca83a2489188782a1e9f87",
+          "fieldLabel": "Direct Or Indirect",
+          "valueId": "1aefbf4c-c10a-422e-a975-a504a7117792",
+          "valueLabel": "Indirect"
+        },
+        {
+          "fieldId": "5abe29f9b60a5e486a2d9b1c",
+          "fieldLabel": "Working hours",
+          "valueId": "60756b3e-dbab-4353-ac3a-0064d2bb27d8",
+          "valueLabel": "Full-time"
+        },
+        {
+          "fieldId": "586a9995e4b0daa006ae1078",
+          "fieldLabel": "Legal Entity",
+          "valueId": "Freud America Inc.",
+          "valueLabel": "Diablo Tools Inc."
+        },
+        {
+          "fieldId": "691cf1c93001c782b9560ab7",
+          "fieldLabel": "Division full name",
+          "valueId": "d46bc602-375e-4c5b-8773-170f49339203",
+          "valueLabel": "Power Tools"
+        },
+        {
+          "fieldId": "5abe27936d8bc56863dd9745",
+          "fieldLabel": "Position type",
+          "valueId": "c7b4da31-6f38-405a-b2e8-08a76e3c3f2c",
+          "valueLabel": "Professional"
+        },
+        {
+          "fieldId": "COUNTRY",
+          "fieldLabel": "Country/Region",
+          "valueId": "us",
+          "valueLabel": "United States"
+        },
+        {
+          "fieldId": "586a971ee4b0daa006ae1077",
+          "fieldLabel": "Brands",
+          "valueId": "2ab0864b-8431-4fba-9340-f4fdd6e770b9",
+          "valueLabel": "Diablo Tools Inc."
+        },
+        {
+          "fieldId": "586a996ce4b05fd937b86097",
+          "fieldLabel": "Working Country",
+          "valueId": "US",
+          "valueLabel": "United States"
+        },
+        {
+          "fieldId": "586a9b22e4b05fd937b8609a",
+          "fieldLabel": "Local Grade",
+          "valueId": "US_E3",
+          "valueLabel": "US_E3"
+        },
+        {
+          "fieldId": "586a99a5e4b05fd937b86099",
+          "fieldLabel": "Division",
+          "valueId": "PT",
+          "valueLabel": "PT"
+        }
+      ],
+      "visibility": "PUBLIC",
+      "ref": "https://api.smartrecruiters.com/v1/companies/BoschGroup/postings/744000161888438",
+      "language": {
+        "code": "en",
+        "label": "English",
+        "labelNative": "English (US)"
+      }
+    },
+    {
+      "id": "744000161888279",
+      "name": "District Sales Manager (MEP Channel) - MT, ID, WY Territory - Diablo Tools",
+      "uuid": "9bdb031f-ff8f-4bfc-8c53-cc5fa56b1517",
+      "jobAdId": "27138bdf-0cee-4f51-bce4-0b1bbe5d2052",
+      "defaultJobAd": false,
+      "refNumber": "REF292152J",
+      "company": {
+        "identifier": "BoschGroup",
+        "name": "Bosch Group"
+      },
+      "releasedDate": "2026-11-16T18:36:28.448Z",
+      "location": {
+        "city": "Boise",
+        "region": "ID",
+        "country": "us",
+        "address": "West Broad Street",
+        "postalCode": "83702",
+        "remote": false,
+        "hybrid": true,
+        "hybridDescription": "Outside Sales",
+        "latitude": "43.6118406",
+        "longitude": "-116.2027586",
+        "fullLocation": "Boise, ID, United States"
+      },
+      "industry": {
+        "id": "consumer_goods",
+        "label": "Consumer Goods"
+      },
+      "department": {},
+      "function": {
+        "id": "sales",
+        "label": "Sales"
+      },
+      "typeOfEmployment": {
+        "id": "permanent",
+        "label": "Full-time"
+      },
+      "experienceLevel": {
+        "id": "associate",
+        "label": "Associate"
+      },
+      "customField": [
+        {
+          "fieldId": "5abe2a4ab60a5e486a2d9b1d",
+          "fieldLabel": "Contract type",
+          "valueId": "1e46492b-d24f-460c-b095-38cf08a778d8",
+          "valueLabel": "Unlimited"
+        },
+        {
+          "fieldId": "5abe28e96d8bc56863dd9746",
+          "fieldLabel": "Tariff Area",
+          "valueId": "82f1dd4b-de9d-4134-9f1a-8d315be380ae",
+          "valueLabel": "United States Local Grades"
+        },
+        {
+          "fieldId": "586a997ee4b05fd937b86098",
+          "fieldLabel": "Legal Entity(acronym)",
+          "valueId": "PTNF",
+          "valueLabel": "PTNF"
+        },
+        {
+          "fieldId": "586a99b5e4b0daa006ae1079",
+          "fieldLabel": "Working Location",
+          "valueId": "Atlanta, GA",
+          "valueLabel": "Atlanta, GA"
+        },
+        {
+          "fieldId": "5abe295a6d8bc56863dd9747",
+          "fieldLabel": "Global Salary Level",
+          "valueId": "427b1359-5057-4375-a2ae-6c649782296d",
+          "valueLabel": "Experienced/ Middle Tariff"
+        },
+        {
+          "fieldId": "69ca83a2489188782a1e9f87",
+          "fieldLabel": "Direct Or Indirect",
+          "valueId": "1aefbf4c-c10a-422e-a975-a504a7117792",
+          "valueLabel": "Indirect"
+        },
+        {
+          "fieldId": "5abe29f9b60a5e486a2d9b1c",
+          "fieldLabel": "Working hours",
+          "valueId": "60756b3e-dbab-4353-ac3a-0064d2bb27d8",
+          "valueLabel": "Full-time"
+        },
+        {
+          "fieldId": "586a9995e4b0daa006ae1078",
+          "fieldLabel": "Legal Entity",
+          "valueId": "Freud America Inc.",
+          "valueLabel": "Diablo Tools Inc."
+        },
+        {
+          "fieldId": "691cf1c93001c782b9560ab7",
+          "fieldLabel": "Division full name",
+          "valueId": "d46bc602-375e-4c5b-8773-170f49339203",
+          "valueLabel": "Power Tools"
+        },
+        {
+          "fieldId": "5abe27936d8bc56863dd9745",
+          "fieldLabel": "Position type",
+          "valueId": "c7b4da31-6f38-405a-b2e8-08a76e3c3f2c",
+          "valueLabel": "Professional"
+        },
+        {
+          "fieldId": "COUNTRY",
+          "fieldLabel": "Country/Region",
+          "valueId": "us",
+          "valueLabel": "United States"
+        },
+        {
+          "fieldId": "586a971ee4b0daa006ae1077",
+          "fieldLabel": "Brands",
+          "valueId": "2ab0864b-8431-4fba-9340-f4fdd6e770b9",
+          "valueLabel": "Diablo Tools Inc."
+        },
+        {
+          "fieldId": "586a996ce4b05fd937b86097",
+          "fieldLabel": "Working Country",
+          "valueId": "US",
+          "valueLabel": "United States"
+        },
+        {
+          "fieldId": "586a9b22e4b05fd937b8609a",
+          "fieldLabel": "Local Grade",
+          "valueId": "US_E3",
+          "valueLabel": "US_E3"
+        },
+        {
+          "fieldId": "586a99a5e4b05fd937b86099",
+          "fieldLabel": "Division",
+          "valueId": "PT",
+          "valueLabel": "PT"
+        }
+      ],
+      "visibility": "PUBLIC",
+      "ref": "https://api.smartrecruiters.com/v1/companies/BoschGroup/postings/744000161888279",
+      "language": {
+        "code": "en",
+        "label": "English",
+        "labelNative": "English (US)"
+      }
+    },
+    {
+      "id": "744000161888149",
+      "name": "District Sales Manager (MEP Channel) - MT, ID, WY Territory - Diablo Tools",
+      "uuid": "d7e9860e-5521-48cf-ae55-4af50ff7dcba",
+      "jobAdId": "85d75a8a-a316-4e6b-9b54-c1a792094401",
+      "defaultJobAd": true,
+      "refNumber": "REF292152J",
+      "company": {
+        "identifier": "BoschGroup",
+        "name": "Bosch Group"
+      },
+      "releasedDate": "2026-11-16T18:36:02.319Z",
+      "location": {
+        "city": "Bozeman",
+        "region": "MT",
+        "country": "us",
+        "address": "Main Street",
+        "postalCode": "59715",
+        "remote": false,
+        "hybrid": true,
+        "hybridDescription": "Outside Sales",
+        "latitude": "45.675272",
+        "longitude": "-111.0121201",
+        "fullLocation": "Bozeman, MT, United States"
+      },
+      "industry": {
+        "id": "consumer_goods",
+        "label": "Consumer Goods"
+      },
+      "department": {},
+      "function": {
+        "id": "sales",
+        "label": "Sales"
+      },
+      "typeOfEmployment": {
+        "id": "permanent",
+        "label": "Full-time"
+      },
+      "experienceLevel": {
+        "id": "associate",
+        "label": "Associate"
+      },
+      "customField": [
+        {
+          "fieldId": "5abe2a4ab60a5e486a2d9b1d",
+          "fieldLabel": "Contract type",
+          "valueId": "1e46492b-d24f-460c-b095-38cf08a778d8",
+          "valueLabel": "Unlimited"
+        },
+        {
+          "fieldId": "5abe28e96d8bc56863dd9746",
+          "fieldLabel": "Tariff Area",
+          "valueId": "82f1dd4b-de9d-4134-9f1a-8d315be380ae",
+          "valueLabel": "United States Local Grades"
+        },
+        {
+          "fieldId": "586a997ee4b05fd937b86098",
+          "fieldLabel": "Legal Entity(acronym)",
+          "valueId": "PTNF",
+          "valueLabel": "PTNF"
+        },
+        {
+          "fieldId": "586a99b5e4b0daa006ae1079",
+          "fieldLabel": "Working Location",
+          "valueId": "Atlanta, GA",
+          "valueLabel": "Atlanta, GA"
+        },
+        {
+          "fieldId": "5abe295a6d8bc56863dd9747",
+          "fieldLabel": "Global Salary Level",
+          "valueId": "427b1359-5057-4375-a2ae-6c649782296d",
+          "valueLabel": "Experienced/ Middle Tariff"
+        },
+        {
+          "fieldId": "69ca83a2489188782a1e9f87",
+          "fieldLabel": "Direct Or Indirect",
+          "valueId": "1aefbf4c-c10a-422e-a975-a504a7117792",
+          "valueLabel": "Indirect"
+        },
+        {
+          "fieldId": "5abe29f9b60a5e486a2d9b1c",
+          "fieldLabel": "Working hours",
+          "valueId": "60756b3e-dbab-4353-ac3a-0064d2bb27d8",
+          "valueLabel": "Full-time"
+        },
+        {
+          "fieldId": "586a9995e4b0daa006ae1078",
+          "fieldLabel": "Legal Entity",
+          "valueId": "Freud America Inc.",
+          "valueLabel": "Diablo Tools Inc."
+        },
+        {
+          "fieldId": "691cf1c93001c782b9560ab7",
+          "fieldLabel": "Division full name",
+          "valueId": "d46bc602-375e-4c5b-8773-170f49339203",
+          "valueLabel": "Power Tools"
+        },
+        {
+          "fieldId": "5abe27936d8bc56863dd9745",
+          "fieldLabel": "Position type",
+          "valueId": "c7b4da31-6f38-405a-b2e8-08a76e3c3f2c",
+          "valueLabel": "Professional"
+        },
+        {
+          "fieldId": "COUNTRY",
+          "fieldLabel": "Country/Region",
+          "valueId": "us",
+          "valueLabel": "United States"
+        },
+        {
+          "fieldId": "586a971ee4b0daa006ae1077",
+          "fieldLabel": "Brands",
+          "valueId": "2ab0864b-8431-4fba-9340-f4fdd6e770b9",
+          "valueLabel": "Diablo Tools Inc."
+        },
+        {
+          "fieldId": "586a996ce4b05fd937b86097",
+          "fieldLabel": "Working Country",
+          "valueId": "US",
+          "valueLabel": "United States"
+        },
+        {
+          "fieldId": "586a9b22e4b05fd937b8609a",
+          "fieldLabel": "Local Grade",
+          "valueId": "US_E3",
+          "valueLabel": "US_E3"
+        },
+        {
+          "fieldId": "586a99a5e4b05fd937b86099",
+          "fieldLabel": "Division",
+          "valueId": "PT",
+          "valueLabel": "PT"
+        }
+      ],
+      "visibility": "PUBLIC",
+      "ref": "https://api.smartrecruiters.com/v1/companies/BoschGroup/postings/744000161888149",
+      "language": {
+        "code": "en",
+        "label": "English",
+        "labelNative": "English (US)"
+      }
+    },
+    {
+      "id": "744000161873610",
+      "name": "Product Data & Change Management specialist (Power tools)",
+      "uuid": "6087dc14-69c3-4751-a791-a1acd2c140bb",
+      "jobAdId": "5e0cd665-ae1b-4bca-ac89-4f660bee709b",
+      "defaultJobAd": true,
+      "refNumber": "REF300938F",
+      "company": {
+        "identifier": "BoschGroup",
+        "name": "Bosch Group"
+      },
+      "releasedDate": "2026-11-16T17:23:48.976Z",
+      "location": {
+        "city": "hosur road bangalore",
+        "country": "in",
+        "address": "plot no.76 & 77 & part 78 keonics electronic city,",
+        "postalCode": "560100",
+        "remote": false,
+        "hybrid": false,
+        "fullLocation": "hosur road bangalore, , India"
+      },
+      "industry": {
+        "id": "computer_software",
+        "label": "Computer Software"
+      },
+      "department": {},
+      "function": {
+        "id": "engineering",
+        "label": "Engineering"
+      },
+      "typeOfEmployment": {
+        "id": "permanent",
+        "label": "Full-time"
+      },
+      "experienceLevel": {
+        "id": "associate",
+        "label": "Associate"
+      },
+      "customField": [
+        {
+          "fieldId": "5abe2a4ab60a5e486a2d9b1d",
+          "fieldLabel": "Contract type",
+          "valueId": "1e46492b-d24f-460c-b095-38cf08a778d8",
+          "valueLabel": "Unlimited"
+        },
+        {
+          "fieldId": "5abe28e96d8bc56863dd9746",
+          "fieldLabel": "Tariff Area",
+          "valueId": "2473485f-051f-4fbc-b802-f3620b73998c",
+          "valueLabel": "India Local Grades"
+        },
+        {
+          "fieldId": "586a997ee4b05fd937b86098",
+          "fieldLabel": "Legal Entity(acronym)",
+          "valueId": "RBEI",
+          "valueLabel": "BGSW"
+        },
+        {
+          "fieldId": "586a99b5e4b0daa006ae1079",
+          "fieldLabel": "Working Location",
+          "valueId": "Bengaluru (prev. Bangalore)",
+          "valueLabel": "Bengaluru (prev. Bangalore)"
+        },
+        {
+          "fieldId": "5abe295a6d8bc56863dd9747",
+          "fieldLabel": "Global Salary Level",
+          "valueId": "427b1359-5057-4375-a2ae-6c649782296d",
+          "valueLabel": "Experienced/ Middle Tariff"
+        },
+        {
+          "fieldId": "69ca83a2489188782a1e9f87",
+          "fieldLabel": "Direct Or Indirect",
+          "valueId": "1aefbf4c-c10a-422e-a975-a504a7117792",
+          "valueLabel": "Indirect"
+        },
+        {
+          "fieldId": "5abe29f9b60a5e486a2d9b1c",
+          "fieldLabel": "Working hours",
+          "valueId": "60756b3e-dbab-4353-ac3a-0064d2bb27d8",
+          "valueLabel": "Full-time"
+        },
+        {
+          "fieldId": "586a9995e4b0daa006ae1078",
+          "fieldLabel": "Legal Entity",
+          "valueId": "Robert Bosch Engineering and Business Solutions Private Ltd.",
+          "valueLabel": "Bosch Global Software Technologies Private Limited"
+        },
+        {
+          "fieldId": "691cf1c93001c782b9560ab7",
+          "fieldLabel": "Division full name",
+          "valueId": "2c84b9fd-f59a-4d8f-8666-3d3e8b6d5cef",
+          "valueLabel": "BGSW"
+        },
+        {
+          "fieldId": "5abe27936d8bc56863dd9745",
+          "fieldLabel": "Position type",
+          "valueId": "c7b4da31-6f38-405a-b2e8-08a76e3c3f2c",
+          "valueLabel": "Professional"
+        },
+        {
+          "fieldId": "COUNTRY",
+          "fieldLabel": "Country/Region",
+          "valueId": "in",
+          "valueLabel": "India"
+        },
+        {
+          "fieldId": "586a971ee4b0daa006ae1077",
+          "fieldLabel": "Brands",
+          "valueId": "default",
+          "valueLabel": "Bosch Group"
+        },
+        {
+          "fieldId": "586a996ce4b05fd937b86097",
+          "fieldLabel": "Working Country",
+          "valueId": "IN",
+          "valueLabel": "India"
+        },
+        {
+          "fieldId": "586a9b22e4b05fd937b8609a",
+          "fieldLabel": "Local Grade",
+          "valueId": "IN_RBEI_52",
+          "valueLabel": "IN_RBEI_52"
+        },
+        {
+          "fieldId": "586a99a5e4b05fd937b86099",
+          "fieldLabel": "Division",
+          "valueId": "RBEI",
+          "valueLabel": "BGSW"
+        }
+      ],
+      "visibility": "PUBLIC",
+      "ref": "https://api.smartrecruiters.com/v1/companies/BoschGroup/postings/744000161873610",
+      "creator": {
+        "name": "Subramaniam Sornam (GS/HRS22-IN)"
+      },
+      "language": {
+        "code": "en",
+        "label": "English",
+        "labelNative": "English (US)"
+      }
+    },
+    {
+      "id": "744000161873738",
+      "name": "Senior Design Engineer / Lead – Motor Mechanics",
+      "uuid": "990ead37-047c-4f93-879d-de05eebdc13a",
+      "jobAdId": "3803be06-45de-4e9b-933a-9635e28fcdba",
+      "defaultJobAd": true,
+      "refNumber": "REF300937C",
+      "company": {
+        "identifier": "BoschGroup",
+        "name": "Bosch Group"
+      },
+      "releasedDate": "2026-11-16T17:21:28.161Z",
+      "location": {
+        "city": "coimbatore",
+        "country": "in",
+        "address": "kgisl infrastructure private limited,sez , keeranatham village,   saravanampatti,",
+        "postalCode": "641035.",
+        "remote": false,
+        "hybrid": false,
+        "fullLocation": "coimbatore, , India"
+      },
+      "industry": {
+        "id": "computer_software",
+        "label": "Computer Software"
+      },
+      "department": {},
+      "function": {
+        "id": "engineering",
+        "label": "Engineering"
+      },
+      "typeOfEmployment": {
+        "id": "permanent",
+        "label": "Full-time"
+      },
+      "experienceLevel": {
+        "id": "associate",
+        "label": "Associate"
+      },
+      "customField": [
+        {
+          "fieldId": "5abe2a4ab60a5e486a2d9b1d",
+          "fieldLabel": "Contract type",
+          "valueId": "1e46492b-d24f-460c-b095-38cf08a778d8",
+          "valueLabel": "Unlimited"
+        },
+        {
+          "fieldId": "5abe28e96d8bc56863dd9746",
+          "fieldLabel": "Tariff Area",
+          "valueId": "2473485f-051f-4fbc-b802-f3620b73998c",
+          "valueLabel": "India Local Grades"
+        },
+        {
+          "fieldId": "586a997ee4b05fd937b86098",
+          "fieldLabel": "Legal Entity(acronym)",
+          "valueId": "RBEI",
+          "valueLabel": "BGSW"
+        },
+        {
+          "fieldId": "586a99b5e4b0daa006ae1079",
+          "fieldLabel": "Working Location",
+          "valueId": "Coimbatore",
+          "valueLabel": "Coimbatore"
+        },
+        {
+          "fieldId": "5abe295a6d8bc56863dd9747",
+          "fieldLabel": "Global Salary Level",
+          "valueId": "427b1359-5057-4375-a2ae-6c649782296d",
+          "valueLabel": "Experienced/ Middle Tariff"
+        },
+        {
+          "fieldId": "69ca83a2489188782a1e9f87",
+          "fieldLabel": "Direct Or Indirect",
+          "valueId": "1aefbf4c-c10a-422e-a975-a504a7117792",
+          "valueLabel": "Indirect"
+        },
+        {
+          "fieldId": "5abe29f9b60a5e486a2d9b1c",
+          "fieldLabel": "Working hours",
+          "valueId": "60756b3e-dbab-4353-ac3a-0064d2bb27d8",
+          "valueLabel": "Full-time"
+        },
+        {
+          "fieldId": "586a9995e4b0daa006ae1078",
+          "fieldLabel": "Legal Entity",
+          "valueId": "Robert Bosch Engineering and Business Solutions Private Ltd.",
+          "valueLabel": "Bosch Global Software Technologies Private Limited"
+        },
+        {
+          "fieldId": "691cf1c93001c782b9560ab7",
+          "fieldLabel": "Division full name",
+          "valueId": "2c84b9fd-f59a-4d8f-8666-3d3e8b6d5cef",
+          "valueLabel": "BGSW"
+        },
+        {
+          "fieldId": "5abe27936d8bc56863dd9745",
+          "fieldLabel": "Position type",
+          "valueId": "c7b4da31-6f38-405a-b2e8-08a76e3c3f2c",
+          "valueLabel": "Professional"
+        },
+        {
+          "fieldId": "COUNTRY",
+          "fieldLabel": "Country/Region",
+          "valueId": "in",
+          "valueLabel": "India"
+        },
+        {
+          "fieldId": "586a971ee4b0daa006ae1077",
+          "fieldLabel": "Brands",
+          "valueId": "default",
+          "valueLabel": "Bosch Group"
+        },
+        {
+          "fieldId": "586a996ce4b05fd937b86097",
+          "fieldLabel": "Working Country",
+          "valueId": "IN",
+          "valueLabel": "India"
+        },
+        {
+          "fieldId": "586a9b22e4b05fd937b8609a",
+          "fieldLabel": "Local Grade",
+          "valueId": "IN_RBEI_52",
+          "valueLabel": "IN_RBEI_52"
+        },
+        {
+          "fieldId": "586a99a5e4b05fd937b86099",
+          "fieldLabel": "Division",
+          "valueId": "RBEI",
+          "valueLabel": "BGSW"
+        }
+      ],
+      "visibility": "PUBLIC",
+      "ref": "https://api.smartrecruiters.com/v1/companies/BoschGroup/postings/744000161873738",
+      "creator": {
+        "name": "Subramaniam Sornam (GS/HRS22-IN)"
+      },
+      "language": {
+        "code": "en",
+        "label": "English",
+        "labelNative": "English (US)"
+      }
+    }
+  ]
+}

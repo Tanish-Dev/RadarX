@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/* class-strategy dark mode: <html class="dark"> or any .dark subtree (used by /design) */
+@custom-variant dark (&:where(.dark, .dark *):not(:where(.light, .light *)));
+
+/* ── Tokens ──────────────────────────────────────────────────────────────── */
+/* Visual language follows ref-01 (dark dashboard): near-black canvas, dark panels with hairline
+   borders, flat grey active pills, light-weight big numbers, colour only for status. */
+:root,
+.light {
+  --canvas: #f1f2f4;
+  --card: #ffffff;
+  --raised: #f5f6f8;
+  --chip: #eceef1;
+  --border: #e3e5e9;
+  --text: #0b0b0c;
+  --text-2: #6e7179;
+  --text-3: #a3a6ad;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-pop: 0 8px 28px rgba(0, 0, 0, 0.12);
+  --map-land: #e9eaed;
+  --map-line: #ffffff;
+  --map-water: #dfe1e5;
+  --inverse: #0b0b0c;
+  --inverse-text: #ffffff;
+  --glass: rgba(255, 255, 255, 0.62);
+  --glass-edge: rgba(255, 255, 255, 0.7);
+  --active: #0b0b0c;
+  --active-text: #ffffff;
+}
+
+.dark {
+  --canvas: #0a0a0b;
+  --card: #141416;
+  --raised: #1c1c1f;
+  --chip: #1f1f22;
+  --border: rgba(255, 255, 255, 0.07);
+  --text: #f5f5f6;
+  --text-2: #8d8d94;
+  --text-3: #5a5a61;
+  --shadow-card: none;
+  --shadow-pop: 0 16px 40px rgba(0, 0, 0, 0.55);
+  --map-land: #141416;
+  --map-line: #232327;
+  --map-water: #0e0f11;
+  --inverse: #f5f5f6;
+  --inverse-text: #0b0b0c;
+  --glass: rgba(26, 26, 30, 0.46);
+  --glass-edge: rgba(255, 255, 255, 0.07);
+  --active: #2a2a2e;
+  --active-text: #ffffff;
+}
+
+:root {
+  --accent: #2f7bff;
+  --green: #34c759;
+  --orange: #ff9f0a;
+  --red: #ff3b30;
+  /* kept as variables so every "active" state switches style in one place:
+     ref-01 uses a flat grey pill, not a gradient */
+  --grad-accent: var(--active);
+  --grad-foryou: var(--raised);
+  --grad-toppick: var(--raised);
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-card: var(--card);
+  --color-raised: var(--raised);
+  --color-chip: var(--chip);
+  --color-line: var(--border);
+  --color-ink: var(--text);
+  --color-ink-2: var(--text-2);
+  --color-ink-3: var(--text-3);
+  --color-accent: var(--accent);
+  --color-good: var(--green);
+  --color-warn: var(--orange);
+  --color-bad: var(--red);
+  --color-inverse: var(--inverse);
+  --color-inverse-ink: var(--inverse-text);
+  --color-glass: var(--glass);
+  --color-active: var(--active);
+  --color-active-ink: var(--active-text);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 18px;
+  --radius-tile: 14px;
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+html {
+  background: var(--canvas);
+  color: var(--text);
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  -webkit-font-smoothing: antialiased;
+  background: var(--canvas);
+}
+h1, h2, h3, h4 {
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+/* stats and times always use tabular numerals; big numbers are light (ref-01) */
+.num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+}
+
+/* floating panels over the map */
+.glass {
+  /* frosted: the map shows through, blurred; a hairline top highlight sells the glass edge */
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: inset 0 1px 0 var(--glass-edge), 0 10px 30px -12px rgb(0 0 0 / 0.35);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+}
+
+/* ── Motion ──────────────────────────────────────────────────────────────── */
+@keyframes rx-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 60%, transparent); }
+  70% { box-shadow: 0 0 0 12px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes rx-drop {
+  from { opacity: 0; transform: translateY(-10px) scale(0.9); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes rx-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes rx-ring {
+  from { stroke-dashoffset: var(--ring-from); }
+}
+.rx-pulse { animation: rx-pulse 1.8s ease-out infinite; }
+.rx-drop { animation: rx-drop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1.2) both; }
+.rx-fade-up { animation: rx-fade-up 0.2s ease-out both; }
+@keyframes rx-progress { from { width: 0; } to { width: 100%; } }
+.rx-lift { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.rx-lift:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--text) 18%, transparent); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* hide scrollbars on horizontally scrolling pill rows */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* MapLibre popups in RadarX styling */
+.rx-popup .maplibregl-popup-content {
+  /* glass, like the floating widgets */
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  color: var(--text);
+  border-radius: 18px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow-pop);
+  font-family: var(--font-sans);
+  letter-spacing: -0.03em;
+  overflow: hidden;
+  overflow-wrap: anywhere; /* long headlines/company names never spill out of the card */
+}
+.rx-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: var(--glass); }
+.rx-popup.maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: var(--glass); }
+.rx-popup.maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: var(--glass); }
+.rx-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: var(--glass); }
+.maplibregl-ctrl-attrib { font-size: 10px; opacity: 0.7; }
+
+/* full-bleed sections (the Home map) use w-screen; clip at the viewport, never at the content column */
+html, body { overflow-x: clip; }
+
+/* ── Loading + page transitions ──────────────────────────────────────────── */
+@keyframes rx-sweep { to { transform: rotate(360deg); } }
+@keyframes rx-blip { 0%, 100% { opacity: 0; transform: scale(0.6); } 12% { opacity: 1; transform: scale(1); } 45% { opacity: 0; } }
+@keyframes rx-shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+@keyframes rx-status { 0% { opacity: 0; transform: translateY(4px); } 15%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-4px); } }
+/* page enter: opacity only + a backwards-filled nudge, so no transform lingers to trap `position: fixed` panels */
+@keyframes rx-page { from { opacity: 0; transform: translateY(6px); } }
+.rx-page { animation: rx-page 0.32s cubic-bezier(.2,.8,.2,1) backwards; }
+.rx-skel {
+  background: linear-gradient(90deg, var(--raised) 0%, color-mix(in srgb, var(--raised) 55%, var(--text) 8%) 50%, var(--raised) 100%);
+  background-size: 200% 100%;
+  animation: rx-shimmer 1.6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rx-page, .rx-skel, .rx-sweep, .rx-blip { animation: none !important; }
+}

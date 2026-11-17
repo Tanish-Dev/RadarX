@@ -1,0 +1,169 @@
+[
+  {
+    "source": "Simplify",
+    "category": "AI/ML/Data",
+    "company_name": "JP Morgan Chase",
+    "id": "198dcbe5-882a-40bd-9dc2-ea376522a837",
+    "title": "Consumer & Community Banking Intern",
+    "active": true,
+    "terms": [
+      "Summer 2027"
+    ],
+    "date_updated": 1794844472,
+    "date_posted": 1794844377,
+    "url": "https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210807923",
+    "locations": [
+      "Palo Alto, CA",
+      "Columbus, OH",
+      "NYC"
+    ],
+    "company_url": "https://simplify.jobs/c/JP-Morgan-Chase",
+    "is_visible": true,
+    "sponsorship": "Other",
+    "degrees": [
+      "Master's",
+      "PhD"
+    ]
+  },
+  {
+    "source": "Simplify",
+    "category": "Software",
+    "company_name": "Boston Scientific",
+    "id": "d48bdf87-b0ff-4edc-a9a5-5f5ecca2154c",
+    "title": "AI Acceleration Intern",
+    "active": true,
+    "terms": [
+      "Summer 2027"
+    ],
+    "date_updated": 1794844441,
+    "date_posted": 1794844280,
+    "url": "https://bostonscientific.eightfold.ai/careers/job/563602813862390",
+    "locations": [
+      "Marlborough, MA"
+    ],
+    "company_url": "https://simplify.jobs/c/Boston-Scientific",
+    "is_visible": true,
+    "sponsorship": "Other",
+    "degrees": [
+      "Bachelor's",
+      "Master's"
+    ]
+  },
+  {
+    "source": "Simplify",
+    "category": "AI/ML/Data",
+    "company_name": "Boston Scientific",
+    "id": "9505b5cc-26f0-4893-93fe-d10cabec7014",
+    "title": "Product Data Analyst Intern",
+    "active": true,
+    "terms": [
+      "Summer 2026"
+    ],
+    "date_updated": 1794844441,
+    "date_posted": 1794844279,
+    "url": "https://bostonscientific.eightfold.ai/careers/job/563602813864319",
+    "locations": [
+      "Marlborough, MA"
+    ],
+    "company_url": "https://simplify.jobs/c/Boston-Scientific",
+    "is_visible": true,
+    "sponsorship": "Other",
+    "degrees": [
+      "Bachelor's"
+    ]
+  },
+  {
+    "source": "Simplify",
+    "category": "Software",
+    "company_name": "Boston Scientific",
+    "id": "ba118afe-7991-4a5a-87c7-f68325d9f99d",
+    "title": "AI Engineer Intern - Generative & Agentic AI",
+    "active": true,
+    "terms": [
+      "Summer 2027"
+    ],
+    "date_updated": 1794844460,
+    "date_posted": 1794844278,
+    "url": "https://bostonscientific.eightfold.ai/careers/job/563602813827837",
+    "locations": [
+      "Marlborough, MA",
+      "Maple Grove, MN",
+      "Arden Hills, MN"
+    ],
+    "company_url": "https://simplify.jobs/c/Boston-Scientific",
+    "is_visible": true,
+    "sponsorship": "Other",
+    "degrees": [
+      "Bachelor's",
+      "Master's"
+    ]
+  },
+  {
+    "source": "Simplify",
+    "category": "Software",
+    "company_name": "Treefera",
+    "id": "fc2f87c9-f97c-48c8-8d6a-bd1af3a4d31a",
+    "title": "Treefera Intern Programme",
+    "active": false,
+    "terms": [
+      "Summer 2026"
+    ],
+    "date_updated": 1774228372,
+    "date_posted": 1774228372,
+    "url": "https://jobs.ashbyhq.com/treefera/800f0bc8-ca10-4d6e-8b89-f9bc8867e63f/application",
+    "locations": [
+      "London, UK",
+      "United States"
+    ],
+    "company_url": "https://simplify.jobs/c/Treefera",
+    "is_visible": true,
+    "sponsorship": "Other",
+    "degrees": []
+  },
+  {
+    "source": "Simplify",
+    "category": "Hardware",
+    "company_name": "AirCapture",
+    "id": "e816626b-6017-4dd5-8087-ddec19f44acd",
+    "title": "Test Engineering Intern",
+    "active": false,
+    "terms": [
+      "Summer 2026"
+    ],
+    "date_updated": 1774246396,
+    "date_posted": 1774246396,
+    "url": "https://job-boards.greenhouse.io/aircapture/jobs/4665737006",
+    "locations": [
+      "Berkeley, CA"
+    ],
+    "company_url": "https://simplify.jobs/c/AirCapture",
+    "is_visible": true,
+    "sponsorship": "Other",
+    "degrees": [
+      "Bachelor's"
+    ]
+  },
+  {
+    "date_updated": 1774263255,
+    "sponsorship": "Other",
+    "active": true,
+    "degrees": [
+      "Bachelor's"
+    ],
+    "url": "https://job-boards.greenhouse.io/genevatrading/jobs/5085231007",
+    "company_name": "Geneva Trading",
+    "title": "Junior Software Engineer",
+    "locations": [
+      "Chicago, IL"
+    ],
+    "terms": [
+      "Summer 2026"
+    ],
+    "category": "Software Engineering",
+    "source": "AlmondCroffle",
+    "id": "58821bd1-bd22-45bf-82f0-c375329b1523",
+    "date_posted": 1774263048,
+    "company_url": "",
+    "is_visible": false
+  }
+]

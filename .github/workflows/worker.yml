@@ -1,0 +1,53 @@
+# RadarX worker on GitHub's runners: polls every source, stores to Turso, sends Telegram alerts.
+# Free for PUBLIC repos (standard runners aren't metered). GitHub may start "*/5" runs late or skip
+# some under load — keep `npm run worker -- --loop` on your own machine too if you want the fastest alerts.
+name: worker
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+    - cron: "17 3 * * 0" # weekly keepalive (below)
+  workflow_dispatch: # "Poll now" in the dashboard triggers this
+
+# never let two polls overlap (a slow run + the next tick)
+concurrency:
+  group: worker
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  poll:
+    if: github.event.schedule != '17 3 * * 0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Poll sources, news, programs, stocks → alerts
+        run: npm run worker -- --once
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_AUTH_TOKEN: ${{ secrets.DATABASE_AUTH_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
+          RADAR_DB_STATS: "1" # prints rows written/returned per run — watch the free-tier budget in the logs
+
+  # GitHub disables scheduled workflows in public repos after 60 days without repository activity.
+  # Re-enabling via the API once a week keeps the schedule alive without dummy commits.
+  keepalive:
+    if: github.event.schedule == '17 3 * * 0'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/worker.yml/enable"
+        env:
+          GH_TOKEN: ${{ github.token }}

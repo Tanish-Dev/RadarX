@@ -1,0 +1,1397 @@
+{
+ "data": {
+  "current_page": 1,
+  "data": [
+   {
+    "id": 1814001,
+    "public_url": "internships/business-operations-internship-star-sea-management-pvt-ltd-1814001",
+    "title": "Business Operations Internship",
+    "organization_id": 1956527,
+    "type": "jobs",
+    "subtype": "internships",
+    "regn_open": 1,
+    "updated_at": "2026-11-17T10:38:30+05:30",
+    "region": "online",
+    "visibility": "public",
+    "details": "<p><strong>Job Summary</strong></p>\n<p>We are looking for a motivated and detail-oriented Operations Intern to support daily operational activities. The candidate will assist in coordination, documentation, reporting, communication, and administrative tasks to ensure a smooth workflow within the organization.</p>\n<p><strong>Key Responsibilities</strong></p>\n<ul>\n<li>Assist in daily operational and administrative activities.</li>\n<li>Maintain records, reports, and documentation.</li>\n<li>Coordinate with team members and clients/candidates.</li>\n<li>Support recruitment and onboarding processes.</li>\n<li>Handle emails, calls, and follow-ups professionally.</li>\n<li>Update databases and operational trackers.</li>\n<li>Assist in scheduling meetings and interviews.</li>\n<li>Ensure timely completion of assigned tasks.</li>\n</ul>\n<p><strong>Requirements</strong></p>\n<ul>\n<li>Bachelor's degree pursuing or completed.</li>\n<li>Good English communication skills (verbal and written) are required.</li>\n<li>Good coordination and interpersonal skills.</li>\n<li>Basic knowledge of MS Office (Excel, Word, Outlook).</li>\n<li>Ability to multitask and work in a team environment.</li>\n<li>Quick learner with a positive attitude.</li>\n<li>Strong organizational skills.</li>\n</ul>\n<p><strong>Preferred Skills</strong></p>\n<ul>\n<li>Knowledge of recruitment or the marine/offshore industry is an advantage.</li>\n<li>Good email drafting and communication skills.</li>\n</ul>\n<p><strong>Internship Benefits</strong></p>\n<ul>\n<li>Practical industry exposure.</li>\n<li>Professional work environment.</li>\n<li>Skill development opportunities.</li>\n<li>Certificate/Letter of Experience upon successful completion.</li>\n</ul>",
+    "short_id": "HkIbNrS",
+    "logoUrl2": "https://d8it4huxumps7.cloudfront.net/uploads/images/150x150/6afbdcc604bff_organisation_image-HGkfflXe7H390926842GNEhVXwG00.png",
+    "organisation": {
+     "id": 1956527,
+     "name": "Star Sea Management Pvt Ltd",
+     "public_url": "c/star-sea-management-pvt-ltd-1956527",
+     "logoUrl": "https://d8it4huxumps7.cloudfront.net/images/partners/new_organisation_image-HGkfflXe7H390926842GNEhVXwG00.png",
+     "logoUrl2": "https://d8it4huxumps7.cloudfront.net/images/partners/new_organisation_image-HGkfflXe7H390926842GNEhVXwG00.png",
+     "show_evaluator_login_link": false,
+     "official_email_domains": null,
+     "tier": null
+    },
+    "seo_url": "https://unstop.com/internships/business-operations-internship-star-sea-management-pvt-ltd-1814001",
+    "status": "LIVE",
+    "tags": [],
+    "thumb": null,
+    "isPaid": false,
+    "festival": null,
+    "prizes": [],
+    "address_with_country_logo": {
+     "address": "",
+     "city": "",
+     "state": "",
+     "country": ""
+    },
+    "short_url": "https://unstop.com/o/HkIbNrS",
+    "workfunction": [
+     {
+      "id": 1963,
+      "name": "Operations",
+      "description": "",
+      "created_at": "2026-02-06T23:31:46+05:30",
+      "updated_at": "2026-02-06T23:31:46+05:30",
+      "work_function_name": null,
+      "batch_id": 11,
+      "pivot": {
+       "entity_id": 1814001,
+       "subject_id": 1963,
+       "id": 6890855,
+       "ai_generated": true
+      }
+     }
+    ],
+    "assignedTag": {
+     "tag": null
+    },
+    "opportunity_config": {
+     "id": 1511657,
+     "opportunity_id": 1814001,
+     "banner_config": "{\"color\":\"color-bg7\",\"text\":\"Business Operations Intern\",\"type\":7,\"banner_data\":[2]}",
+     "show_registrations_count": 0,
+     "show_impressions": 1,
+     "show_team_size": 1,
+     "show_region": 1
+    },
+    "payment_services": [],
+    "filters": [
+     {
+      "id": 424,
+      "name": "Postgraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "postgraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/postgraduate.svg"
+     },
+     {
+      "id": 426,
+      "name": "Undergraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "undergraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/undergraduate.svg"
+     },
+     {
+      "id": 679,
+      "name": "Fresher",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "fresher",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/fresher.svg"
+     },
+     {
+      "id": 4022,
+      "name": "Management",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     },
+     {
+      "id": 4025,
+      "name": "Arts, Commerce, Sciences & Others",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     }
+    ],
+    "required_skills": [
+     {
+      "id": 646878,
+      "skill": "Organization Skills",
+      "skill_name": "Organization Skills",
+      "pivot": {
+       "entity_id": 1814001,
+       "subject_id": 646878,
+       "id": 6890850,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 645802,
+      "skill": "Communication Skills",
+      "skill_name": "Communication Skills",
+      "pivot": {
+       "entity_id": 1814001,
+       "subject_id": 645802,
+       "id": 6890851,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 645863,
+      "skill": "Coordination skills",
+      "skill_name": "Coordination skills",
+      "pivot": {
+       "entity_id": 1814001,
+       "subject_id": 645863,
+       "id": 6890852,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 646723,
+      "skill": "Microsoft Office Suite",
+      "skill_name": "Microsoft Office Suite",
+      "pivot": {
+       "entity_id": 1814001,
+       "subject_id": 646723,
+       "id": 6890853,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 646448,
+      "skill": "Interview Scheduling",
+      "skill_name": "Interview Scheduling",
+      "pivot": {
+       "entity_id": 1814001,
+       "subject_id": 646448,
+       "id": 6890854,
+       "ai_generated": true
+      }
+     }
+    ],
+    "locations": [
+     {
+      "id": 1912702,
+      "city": "Vashi",
+      "state": "Maharashtra",
+      "country": "India",
+      "addressable_id": 1814001,
+      "addressable_type": "App\\Model\\Opportunity"
+     }
+    ],
+    "jobDetail": {
+     "entity_id": 1814001,
+     "max_salary": 10000,
+     "currency": "fa-rupee",
+     "locations": [
+      "Vashi"
+     ],
+     "type": "in_office",
+     "min_salary": 5000,
+     "show_salary": 1,
+     "min_experience": null,
+     "max_experience": null,
+     "timing": "full_time",
+     "paid_unpaid": "paid",
+     "pay_in": "monthly",
+     "not_disclosed": false
+    },
+    "end_date": "2026-11-30T00:00:00+05:30",
+    "approved_date": "2026-11-17 10:19:35 GMT+0530",
+    "viewsCount": 1,
+    "registerCount": 2,
+    "regnRequirements": {
+     "opportunity_id": 1814001,
+     "start_regn_dt": "2026-11-16T00:00:00+05:30",
+     "end_regn_dt": "2026-11-30T00:00:00+05:30",
+     "show_deadline": 1,
+     "min_team_size": 1,
+     "max_team_size": 1,
+     "work_location_type": "city",
+     "eligibility": "{\"sector\":[\"students\",\"fresher\"],\"engineering\":[],\"bSchools\":[\"allCourses\",{\"course\":\"mba1\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"mba2\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bSchoolOthers\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bhm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ca\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"cs\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"pgdm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"execMba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"ipm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"phdManagement\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3}],\"arts\":[\"allCourses\",{\"course\":\"bsc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"msc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"ba\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ma\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"artsOthers\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"march\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"barch\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"bftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"phdArts\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"mftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bs\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ms\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bed\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"med\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"beled\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bped\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2}],\"medicine\":[],\"law\":[],\"others\":[\"all\"],\"experience\":[\"all\"],\"studentPassoutYearsSelected\":[\"all\"],\"fresherPassoutYearsSelected\":[2026],\"schoolFilteredClasses\":[\"all\"],\"minMarks\":{\"high_school_perc\":0,\"high_school_cgpa\":0},\"locations\":[],\"location_type\":\"all\",\"professionalEligibility\":null,\"fresherEligibility\":null}",
+     "reg_status": "STARTED",
+     "remainingDaysArray": {
+      "durations": 12,
+      "text": " days left"
+     },
+     "remain_days": "12 days left",
+     "remaining_time": 1080167
+    }
+   },
+   {
+    "id": 1814393,
+    "public_url": "internships/campus-marketing-engagement-internship-airkrit-india-pvt-ltd-1814393",
+    "title": "Campus Marketing & Engagement Internship",
+    "organization_id": 2057678,
+    "type": "jobs",
+    "subtype": "internships",
+    "regn_open": 1,
+    "updated_at": "2026-11-17T11:47:36+05:30",
+    "region": "online",
+    "visibility": "public",
+    "details": "<p><strong>Roles</strong></p>\n<ul>\n<li>Promote Airkrit India's training and internship programs across colleges and student communities.</li>\n<li>Build and maintain connections with students, college clubs, and campus coordinators.</li>\n<li>Create awareness about Airkrit opportunities through WhatsApp, social media, and other digital platforms.</li>\n<li>Identify potential participants and generate student leads.</li>\n<li>Manage student information and engagement activities using CRM tools.</li>\n</ul>\n<p><strong>Responsibilities</strong></p>\n<ul>\n<li>Connect with students through WhatsApp, social media, and other communication channels.</li>\n<li>Share program information, explain key benefits, and guide interested students through registration.</li>\n<li>Follow up with interested students and respond to their queries.</li>\n<li>Maintain and update student information, communication records, and registration status in the CRM.</li>\n<li>Monitor daily outreach activities and prepare lead engagement updates.</li>\n<li>Coordinate with the internal team to improve outreach strategies and achieve assigned targets.</li>\n</ul>\n<p><strong>Requirements</strong></p>\n<ul>\n<li>Currently pursuing or recently graduated from any degree program.</li>\n<li>Good verbal and written communication skills.</li>\n<li>Interest in digital marketing, campus engagement, and business development.</li>\n<li>Familiarity with WhatsApp, social media platforms, and basic CRM tools.</li>\n<li>Basic computer knowledge and data management skills.</li>\n<li>Self-motivated, proactive, and eager to learn.</li>\n<li>Ability to work independently and meet assigned targets.</li>\n<li>Previous experience in marketing, outreach, or lead management is an added advantage but not mandatory.</li>\n</ul>",
+    "short_id": "lgBnKzt",
+    "logoUrl2": "https://d8it4huxumps7.cloudfront.net/uploads/images/150x150/6afbf15de3509_organisation_image-Re5nIxAUjJ826233303dIbN3dQfFF.png",
+    "organisation": {
+     "id": 2057678,
+     "name": "Airkrit India Pvt. Ltd.",
+     "public_url": "c/airkrit-india-pvt-ltd-2057678",
+     "logoUrl": "https://d8it4huxumps7.cloudfront.net/images/partners/new_organisation_image-Re5nIxAUjJ826233303dIbN3dQfFF.png",
+     "logoUrl2": "https://d8it4huxumps7.cloudfront.net/images/partners/new_organisation_image-Re5nIxAUjJ826233303dIbN3dQfFF.png",
+     "show_evaluator_login_link": false,
+     "official_email_domains": null,
+     "tier": null
+    },
+    "seo_url": "https://unstop.com/internships/campus-marketing-engagement-internship-airkrit-india-pvt-ltd-1814393",
+    "status": "LIVE",
+    "tags": [],
+    "thumb": null,
+    "isPaid": false,
+    "festival": null,
+    "prizes": [],
+    "address_with_country_logo": {
+     "address": "",
+     "city": "",
+     "state": "",
+     "country": ""
+    },
+    "short_url": "https://unstop.com/o/lgBnKzt",
+    "workfunction": [
+     {
+      "id": 1976,
+      "name": "Campus Ambassador",
+      "description": "",
+      "created_at": "2026-02-06T23:31:46+05:30",
+      "updated_at": "2026-02-06T23:31:46+05:30",
+      "work_function_name": null,
+      "batch_id": 11,
+      "pivot": {
+       "entity_id": 1814393,
+       "subject_id": 1976,
+       "id": 6892229,
+       "ai_generated": true
+      }
+     }
+    ],
+    "assignedTag": {
+     "tag": null
+    },
+    "opportunity_config": {
+     "id": 1512181,
+     "opportunity_id": 1814393,
+     "banner_config": "{\"color\":\"color-bg6\",\"text\":\"Digital Outreach & Marketing Intern\",\"type\":6,\"banner_data\":[3]}",
+     "show_registrations_count": 0,
+     "show_impressions": 1,
+     "show_team_size": 1,
+     "show_region": 1
+    },
+    "payment_services": [],
+    "filters": [
+     {
+      "id": 424,
+      "name": "Postgraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "postgraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/postgraduate.svg"
+     },
+     {
+      "id": 426,
+      "name": "Undergraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "undergraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/undergraduate.svg"
+     },
+     {
+      "id": 679,
+      "name": "Fresher",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "fresher",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/fresher.svg"
+     },
+     {
+      "id": 4022,
+      "name": "Management",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     },
+     {
+      "id": 4025,
+      "name": "Arts, Commerce, Sciences & Others",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     }
+    ],
+    "required_skills": [
+     {
+      "id": 645802,
+      "skill": "Communication Skills",
+      "skill_name": "Communication Skills",
+      "pivot": {
+       "entity_id": 1814393,
+       "subject_id": 645802,
+       "id": 6892224,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 647346,
+      "skill": "Social Media Management",
+      "skill_name": "Social Media Management",
+      "pivot": {
+       "entity_id": 1814393,
+       "subject_id": 647346,
+       "id": 6892225,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 645886,
+      "skill": "CRM Software",
+      "skill_name": "CRM Software",
+      "pivot": {
+       "entity_id": 1814393,
+       "subject_id": 645886,
+       "id": 6892226,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 645803,
+      "skill": "Community Engagement",
+      "skill_name": "Community Engagement",
+      "pivot": {
+       "entity_id": 1814393,
+       "subject_id": 645803,
+       "id": 6892227,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 646541,
+      "skill": "Lead Qualification",
+      "skill_name": "Lead Qualification",
+      "pivot": {
+       "entity_id": 1814393,
+       "subject_id": 646541,
+       "id": 6892228,
+       "ai_generated": true
+      }
+     }
+    ],
+    "locations": [],
+    "jobDetail": {
+     "entity_id": 1814393,
+     "max_salary": 20000,
+     "currency": "fa-rupee",
+     "locations": [],
+     "type": "wfh",
+     "min_salary": 5000,
+     "show_salary": 1,
+     "min_experience": null,
+     "max_experience": null,
+     "timing": "part_time",
+     "paid_unpaid": "paid",
+     "pay_in": "monthly",
+     "not_disclosed": false
+    },
+    "end_date": "2026-11-30T00:00:00+05:30",
+    "approved_date": "2026-11-17 11:47:36 GMT+0530",
+    "viewsCount": 1,
+    "registerCount": 0,
+    "regnRequirements": {
+     "opportunity_id": 1814393,
+     "start_regn_dt": "2026-11-16T00:00:00+05:30",
+     "end_regn_dt": "2026-11-30T00:00:00+05:30",
+     "show_deadline": 1,
+     "min_team_size": 1,
+     "max_team_size": 1,
+     "work_location_type": "pan_india",
+     "eligibility": "{\"sector\":[\"students\",\"fresher\"],\"engineering\":[],\"bSchools\":[\"allCourses\",{\"course\":\"mba1\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"mba2\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bSchoolOthers\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bhm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ca\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"cs\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"pgdm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"execMba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"ipm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"phdManagement\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3}],\"arts\":[\"allCourses\",{\"course\":\"bsc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"msc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"ba\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ma\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"artsOthers\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"march\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"barch\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"bftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"phdArts\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"mftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bs\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ms\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bed\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"med\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"beled\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bped\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2}],\"medicine\":[],\"law\":[],\"others\":[\"all\"],\"experience\":[\"all\"],\"studentPassoutYearsSelected\":[\"all\"],\"fresherPassoutYearsSelected\":[2025,2026],\"schoolFilteredClasses\":[\"all\"],\"minMarks\":{\"high_school_perc\":0,\"high_school_cgpa\":0},\"locations\":[],\"location_type\":\"all\",\"professionalEligibility\":null,\"fresherEligibility\":null}",
+     "reg_status": "STARTED",
+     "remainingDaysArray": {
+      "durations": 12,
+      "text": " days left"
+     },
+     "remain_days": "12 days left",
+     "remaining_time": 1080132
+    }
+   },
+   {
+    "id": 1813527,
+    "public_url": "internships/recruiter-internship-peoplever-1813527",
+    "title": "Recruiter Internship",
+    "organization_id": 2087844,
+    "type": "jobs",
+    "subtype": "internships",
+    "regn_open": 1,
+    "updated_at": "2026-11-17T09:52:41+05:30",
+    "region": "online",
+    "visibility": "public",
+    "details": "<p><strong>About the Company</strong></p>\n<p>Peoplever is seeking a motivated Recruiter Intern to support its talent acquisition efforts in a remote work environment. This six-month internship offers practical exposure to recruitment operations and includes the possibility of a Pre-Placement Offer based on performance and business requirements. The role is suitable for candidates with 0 to 1 year of experience who are eager to build a career in human resources and hiring.</p>\n<p><strong>Responsibilities</strong></p>\n<ul>\n<li>Source potential candidates through job portals, professional networks, referrals, and other relevant channels.</li>\n<li>Review applications, maintain candidate records, and assist with initial screening against role requirements.</li>\n<li>Coordinate interview schedules and communicate professionally with candidates throughout the hiring process.</li>\n<li>Support recruiters with follow-ups, recruitment trackers, database updates, and status reporting.</li>\n<li>Help improve sourcing quality and contribute to a smooth, timely candidate experience.</li>\n</ul>\n<p><strong>Requirements</strong></p>\n<ul>\n<li>0 to 1 year of experience in recruitment, human resources, coordination, or a related area; freshers are welcome.</li>\n<li>Strong verbal and written communication skills with a professional and responsive approach.</li>\n<li>Good organization, attention to detail, follow-through, and willingness to learn.</li>\n<li>Basic familiarity with spreadsheets, online research, and digital communication tools.</li>\n<li>Ability to work independently from home while collaborating effectively with a distributed team.</li>\n</ul>\n<p>The selected intern will receive a monthly stipend of \u20b92,000 to \u20b910,000. The internship duration is six months, and strong performers may be considered for a Pre-Placement Offer.</p>",
+    "short_id": "PTVpIao",
+    "logoUrl2": "https://d8it4huxumps7.cloudfront.net/uploads/images/150x150/uploadedManual-6accb154ba683_p_bold.png",
+    "organisation": {
+     "id": 2087844,
+     "name": "Peoplever",
+     "public_url": "c/peoplever-2087844",
+     "logoUrl": "",
+     "logoUrl2": "",
+     "show_evaluator_login_link": false,
+     "official_email_domains": null,
+     "tier": null
+    },
+    "seo_url": "https://unstop.com/internships/recruiter-internship-peoplever-1813527",
+    "status": "LIVE",
+    "tags": [],
+    "thumb": null,
+    "isPaid": false,
+    "festival": null,
+    "prizes": [],
+    "address_with_country_logo": {
+     "address": "",
+     "city": "",
+     "state": "",
+     "country": ""
+    },
+    "short_url": "https://unstop.com/o/PTVpIao",
+    "workfunction": [
+     {
+      "id": 1939,
+      "name": "Talent Acquisition",
+      "description": "",
+      "created_at": "2026-02-06T23:31:46+05:30",
+      "updated_at": "2026-02-06T23:31:46+05:30",
+      "work_function_name": null,
+      "batch_id": 11,
+      "pivot": {
+       "entity_id": 1813527,
+       "subject_id": 1939,
+       "id": 6889273,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 1938,
+      "name": "Human Resources (HR)",
+      "description": "",
+      "created_at": "2026-02-06T23:31:46+05:30",
+      "updated_at": "2026-02-06T23:31:46+05:30",
+      "work_function_name": null,
+      "batch_id": 11,
+      "pivot": {
+       "entity_id": 1813527,
+       "subject_id": 1938,
+       "id": 6889267,
+       "ai_generated": false
+      }
+     },
+     {
+      "id": 1940,
+      "name": "HR Operations",
+      "description": "",
+      "created_at": "2026-02-06T23:31:46+05:30",
+      "updated_at": "2026-02-06T23:31:46+05:30",
+      "work_function_name": null,
+      "batch_id": 11,
+      "pivot": {
+       "entity_id": 1813527,
+       "subject_id": 1940,
+       "id": 6889274,
+       "ai_generated": true
+      }
+     }
+    ],
+    "assignedTag": {
+     "tag": null
+    },
+    "opportunity_config": {
+     "id": 1511079,
+     "opportunity_id": 1813527,
+     "banner_config": "{\"color\":\"color-bg2\",\"text\":\"Recruiter Intern\",\"type\":3,\"banner_data\":[4]}",
+     "show_registrations_count": 0,
+     "show_impressions": 1,
+     "show_team_size": 1,
+     "show_region": 1
+    },
+    "payment_services": [],
+    "filters": [
+     {
+      "id": 421,
+      "name": "Experienced Professionals",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "corporate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/corporate.svg"
+     },
+     {
+      "id": 424,
+      "name": "Postgraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "postgraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/postgraduate.svg"
+     },
+     {
+      "id": 426,
+      "name": "Undergraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "undergraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/undergraduate.svg"
+     },
+     {
+      "id": 679,
+      "name": "Fresher",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "fresher",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/fresher.svg"
+     },
+     {
+      "id": 4022,
+      "name": "Management",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     },
+     {
+      "id": 4025,
+      "name": "Arts, Commerce, Sciences & Others",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     }
+    ],
+    "required_skills": [
+     {
+      "id": 645156,
+      "skill": "Talent Sourcing",
+      "skill_name": "Talent Sourcing",
+      "pivot": {
+       "entity_id": 1813527,
+       "subject_id": 645156,
+       "id": 6889268,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 645802,
+      "skill": "Communication Skills",
+      "skill_name": "Communication Skills",
+      "pivot": {
+       "entity_id": 1813527,
+       "subject_id": 645802,
+       "id": 6889269,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 646448,
+      "skill": "Interview Scheduling",
+      "skill_name": "Interview Scheduling",
+      "pivot": {
+       "entity_id": 1813527,
+       "subject_id": 646448,
+       "id": 6889270,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 646878,
+      "skill": "Organization Skills",
+      "skill_name": "Organization Skills",
+      "pivot": {
+       "entity_id": 1813527,
+       "subject_id": 646878,
+       "id": 6889271,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 643233,
+      "skill": "Applicant Tracking Systems (ATS)",
+      "skill_name": "Applicant Tracking Systems (ATS)",
+      "pivot": {
+       "entity_id": 1813527,
+       "subject_id": 643233,
+       "id": 6889272,
+       "ai_generated": true
+      }
+     }
+    ],
+    "locations": [],
+    "jobDetail": {
+     "entity_id": 1813527,
+     "max_salary": 10000,
+     "currency": "fa-rupee",
+     "locations": [],
+     "type": "wfh",
+     "min_salary": 2000,
+     "show_salary": 1,
+     "min_experience": null,
+     "max_experience": null,
+     "timing": "full_time",
+     "paid_unpaid": "paid",
+     "pay_in": "monthly",
+     "not_disclosed": false
+    },
+    "end_date": "2026-12-01T16:42:21+05:30",
+    "approved_date": "2026-11-16 23:56:21 GMT+0530",
+    "viewsCount": 693,
+    "registerCount": 14,
+    "regnRequirements": {
+     "opportunity_id": 1813527,
+     "start_regn_dt": "2026-11-16T16:42:22+05:30",
+     "end_regn_dt": "2026-12-01T16:42:21+05:30",
+     "show_deadline": 1,
+     "min_team_size": 1,
+     "max_team_size": 1,
+     "work_location_type": "city",
+     "eligibility": "{\"sector\":[\"fresher\",\"corporates\",\"students\"],\"experience\":[\"1 year\"],\"fresherEligibility\":null,\"professionalEligibility\":null,\"studentPassoutYearsSelected\":[\"all\"],\"undefined\":[\"allCourses\"],\"bSchools\":[\"allCourses\",{\"course\":\"mba1\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"mba2\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bSchoolOthers\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bhm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ca\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"cs\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"pgdm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"execMba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"ipm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"phdManagement\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3}],\"arts\":[\"allCourses\",{\"course\":\"bsc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"msc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"ba\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ma\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"artsOthers\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"march\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"barch\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"bftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"phdArts\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"mftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bs\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ms\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bed\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"med\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"beled\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bped\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2}],\"fresherPassoutYearsSelected\":[2026,2025]}",
+     "reg_status": "STARTED",
+     "remainingDaysArray": {
+      "durations": 14,
+      "text": " days left"
+     },
+     "remain_days": "14 days left",
+     "remaining_time": 1226856
+    }
+   },
+   {
+    "id": 1813611,
+    "public_url": "internships/business-development-vendor-success-internship-tiffinbyte-technologies-private-limited-1813611",
+    "title": "Business Development & Vendor Success Internship",
+    "organization_id": 2153959,
+    "type": "jobs",
+    "subtype": "internships",
+    "regn_open": 1,
+    "updated_at": "2026-11-16T20:54:56+05:30",
+    "region": "online",
+    "visibility": "public",
+    "details": "<p><strong>TiffinByte is hiring for Business Development &amp; Vendor Success Intern</strong></p>\n<p><strong>About the Company</strong></p>\n<p>TIFFINBYTE TECHNOLOGIES PRIVATE LIMITED is building a digital marketplace that helps customers discover and book tiffin subscriptions and catering services from independent providers, caterers, restaurants and home chefs. The team is bringing everyday food businesses online and making it easier for partners to present their offerings and connect with customers.</p>\n<p>This onsite internship in Noida offers practical exposure to food, e-commerce and marketplace operations, with a focus on business development and vendor success. The internship runs for 4 months and provides a monthly stipend of INR 15,000&ndash;17,000. A Pre-Placement Offer may be considered after 3&ndash;4 months based on performance, ownership and business requirements.</p>\n<p><strong>Responsibilities</strong></p>\n<ul>\n<li>Call prospective food vendors, introduce the platform, understand their businesses and explain how joining can support their goals.</li>\n<li>Respond to questions, address concerns, follow up with interested partners and guide them through registration and onboarding.</li>\n<li>Coordinate the collection of business information and documents, and help build accurate vendor profiles with menus, meal plans, pricing, photos and service areas.</li>\n<li>Stay in touch with onboarded partners, assist them in using the platform and coordinate with internal teams to resolve queries.</li>\n<li>Maintain organized records of calls, follow-ups, onboarding progress and pending tasks while working toward agreed outreach and profile-completion targets.</li>\n<li>Share partner feedback to help improve the onboarding experience and marketplace operations.</li>\n</ul>\n<h3><strong>Requirements</strong></h3>\n<ul>\n<li>Open to college students and recent graduates interested in business development, sales, partnerships or startup operations.</li>\n<li>Confident Hindi communication and working English, with comfort making outbound calls and following up consistently.</li>\n<li>Organized, patient and persuasive, with the ability to build trust with small business owners and take initiative.</li>\n<li>Basic familiarity with Google Sheets or Excel. Previous experience in sales, customer support or college outreach is helpful but not essential.</li>\n</ul>",
+    "short_id": "CNdAYRF",
+    "logoUrl2": "https://d8it4huxumps7.cloudfront.net/uploads/images/150x150/6afb20297890f_organisation_image-MuZc0tvZVD562719643NZN3zYZLju.png",
+    "organisation": {
+     "id": 2153959,
+     "name": "Tiffinbyte Technologies Private Limited",
+     "public_url": "c/tiffinbyte-technologies-private-limited-2153959",
+     "logoUrl": "https://d8it4huxumps7.cloudfront.net/images/partners/new_organisation_image-MuZc0tvZVD562719643NZN3zYZLju.png",
+     "logoUrl2": "https://d8it4huxumps7.cloudfront.net/images/partners/new_organisation_image-MuZc0tvZVD562719643NZN3zYZLju.png",
+     "show_evaluator_login_link": false,
+     "official_email_domains": null,
+     "tier": null
+    },
+    "seo_url": "https://unstop.com/internships/business-development-vendor-success-internship-tiffinbyte-technologies-private-limited-1813611",
+    "status": "LIVE",
+    "tags": [],
+    "thumb": null,
+    "isPaid": false,
+    "festival": null,
+    "prizes": [],
+    "address_with_country_logo": {
+     "address": "",
+     "city": "",
+     "state": "",
+     "country": ""
+    },
+    "short_url": "https://unstop.com/o/CNdAYRF",
+    "workfunction": [
+     {
+      "id": 2002,
+      "name": "Business Development",
+      "description": "",
+      "created_at": "2026-02-06T23:31:46+05:30",
+      "updated_at": "2026-02-06T23:31:46+05:30",
+      "work_function_name": null,
+      "batch_id": 11,
+      "pivot": {
+       "entity_id": 1813611,
+       "subject_id": 2002,
+       "id": 6887555,
+       "ai_generated": true
+      }
+     }
+    ],
+    "assignedTag": {
+     "tag": null
+    },
+    "opportunity_config": {
+     "id": 1511219,
+     "opportunity_id": 1813611,
+     "banner_config": "{\"color\":\"color-bg8\",\"text\":\"Business Development & Vendor Success Intern\",\"type\":1,\"banner_data\":[4]}",
+     "show_registrations_count": 0,
+     "show_impressions": 1,
+     "show_team_size": 1,
+     "show_region": 1
+    },
+    "payment_services": [],
+    "filters": [
+     {
+      "id": 424,
+      "name": "Postgraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "postgraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/postgraduate.svg"
+     },
+     {
+      "id": 426,
+      "name": "Undergraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "undergraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/undergraduate.svg"
+     },
+     {
+      "id": 679,
+      "name": "Fresher",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "fresher",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/fresher.svg"
+     },
+     {
+      "id": 4022,
+      "name": "Management",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     },
+     {
+      "id": 4025,
+      "name": "Arts, Commerce, Sciences & Others",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     }
+    ],
+    "required_skills": [
+     {
+      "id": 643372,
+      "skill": "Business development",
+      "skill_name": "Business development",
+      "pivot": {
+       "entity_id": 1813611,
+       "subject_id": 643372,
+       "id": 6887550,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 645319,
+      "skill": "Vendor Relationship Management",
+      "skill_name": "Vendor Relationship Management",
+      "pivot": {
+       "entity_id": 1813611,
+       "subject_id": 645319,
+       "id": 6887551,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 644883,
+      "skill": "Sales Prospecting",
+      "skill_name": "Sales Prospecting",
+      "pivot": {
+       "entity_id": 1813611,
+       "subject_id": 644883,
+       "id": 6887552,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 645802,
+      "skill": "Communication Skills",
+      "skill_name": "Communication Skills",
+      "pivot": {
+       "entity_id": 1813611,
+       "subject_id": 645802,
+       "id": 6887553,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 646852,
+      "skill": "Onboarding",
+      "skill_name": "Onboarding",
+      "pivot": {
+       "entity_id": 1813611,
+       "subject_id": 646852,
+       "id": 6887554,
+       "ai_generated": true
+      }
+     }
+    ],
+    "locations": [
+     {
+      "id": 1911950,
+      "city": "Noida",
+      "state": "Uttar Pradesh",
+      "country": "India",
+      "addressable_id": 1813611,
+      "addressable_type": "App\\Model\\Opportunity"
+     }
+    ],
+    "jobDetail": {
+     "entity_id": 1813611,
+     "max_salary": 17000,
+     "currency": "fa-rupee",
+     "locations": [
+      "Noida"
+     ],
+     "type": "in_office",
+     "min_salary": 15000,
+     "show_salary": 1,
+     "min_experience": null,
+     "max_experience": null,
+     "timing": "full_time",
+     "paid_unpaid": "paid",
+     "pay_in": "monthly",
+     "not_disclosed": false
+    },
+    "end_date": "2026-11-30T00:00:00+05:30",
+    "approved_date": "2026-11-16 20:54:56 GMT+0530",
+    "viewsCount": 1312,
+    "registerCount": 1,
+    "regnRequirements": {
+     "opportunity_id": 1813611,
+     "start_regn_dt": "2026-11-16T00:00:00+05:30",
+     "end_regn_dt": "2026-11-30T00:00:00+05:30",
+     "show_deadline": 1,
+     "min_team_size": 1,
+     "max_team_size": 1,
+     "work_location_type": "city",
+     "eligibility": "{\"sector\":[\"students\",\"fresher\"],\"experience\":[\"all\"],\"fresherEligibility\":null,\"fresherPassoutYearsSelected\":[2026],\"studentPassoutYearsSelected\":[\"all\"],\"bSchools\":[\"allCourses\",{\"course\":\"mba1\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"mba2\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bSchoolOthers\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bhm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ca\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"cs\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"pgdm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"execMba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"ipm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"phdManagement\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3}],\"engineering\":[],\"arts\":[\"allCourses\",{\"course\":\"bsc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"msc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"ba\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ma\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"artsOthers\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"march\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"barch\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"bftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"phdArts\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"mftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bs\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ms\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bed\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"med\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"beled\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bped\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2}],\"medicine\":[],\"law\":[],\"undefined\":[\"allCourses\"]}",
+     "reg_status": "STARTED",
+     "remainingDaysArray": {
+      "durations": 12,
+      "text": " days left"
+     },
+     "remain_days": "12 days left",
+     "remaining_time": 1080305
+    }
+   },
+   {
+    "id": 1814271,
+    "public_url": "internships/campus-recruitment-internship-akrenix-solutions-1814271",
+    "title": "Campus Recruitment Internship",
+    "organization_id": 2154747,
+    "type": "jobs",
+    "subtype": "internships",
+    "regn_open": 1,
+    "updated_at": "2026-11-17T10:29:37+05:30",
+    "region": "online",
+    "visibility": "public",
+    "details": "<p><strong>Roles and Responsibilities:</strong></p>\n<ul>\n<li>Support campus recruitment activities and help coordinate outreach to educational institutions.</li>\n<li>Assist with organizing recruitment events, campus visits, and candidate engagement activities.</li>\n<li>Help manage communication with students, campus representatives, and other recruitment stakeholders.</li>\n<li>Coordinate schedules and logistics for campus hiring activities.</li>\n<li>Support the collection and organization of candidate applications and recruitment event information.</li>\n<li>Assist with tracking participation and follow-up throughout campus recruitment processes.</li>\n<li>Prepare and maintain clear records and updates related to campus activities.</li>\n<li>Contribute to a positive and informative experience for students engaging with Akrenix Solutions.</li>\n</ul>\n<p><strong>Job Summary:</strong></p>\n<p>This three-month internship with Akrenix Solutions offers an opportunity to contribute to campus recruitment and relations activities. The role focuses on supporting outreach, event coordination, and communication with students and educational institutions.&nbsp;</p>",
+    "short_id": "3D4fHlQ",
+    "logoUrl2": "https://d8it4huxumps7.cloudfront.net/uploads/images/150x150/6afbdf1940fb1_organisation_image-S1FMGUNy2u1012180676xU1dNOrnzH.png",
+    "organisation": {
+     "id": 2154747,
+     "name": "Akrenix Solutions",
+     "public_url": "c/akrenix-solutions-2154747",
+     "logoUrl": "https://d8it4huxumps7.cloudfront.net/images/partners/new_organisation_image-S1FMGUNy2u1012180676xU1dNOrnzH.png",
+     "logoUrl2": "https://d8it4huxumps7.cloudfront.net/images/partners/new_organisation_image-S1FMGUNy2u1012180676xU1dNOrnzH.png",
+     "show_evaluator_login_link": false,
+     "official_email_domains": null,
+     "tier": null
+    },
+    "seo_url": "https://unstop.com/internships/campus-recruitment-internship-akrenix-solutions-1814271",
+    "status": "LIVE",
+    "tags": [],
+    "thumb": null,
+    "isPaid": false,
+    "festival": null,
+    "prizes": [],
+    "address_with_country_logo": {
+     "address": "",
+     "city": "",
+     "state": "",
+     "country": ""
+    },
+    "short_url": "https://unstop.com/o/3D4fHlQ",
+    "workfunction": [
+     {
+      "id": 1939,
+      "name": "Talent Acquisition",
+      "description": "",
+      "created_at": "2026-02-06T23:31:46+05:30",
+      "updated_at": "2026-02-06T23:31:46+05:30",
+      "work_function_name": null,
+      "batch_id": 11,
+      "pivot": {
+       "entity_id": 1814271,
+       "subject_id": 1939,
+       "id": 6890953,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 1976,
+      "name": "Campus Ambassador",
+      "description": "",
+      "created_at": "2026-02-06T23:31:46+05:30",
+      "updated_at": "2026-02-06T23:31:46+05:30",
+      "work_function_name": null,
+      "batch_id": 11,
+      "pivot": {
+       "entity_id": 1814271,
+       "subject_id": 1976,
+       "id": 6890954,
+       "ai_generated": true
+      }
+     }
+    ],
+    "assignedTag": {
+     "tag": null
+    },
+    "opportunity_config": {
+     "id": 1512059,
+     "opportunity_id": 1814271,
+     "banner_config": "{\"color\":\"color-bg6\",\"text\":\"Campus Recruitment \\/ Campus Relations\",\"type\":3,\"banner_data\":[4]}",
+     "show_registrations_count": 0,
+     "show_impressions": 1,
+     "show_team_size": 1,
+     "show_region": 1
+    },
+    "payment_services": [],
+    "filters": [
+     {
+      "id": 424,
+      "name": "Postgraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "postgraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/postgraduate.svg"
+     },
+     {
+      "id": 426,
+      "name": "Undergraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "undergraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/undergraduate.svg"
+     },
+     {
+      "id": 4022,
+      "name": "Management",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     },
+     {
+      "id": 4025,
+      "name": "Arts, Commerce, Sciences & Others",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     }
+    ],
+    "required_skills": [
+     {
+      "id": 647483,
+      "skill": "Talent Acquisition Strategy",
+      "skill_name": "Talent Acquisition Strategy",
+      "pivot": {
+       "entity_id": 1814271,
+       "subject_id": 647483,
+       "id": 6890948,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 645863,
+      "skill": "Coordination skills",
+      "skill_name": "Coordination skills",
+      "pivot": {
+       "entity_id": 1814271,
+       "subject_id": 645863,
+       "id": 6890949,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 645802,
+      "skill": "Communication Skills",
+      "skill_name": "Communication Skills",
+      "pivot": {
+       "entity_id": 1814271,
+       "subject_id": 645802,
+       "id": 6890950,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 647240,
+      "skill": "Schedule Management",
+      "skill_name": "Schedule Management",
+      "pivot": {
+       "entity_id": 1814271,
+       "subject_id": 647240,
+       "id": 6890951,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 647116,
+      "skill": "Records Management",
+      "skill_name": "Records Management",
+      "pivot": {
+       "entity_id": 1814271,
+       "subject_id": 647116,
+       "id": 6890952,
+       "ai_generated": true
+      }
+     }
+    ],
+    "locations": [
+     {
+      "id": 1912736,
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "country": "India",
+      "addressable_id": 1814271,
+      "addressable_type": "App\\Model\\Opportunity"
+     }
+    ],
+    "jobDetail": {
+     "entity_id": 1814271,
+     "max_salary": 5000,
+     "currency": "fa-rupee",
+     "locations": [
+      "Bangalore"
+     ],
+     "type": "hybrid",
+     "min_salary": 2000,
+     "show_salary": 1,
+     "min_experience": null,
+     "max_experience": null,
+     "timing": "full_time",
+     "paid_unpaid": "paid",
+     "pay_in": "monthly",
+     "not_disclosed": false
+    },
+    "end_date": "2026-11-30T00:00:00+05:30",
+    "approved_date": "2026-11-17 10:29:37 GMT+0530",
+    "viewsCount": 7,
+    "registerCount": 0,
+    "regnRequirements": {
+     "opportunity_id": 1814271,
+     "start_regn_dt": "2026-11-16T00:00:00+05:30",
+     "end_regn_dt": "2026-11-30T00:00:00+05:30",
+     "show_deadline": 1,
+     "min_team_size": 1,
+     "max_team_size": 1,
+     "work_location_type": "city",
+     "eligibility": "{\"sector\":[\"students\"],\"engineering\":[],\"bSchools\":[\"allCourses\",{\"course\":\"mba1\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"mba2\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bSchoolOthers\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bhm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ca\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"cs\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"pgdm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"execMba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"ipm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"phdManagement\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3}],\"arts\":[\"allCourses\",{\"course\":\"bsc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"msc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"ba\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ma\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"artsOthers\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"march\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"barch\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"bftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"phdArts\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"mftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bs\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ms\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bed\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"med\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"beled\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bped\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2}],\"medicine\":[],\"law\":[],\"others\":[\"all\"],\"experience\":[\"all\"],\"studentPassoutYearsSelected\":[2027,2028,2029,2030],\"fresherPassoutYearsSelected\":[\"all\"],\"schoolFilteredClasses\":[\"all\"],\"minMarks\":{\"high_school_perc\":0,\"high_school_cgpa\":0},\"locations\":[],\"location_type\":\"all\",\"professionalEligibility\":null,\"fresherEligibility\":null}",
+     "reg_status": "STARTED",
+     "remainingDaysArray": {
+      "durations": 12,
+      "text": " days left"
+     },
+     "remain_days": "12 days left",
+     "remaining_time": 1080210
+    }
+   },
+   {
+    "id": 1814110,
+    "public_url": "internships/business-development-internship-skillforever-1814110",
+    "title": "Business Development Internship",
+    "organization_id": 2154626,
+    "type": "jobs",
+    "subtype": "internships",
+    "regn_open": 1,
+    "updated_at": "2026-11-17T11:22:02+05:30",
+    "region": "online",
+    "visibility": "public",
+    "details": "<p><strong>About the Company</strong></p>\n<p>SkillForever operates in the Information Technology industry and is seeking a Business Development Intern to support its growth initiatives. This remote internship offers a monthly stipend of \u20b95,000, based on performance, for a three-month term.</p>\n<p><strong>Responsibilities</strong></p>\n<ul>\n<li>Research prospective customers, markets, and partnership opportunities.</li>\n<li>Support lead generation, outreach, and follow-up activities across relevant channels.</li>\n<li>Help maintain prospect records and track business development activity.</li>\n<li>Coordinate with the team to prepare meeting notes, proposals, and progress updates.</li>\n</ul>\n<p><strong>Requirements</strong></p>\n<ul>\n<li>Industry: Information Technology.</li>\n<li>Candidates should demonstrate clear communication, initiative, organization, and an interest in business development.</li>\n<li>Comfort with remote collaboration and timely follow-through is important.</li>\n</ul>",
+    "short_id": "sZg86Iq",
+    "logoUrl2": "https://d8it4huxumps7.cloudfront.net/uploads/images/150x150/6afbeb5aa4123_organisation_image-isnXio7QXd687049393UOIh8onpe2.png",
+    "organisation": {
+     "id": 2154626,
+     "name": "SkillForever",
+     "public_url": "c/skillforever-2154626",
+     "logoUrl": "https://d8it4huxumps7.cloudfront.net/images/partners/new_organisation_image-isnXio7QXd687049393UOIh8onpe2.png",
+     "logoUrl2": "https://d8it4huxumps7.cloudfront.net/images/partners/new_organisation_image-isnXio7QXd687049393UOIh8onpe2.png",
+     "show_evaluator_login_link": false,
+     "official_email_domains": null,
+     "tier": null
+    },
+    "seo_url": "https://unstop.com/internships/business-development-internship-skillforever-1814110",
+    "status": "LIVE",
+    "tags": [],
+    "thumb": null,
+    "isPaid": false,
+    "festival": null,
+    "prizes": [],
+    "address_with_country_logo": {
+     "address": "",
+     "city": "",
+     "state": "",
+     "country": ""
+    },
+    "short_url": "https://unstop.com/o/sZg86Iq",
+    "workfunction": [
+     {
+      "id": 2002,
+      "name": "Business Development",
+      "description": "",
+      "created_at": "2026-02-06T23:31:46+05:30",
+      "updated_at": "2026-02-06T23:31:46+05:30",
+      "work_function_name": null,
+      "batch_id": 11,
+      "pivot": {
+       "entity_id": 1814110,
+       "subject_id": 2002,
+       "id": 6891649,
+       "ai_generated": true
+      }
+     }
+    ],
+    "assignedTag": {
+     "tag": null
+    },
+    "opportunity_config": {
+     "id": 1511794,
+     "opportunity_id": 1814110,
+     "banner_config": "{\"color\":\"color-bg1\",\"text\":\"Business Development Intern\",\"type\":5,\"banner_data\":[1]}",
+     "show_registrations_count": 0,
+     "show_impressions": 1,
+     "show_team_size": 1,
+     "show_region": 1
+    },
+    "payment_services": [],
+    "filters": [
+     {
+      "id": 424,
+      "name": "Postgraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "postgraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/postgraduate.svg"
+     },
+     {
+      "id": 426,
+      "name": "Undergraduate",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "undergraduate",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/undergraduate.svg"
+     },
+     {
+      "id": 679,
+      "name": "Fresher",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": "fresher",
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/fresher.svg"
+     },
+     {
+      "id": 4022,
+      "name": "Management",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     },
+     {
+      "id": 4025,
+      "name": "Arts, Commerce, Sciences & Others",
+      "type": "eligible",
+      "subtype": null,
+      "file_name": null,
+      "domain_id": 0,
+      "icon_url": "https://d8it4huxumps7.cloudfront.net/images/icons/color_icons/.svg"
+     }
+    ],
+    "required_skills": [
+     {
+      "id": 643372,
+      "skill": "Business development",
+      "skill_name": "Business development",
+      "pivot": {
+       "entity_id": 1814110,
+       "subject_id": 643372,
+       "id": 6891644,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 644883,
+      "skill": "Sales Prospecting",
+      "skill_name": "Sales Prospecting",
+      "pivot": {
+       "entity_id": 1814110,
+       "subject_id": 644883,
+       "id": 6891645,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 644315,
+      "skill": "Market Research Methods",
+      "skill_name": "Market Research Methods",
+      "pivot": {
+       "entity_id": 1814110,
+       "subject_id": 644315,
+       "id": 6891646,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 645802,
+      "skill": "Communication Skills",
+      "skill_name": "Communication Skills",
+      "pivot": {
+       "entity_id": 1814110,
+       "subject_id": 645802,
+       "id": 6891647,
+       "ai_generated": true
+      }
+     },
+     {
+      "id": 646878,
+      "skill": "Organization Skills",
+      "skill_name": "Organization Skills",
+      "pivot": {
+       "entity_id": 1814110,
+       "subject_id": 646878,
+       "id": 6891648,
+       "ai_generated": true
+      }
+     }
+    ],
+    "locations": [],
+    "jobDetail": {
+     "entity_id": 1814110,
+     "max_salary": 5000,
+     "currency": "fa-rupee",
+     "locations": [],
+     "type": "wfh",
+     "min_salary": 5000,
+     "show_salary": 1,
+     "min_experience": null,
+     "max_experience": null,
+     "timing": "full_time",
+     "paid_unpaid": "paid",
+     "pay_in": "monthly",
+     "not_disclosed": false
+    },
+    "end_date": "2026-11-30T00:00:00+05:30",
+    "approved_date": "2026-11-17 11:22:02 GMT+0530",
+    "viewsCount": 4,
+    "registerCount": 0,
+    "regnRequirements": {
+     "opportunity_id": 1814110,
+     "start_regn_dt": "2026-11-16T00:00:00+05:30",
+     "end_regn_dt": "2026-11-30T00:00:00+05:30",
+     "show_deadline": 1,
+     "min_team_size": 1,
+     "max_team_size": 1,
+     "work_location_type": "city",
+     "eligibility": "{\"sector\":[\"students\",\"fresher\"],\"engineering\":[],\"bSchools\":[\"allCourses\",{\"course\":\"mba1\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"mba2\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bSchoolOthers\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"bcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mcom\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bhm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ca\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"cs\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"pgdm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"execMba\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":1},{\"course\":\"ipm\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"phdManagement\",\"type\":\"bSchools\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3}],\"arts\":[\"allCourses\",{\"course\":\"bsc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"msc\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"ba\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ma\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"artsOthers\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"mdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"march\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bdes\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"barch\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"bftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mplan\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"phdArts\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":5},{\"course\":\"mftech\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"mfa\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bs\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":3},{\"course\":\"ms\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"bed\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"med\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2},{\"course\":\"beled\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":4},{\"course\":\"bped\",\"type\":\"arts\",\"programme\":[\"all\"],\"passoutYear\":[\"all\"],\"specialization\":[\"all\"],\"duration\":2}],\"medicine\":[],\"law\":[],\"others\":[\"all\"],\"experience\":[\"all\"],\"studentPassoutYearsSelected\":[\"all\"],\"fresherPassoutYearsSelected\":[2026],\"schoolFilteredClasses\":[\"all\"],\"minMarks\":{\"high_school_perc\":0,\"high_school_cgpa\":0},\"locations\":[],\"location_type\":\"all\",\"professionalEligibility\":null,\"fresherEligibility\":null}",
+     "reg_status": "STARTED",
+     "remainingDaysArray": {
+      "durations": 12,
+      "text": " days left"
+     },
+     "remain_days": "12 days left",
+     "remaining_time": 1080367
+    }
+   }
+  ],
+  "first_page_url": "https://unstop.com/api/public/opportunity/search-result?&opportunity=internships&per_page=100&oppstatus=open&page=1",
+  "from": 1,
+  "last_page": 6,
+  "last_page_url": "https://unstop.com/api/public/opportunity/search-result?&opportunity=internships&per_page=100&oppstatus=open&page=6",
+  "links": [
+   {
+    "url": null,
+    "label": "&laquo; Previous",
+    "active": false
+   },
+   {
+    "url": "https://unstop.com/api/public/opportunity/search-result?&opportunity=internships&per_page=100&oppstatus=open&page=1",
+    "label": "1",
+    "active": true
+   },
+   {
+    "url": "https://unstop.com/api/public/opportunity/search-result?&opportunity=internships&per_page=100&oppstatus=open&page=2",
+    "label": "2",
+    "active": false
+   },
+   {
+    "url": "https://unstop.com/api/public/opportunity/search-result?&opportunity=internships&per_page=100&oppstatus=open&page=3",
+    "label": "3",
+    "active": false
+   },
+   {
+    "url": "https://unstop.com/api/public/opportunity/search-result?&opportunity=internships&per_page=100&oppstatus=open&page=4",
+    "label": "4",
+    "active": false
+   },
+   {
+    "url": "https://unstop.com/api/public/opportunity/search-result?&opportunity=internships&per_page=100&oppstatus=open&page=5",
+    "label": "5",
+    "active": false
+   },
+   {
+    "url": "https://unstop.com/api/public/opportunity/search-result?&opportunity=internships&per_page=100&oppstatus=open&page=6",
+    "label": "6",
+    "active": false
+   },
+   {
+    "url": "https://unstop.com/api/public/opportunity/search-result?&opportunity=internships&per_page=100&oppstatus=open&page=2",
+    "label": "Next &raquo;",
+    "active": false
+   }
+  ],
+  "next_page_url": "https://unstop.com/api/public/opportunity/search-result?&opportunity=internships&per_page=100&oppstatus=open&page=2",
+  "path": "https://unstop.com/api/public/opportunity/search-result?",
+  "per_page": 100,
+  "prev_page_url": null,
+  "to": 98,
+  "total": 558
+ }
+}
