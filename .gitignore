@@ -10,3 +10,8 @@ public/maplibre-gl-worker.mjs
 .env.*
 !.env.example
 .DS_Store
+
+# private working docs & reference images (kept locally, not published)
+MASTER_PROMPT.md
+CLAUDE.md
+design-refs/
