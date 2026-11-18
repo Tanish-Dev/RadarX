@@ -225,5 +225,5 @@ export function clusterNews(items: ClusterInput[]): Map<string, string> {
 
 /** Rank for "main stories": coverage dominates, HN points help tech, age decays. */
 export function storyScore(coverage: number, points: number | null, ageHours: number): number {
-  return (coverage - 1) * 3 + Math.log10((points ?? 0) + 1) * 1.5 - ageHours / 10;
+  return (coverage - 1) * 3 + Math.log10((points ?? 0) + 1) * 1.5 - ageHours / 6; // fresh beats stale: a day-old story must carry ~4 more outlets to outrank a new one
 }

@@ -8,6 +8,7 @@ import { CITIES } from "@/data/cities";
 import { MapBackdrop } from "@/components/ui/map";
 import type { NewsPoint } from "@/lib/newsQueries";
 import type { MapPoint } from "@/lib/queries";
+import type { HazardView } from "@/lib/worldQueries";
 import { mapStore, type MapLayer, type Pad } from "./mapStore";
 
 /**
@@ -153,6 +154,30 @@ function newsPopupHtml(p: NewsPoint) {
   </div>`;
 }
 
+const HAZARD_LABEL: Record<HazardView["kind"], string> = { quake: "Earthquake", storm: "Storm", wildfire: "Wildfire", volcano: "Volcano", flood: "Flood", other: "Event" };
+const HAZARD_COLOR: Record<HazardView["kind"], string> = { quake: "#ff6b57", storm: "#5ab0ff", wildfire: "#ff9f1c", volcano: "#ff4d8d", flood: "#4dd4c4", other: "#b0b0b8" };
+
+/** Hazard marker: a ring (pulsing when recent) sized by severity, coloured by kind; quakes show the magnitude. */
+function hazardMarkerEl(hz: HazardView): HTMLElement {
+  const el = h("button", "cursor-pointer");
+  el.type = "button";
+  el.setAttribute("aria-label", `${HAZARD_LABEL[hz.kind]}: ${hz.title}, ${hz.ago}`);
+  const size = 14 + hz.severity * 6;
+  const inner = h("span", `rx-drop flex items-center justify-center rounded-full border-2 bg-card/70 backdrop-blur-[2px]${Date.now() - hz.ts < 3 * 3_600_000 ? " rx-pulse" : ""}`);
+  inner.style.cssText = `width:${size}px;height:${size}px;border-color:${HAZARD_COLOR[hz.kind]};opacity:${hz.severity === 1 ? 0.8 : 1}`;
+  if (hz.mag != null && hz.severity > 1) inner.append(h("span", "num text-[10px] font-medium text-ink", hz.mag.toFixed(1)));
+  el.append(inner);
+  return el;
+}
+
+function hazardPopupHtml(h: HazardView) {
+  return `<div class="w-60 max-w-[70vw]">
+    <div class="flex items-baseline justify-between gap-3"><span class="text-[13px]" style="color:${HAZARD_COLOR[h.kind]}">${esc(HAZARD_LABEL[h.kind])}${h.mag != null ? ` · M${h.mag.toFixed(1)}` : ""}</span><span class="num shrink-0 text-[12px] text-ink-2">${esc(h.ago)}</span></div>
+    <p class="mt-1 text-[13px] leading-snug">${esc(h.title)}</p>
+    <p class="mt-2 text-[11px] text-ink-3">click for details</p>
+  </div>`;
+}
+
 const visible = (kind: "jobs" | NewsPoint["kind"], on: Set<MapLayer>) => (kind === "mixed" ? on.has("tech") || on.has("world") : on.has(kind));
 
 /**
@@ -162,6 +187,7 @@ const visible = (kind: "jobs" | NewsPoint["kind"], on: Set<MapLayer>) => (kind =
 export function LiveMap({
   points,
   news = [],
+  hazards = [],
   view = "india",
   rightInset = 0,
   pad,
@@ -173,6 +199,8 @@ export function LiveMap({
   points: MapPoint[];
   /** headlines grouped by place (tech + world affairs) */
   news?: NewsPoint[];
+  /** earthquakes + natural events */
+  hazards?: HazardView[];
   /** initial framing */
   view?: "india" | "world";
   rightInset?: number;
@@ -236,7 +264,20 @@ export function LiveMap({
       const shared = jobCities.has(`${p.lat.toFixed(1)},${p.lon.toFixed(1)}`);
       return { kind: p.kind, el, marker: new maplibregl.Marker({ element: el, offset: shared ? [0, 30] : [0, 0] }).setLngLat([p.lon, p.lat]).addTo(map) };
     });
+    const hazardMarkers = hazards.map((hz) => {
+      const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, maxWidth: "none", offset: 14, className: "rx-popup" }).setHTML(hazardPopupHtml(hz));
+      const el = hazardMarkerEl(hz);
+      el.addEventListener("mouseenter", () => popup.setLngLat([hz.lon, hz.lat]).addTo(map));
+      el.addEventListener("mouseleave", () => popup.remove());
+      el.addEventListener("focus", () => popup.setLngLat([hz.lon, hz.lat]).addTo(map));
+      el.addEventListener("blur", () => popup.remove());
+      el.addEventListener("click", () => {
+        if (hz.url && /^https?:\/\//.test(hz.url)) window.open(hz.url, "_blank", "noopener,noreferrer");
+      });
+      return new maplibregl.Marker({ element: el }).setLngLat([hz.lon, hz.lat]).addTo(map);
+    });
     const applyLayers = (on: Set<MapLayer>) => {
+      for (const m of hazardMarkers) m.getElement().style.display = on.has("hazards") ? "" : "none";
       for (const m of markers) m.getElement().style.display = visible("jobs", on) ? "" : "none";
       for (const m of newsMarkers) m.el.style.display = visible(m.kind, on) ? "" : "none";
     };
@@ -272,10 +313,11 @@ export function LiveMap({
       offLayers();
       markers.forEach((m) => m.remove());
       newsMarkers.forEach((m) => m.marker.remove());
+      hazardMarkers.forEach((m) => m.remove());
       mapStore.clear(map);
       map.remove();
     };
-  }, [points, news, view, rightInset, pad, compact, interactive, router]);
+  }, [points, news, hazards, view, rightInset, pad, compact, interactive, router]);
 
   if (failed) return <MapBackdrop className={className} />;
   // maplibre-gl.css forces `.maplibregl-map { position: relative }`, so positioning lives on a wrapper

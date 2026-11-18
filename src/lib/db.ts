@@ -172,6 +172,22 @@ const MIGRATIONS: string[][] = [
     `CREATE INDEX IF NOT EXISTS jobs_url_id ON jobs(url_id)`,
     `CREATE INDEX IF NOT EXISTS jobs_classifier ON jobs(classifier_version)`,
   ],
+  // v9 — world signals: earthquakes + natural events (USGS / NASA EONET)
+  [
+    `CREATE TABLE IF NOT EXISTS hazards (
+      id TEXT PRIMARY KEY,
+      kind TEXT NOT NULL,
+      title TEXT NOT NULL,
+      mag REAL,
+      lat REAL NOT NULL,
+      lon REAL NOT NULL,
+      ts INTEGER NOT NULL,
+      url TEXT,
+      active INTEGER NOT NULL DEFAULT 1,
+      updated_at INTEGER NOT NULL
+    )`,
+    `CREATE INDEX IF NOT EXISTS hazards_ts ON hazards(ts)`,
+  ],
 ];
 
 let client: Client | null = null;

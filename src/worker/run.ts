@@ -9,6 +9,7 @@ import { dispatchAlerts, type DispatchResult } from "../alerts/dispatch";
 import { classifyPending, rescoreIfProfileChanged } from "../lib/jobs";
 import { checkNews, type NewsCheck } from "./news";
 import { checkStocks } from "./stocks";
+import { checkWorld } from "./world";
 import { checkPrograms, sendProgramAlerts, type ProgramCheck } from "./programs";
 import { ENRICHABLE, fetchDetail, fetchSource } from "../sources/fetchers";
 import type { RawJob } from "../sources/types";
@@ -373,10 +374,16 @@ export async function runOnce(opts: { only?: string[] } = {}): Promise<RunSummar
   const classified = await classifyPending();
   await rescoreIfProfileChanged();
   const alerts = await dispatchAlerts();
-  const programs = await checkPrograms().catch(() => null);
-  const programAlerts = await sendProgramAlerts().catch(() => 0);
-  const news = await checkNews().catch(() => null);
-  await checkStocks().catch(() => null);
+  // side feeds must never fail the run, but a silent `() => null` hides real breakage — log it
+  const soft = <T>(name: string, fallback: T) => (e: unknown) => {
+    console.warn(`[${name}] ${e instanceof Error ? e.message : e}`);
+    return fallback;
+  };
+  const programs = await checkPrograms().catch(soft("programs", null));
+  const programAlerts = await sendProgramAlerts().catch(soft("program-alerts", 0));
+  const news = await checkNews().catch(soft("news", null));
+  await checkStocks().catch(soft("stocks", null));
+  await checkWorld().then((w) => w?.errors.forEach((e) => console.warn(`[world] ${e}`))).catch(soft("world", null));
 
   const finishedAt = Date.now();
   const newJobs = results.reduce((n, r) => n + r.newJobs, 0);

@@ -7,7 +7,7 @@ import { clusterNews, locate, newsId, parseFeed, topicsFor, type FeedItem } from
 
 /** Bump when the gazetteer or topic rules change → every stored story is re-placed and re-tagged. */
 export const NEWS_GEO_VERSION = 3;
-const INTERVAL_MS = (Number(process.env.NEWS_INTERVAL_MIN) || 20) * 60_000;
+const INTERVAL_MS = (Number(process.env.NEWS_INTERVAL_MIN) || 10) * 60_000;
 const KEEP_DAYS = 14;
 const H = 3_600_000;
 
@@ -47,10 +47,10 @@ async function fetchFeed(f: Feed): Promise<FeedItem[] | null> {
   }
 }
 
-export async function checkNews(opts: { force?: boolean } = {}): Promise<NewsCheck[] | null> {
+export async function checkNews(opts: { force?: boolean; minGapMs?: number } = {}): Promise<NewsCheck[] | null> {
   const now = Date.now();
   const last = (await kvGet<number>("news_checked_at")) ?? 0;
-  if (!opts.force && now - last < INTERVAL_MS) return null;
+  if (!opts.force && now - last < (opts.minGapMs ?? INTERVAL_MS)) return null;
   await kvSet("news_checked_at", now);
   const c = await db();
   const limit = pLimit(6);

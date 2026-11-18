@@ -10,9 +10,9 @@ let pad: Pad | number = 8;
 let view: "india" | "world" = "india";
 const listeners = new Set<Listener>();
 
-/** Which marker layers are visible: job pins, tech headlines, world-affairs headlines. */
-export type MapLayer = "jobs" | "tech" | "world";
-let layers = new Set<MapLayer>(["jobs", "tech", "world"]);
+/** Which marker layers are visible: job pins, tech headlines, world-affairs headlines, natural hazards. */
+export type MapLayer = "jobs" | "tech" | "world" | "hazards";
+let layers = new Set<MapLayer>(["jobs", "tech", "world", "hazards"]);
 const layerListeners = new Set<(l: Set<MapLayer>) => void>();
 
 export const mapStore = {

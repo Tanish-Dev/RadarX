@@ -112,7 +112,7 @@ const LIST_COLS = `id, title, company, company_key, url, location, level, region
  * One row per role: hide a posting when another active copy with the same dedupe_key
  * is preferred (direct ATS over the Simplify list, then earliest seen).
  */
-const ONE_PER_ROLE = `NOT EXISTS (SELECT 1 FROM jobs d WHERE d.dedupe_key = jobs.dedupe_key AND d.id != jobs.id AND d.active = 1 AND d.dismissed = 0
+export const ONE_PER_ROLE = `NOT EXISTS (SELECT 1 FROM jobs d WHERE d.dedupe_key = jobs.dedupe_key AND d.id != jobs.id AND d.active = 1 AND d.dismissed = 0
   AND (${AGGREGATE_SQL("d.source")} < ${AGGREGATE_SQL("jobs.source")}
     OR (${AGGREGATE_SQL("d.source")} = ${AGGREGATE_SQL("jobs.source")} AND (d.first_seen_at < jobs.first_seen_at OR (d.first_seen_at = jobs.first_seen_at AND d.id < jobs.id)))))`;
 

@@ -117,6 +117,23 @@ export async function pollNow(): Promise<Result> {
   return { ok: true, message: "Polling all sources — results appear in about a minute" };
 }
 
+/**
+ * Pull the news feeds from the dashboard itself (no worker needed): the page calls this when its stories are
+ * older than the poll interval, and from the Refresh button. A 2-minute gap stops several tabs from hammering feeds.
+ */
+export async function refreshNews(): Promise<Result & { fetched?: number; checkedAt?: number }> {
+  try {
+    const { checkNews } = await import("@/worker/news");
+    const rows = await checkNews({ minGapMs: 2 * 60_000 });
+    const checkedAt = (await kvGet<number>("news_checked_at")) ?? Date.now();
+    if (!rows) return { ok: true, message: "Already up to date", checkedAt };
+    refreshAll();
+    return { ok: true, fetched: rows.reduce((n, r) => n + r.added, 0), checkedAt };
+  } catch (e) {
+    return fail(e);
+  }
+}
+
 export async function markAlertsSeen(): Promise<void> {
   const c = await db();
   await c.execute(`UPDATE alerts SET seen = 1 WHERE seen = 0`);

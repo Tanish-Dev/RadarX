@@ -91,7 +91,7 @@ function toStories(rows: Row[], now: number): NewsItem[] {
   return out;
 }
 
-async function loadStories(hours: number, now = Date.now()): Promise<NewsItem[]> {
+export async function loadStories(hours: number, now = Date.now()): Promise<NewsItem[]> {
   const c = await db();
   const r = await c.execute({
     sql: `SELECT id, source, kind, title, url, summary, image, COALESCE(published_at, first_seen_at) AS ts, place, lat, lon, india, topics, points, cluster, coverage

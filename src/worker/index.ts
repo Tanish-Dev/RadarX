@@ -6,6 +6,7 @@
  *   npm run worker -- --health               print source health from the DB
  *   npm run worker -- --programs             check every research/program page now
  *   npm run worker -- --news                 poll every tech/world news feed now
+ *   npm run worker -- --world               refresh quakes / natural events / FX now
  *   npm run worker -- --stocks [--demo]      refresh the stock watchlist now (needs TWELVEDATA_API_KEY; --demo = AAPL only)
  *   npm run worker -- --enrich [N]           fetch missing descriptions for early-career postings (default 500)
  *   add  --only greenhouse,stripe            to restrict a run to matching sources / ATS types
@@ -132,6 +133,13 @@ async function main() {
     if (!r) return console.log(c.yellow("No TWELVEDATA_API_KEY set — get a free key at https://twelvedata.com/pricing and add it to .env.local (or use --demo for AAPL only)."));
     console.log(`${c.bold("Stocks")}: ${c.green(`${r.ok} quotes`)}${r.series ? `, history for ${r.series}` : ""}`);
     for (const f of r.failed) console.log(c.red(`  ${f.key}: ${f.error}`));
+    return;
+  }
+  if (has("--world")) {
+    const { checkWorld } = await import("./world");
+    const r = (await checkWorld({ force: true }))!;
+    console.log(`${c.bold("World")}: ${c.green(`${r.hazards} hazards`)} (${r.changed} written)${r.fx ? ", FX refreshed" : ""}`);
+    for (const e of r.errors) console.log(c.red(`  ${e}`));
     return;
   }
   if (has("--news")) {

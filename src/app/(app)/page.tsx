@@ -1,4 +1,4 @@
-import { ChevronRight, ClipboardList, Clock3, Check } from "lucide-react";
+import { ChevronRight, ClipboardList, Clock3 } from "lucide-react";
 import Link from "next/link";
 import { telegramConfigured } from "@/alerts/channels";
 import { FilterBar } from "@/components/app/FilterBar";
@@ -12,12 +12,13 @@ import { AlertRow } from "@/components/ui/cards";
 import { cn } from "@/components/ui/primitives";
 import { parseFilters, type RawParams } from "@/lib/filters";
 import { getBriefing, getNewsPoints } from "@/lib/newsQueries";
+import { getHazards } from "@/lib/worldQueries";
 import { getStocks } from "@/lib/stockQueries";
+import { NewsFresh } from "@/components/app/NewsFresh";
 import { StockMini } from "@/components/app/Stocks";
 import {
   getAttention,
   getHomeKpis,
-  getSkillDemand,
   getJobs,
   getMapPoints,
   getPrograms,
@@ -40,7 +41,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
   const early = ["intern", "newgrad", "research"];
   const f = parseFilters(sp, { within: "7d", sort: hasResume ? "match" : "new", level: early });
 
-  const [rec, topPick, attention, map, india, programs, kpis, skills, stocks, volume, sources, top4, brief, newsPoints] = await Promise.all([
+  const [rec, topPick, attention, map, india, programs, kpis, stocks, volume, sources, top4, brief, newsPoints, hazards] = await Promise.all([
     getJobs(f, { limit: 9 }),
     getJobs({ ...f, within: "24h", sort: hasResume ? "match" : "new" }, { limit: 1 }),
     getAttention(),
@@ -48,13 +49,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
     getJobs({ region: ["india"], level: early, within: "7d", sort: hasResume ? "match" : "new", tech: true }, { limit: 8 }),
     getPrograms(),
     getHomeKpis(),
-    getSkillDemand(6),
     getStocks(),
     getVolumeBuckets(),
     getSourceCounts(),
     getJobs({ level: early, within: "24h", sort: hasResume ? "match" : "new", tech: true }, { limit: 4 }),
     getBriefing(),
     getNewsPoints(48),
+    getHazards(48, 5),
   ]);
   const pick = topPick.jobs[0] ?? rec.jobs[0];
   const recommended = pick ? [pick, ...rec.jobs.filter((j) => j.id !== pick.id)].slice(0, 8) : [];
@@ -137,10 +138,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
           ))}
         </div>
       </section>
-
-      <G title="Stocks" href="/market#stocks" note={stocks.lastCheck ? `updated ${stocks.lastCheck}` : undefined}>
-        <StockMini items={stocks.items} configured={stocks.configured} />
-      </G>
     </>
   );
 
@@ -177,37 +174,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
         </div>
       </G>
 
-      <G title="Skills in demand" href="/market" note="open early-career roles">
-        {skills.hasResume ? (
-          <div className="flex items-baseline justify-between gap-2">
-            <span className="num text-[24px] font-light leading-none tracking-[-0.03em]">
-              {skills.covered}<span className="text-[14px] text-ink-2">/{skills.top.length}</span>
-              <span className="ml-1.5 text-[11px] tracking-normal text-ink-2">top skills on your resume</span>
-            </span>
-          </div>
-        ) : (
-          <p className="text-[12px] text-ink-2">
-            <Link href="/settings#resume" className="underline">Upload your resume</Link> to see which of these you already have.
-          </p>
-        )}
-        <ul className="flex flex-col gap-1.5">
-          {skills.top.map((sk) => (
-            <li key={sk.skill} className="grid grid-cols-[14px_minmax(0,112px)_minmax(0,1fr)_30px] items-center gap-2 text-[12px]">
-              {sk.have ? <Check size={12} className="text-good" /> : <span className="size-1.5 justify-self-center rounded-full bg-ink-3" />}
-              <span className={cn("truncate", !sk.have && skills.hasResume && "text-ink-2")}>{sk.skill}</span>
-              <span className="h-1.5 overflow-hidden rounded-full bg-raised">
-                <span className={cn("block h-full rounded-full", sk.have ? "bg-good/80" : "bg-ink-3")} style={{ width: `${Math.round((sk.share / skills.top[0].share) * 100)}%` }} />
-              </span>
-              <span className="num text-right text-ink-2">{Math.round(sk.share * 100)}%</span>
-            </li>
-          ))}
-        </ul>
-        {skills.learnNext && (
-          <Link href={`/feed?q=${encodeURIComponent(skills.learnNext.skill)}&level=intern,newgrad,research`} className="rounded-[10px] bg-raised/70 px-3 py-2 text-[12px] hover:bg-chip">
-            Learn next: <span className="text-ink">{skills.learnNext.skill}</span>
-            <span className="text-ink-2"> · in {skills.learnNext.n.toLocaleString("en-IN")} open roles</span>
-          </Link>
-        )}
+      <G title="Stocks" href="/market#stocks" note={stocks.lastCheck ? `updated ${stocks.lastCheck}` : undefined}>
+        <StockMini limit={6} items={stocks.items} configured={stocks.configured} />
       </G>
 
       <G title="Posting volume" href="/market" note={`${volume.perDay.toLocaleString("en-IN")} / day`}>
@@ -235,7 +203,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
       */}
       <section className="relative mt-4 xl:h-[calc(100dvh-84px)] xl:min-h-[820px]">
         <div className="relative h-[420px] overflow-hidden rounded-card ring-1 ring-line md:h-[520px] xl:absolute xl:-top-[84px] xl:bottom-0 xl:left-[calc(50%-50vw)] xl:z-0 xl:h-auto xl:w-screen xl:rounded-none xl:ring-0">
-          <MapCanvas points={map.points} news={newsPoints} hero />
+          <MapCanvas points={map.points} news={newsPoints} hazards={hazards} hero />
           {/* fades: keep the top bar readable and melt the map into the page below */}
           <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] hidden h-44 bg-linear-to-b from-canvas/90 to-transparent xl:block" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] hidden h-28 bg-linear-to-t from-canvas to-transparent xl:block" />
@@ -269,9 +237,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
               <span className="text-ink-2">Today&apos;s</span> briefing
             </h2>
             <span className="flex gap-3 text-[13px]">
-              <span className="num hidden text-ink-3 sm:inline">
-                {brief.counts.tech + brief.counts.world} stories · 48h{brief.checkedAt ? ` · ${ago(brief.checkedAt)}` : ""}
-              </span>
+              <span className="num hidden items-center text-ink-3 sm:flex">{brief.counts.tech + brief.counts.world} stories · 48h</span>
+              <NewsFresh checkedAt={brief.checkedAt} />
               <Link href="/news" className="text-ink-2 hover:text-ink">All news →</Link>
             </span>
           </div>

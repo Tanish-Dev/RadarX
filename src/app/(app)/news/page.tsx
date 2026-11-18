@@ -5,6 +5,8 @@ import { KindDot, NewsCard } from "@/components/app/NewsCards";
 import { HeroTitle, cn } from "@/components/ui/primitives";
 import { FEEDS, type NewsKind } from "@/data/news";
 import type { RawParams } from "@/lib/filters";
+import { NewsFresh } from "@/components/app/NewsFresh";
+import { kvGet } from "@/lib/db";
 import { getNews, getNewsPoints, type NewsFilters } from "@/lib/newsQueries";
 
 export const dynamic = "force-dynamic";
@@ -38,7 +40,7 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
   const within = (one(sp.within) in HOURS ? one(sp.within) : "3d") as keyof typeof HOURS;
   const f: NewsFilters = { kind, india, topic, place, sort, hours: HOURS[within] };
 
-  const [news, points] = await Promise.all([getNews(f, 60), getNewsPoints(HOURS[within], { kind, india, topic })]);
+  const [news, points, checkedAt] = await Promise.all([getNews(f, 60), getNewsPoints(HOURS[within], { kind, india, topic }), kvGet<number>("news_checked_at")]);
 
   /** Same page with some params changed ("" removes one). */
   const href = (patch: Record<string, string>) => {
@@ -52,7 +54,10 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
   return (
     <>
       <header className="mt-10 grid gap-6 lg:mt-14 lg:grid-cols-[1fr_auto] lg:items-end">
-        <HeroTitle light="Tech &" strong="World news" />
+        <div>
+          <HeroTitle light="Tech &" strong="World news" />
+          <NewsFresh checkedAt={checkedAt} className="mt-4" />
+        </div>
         <p className="max-w-md text-[14px] font-light text-ink-2">
           {FEEDS.length} public feeds — TechCrunch, The Verge, Hacker News, BBC, Al Jazeera, The Hindu, ET Tech and more. Stories several outlets carry rank first; each one is placed on the map where it happens.
         </p>

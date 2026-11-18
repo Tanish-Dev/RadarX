@@ -30,5 +30,5 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   // everything except static assets (the browser re-sends Basic credentials for those anyway)
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon.svg|maplibre-gl-worker.mjs).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon.svg|sw.js|maplibre-gl-worker.mjs).*)"],
 };
