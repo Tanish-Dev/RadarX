@@ -3,7 +3,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { OWNER_COOKIE, SESSION_DAYS, createSession, ownerPassword, passwordMatches, safeNext } from "@/lib/owner";
-import { clientIp, peekLimit, rateLimit } from "@/lib/ratelimit";
+import { clientIp, rateLimit, refund, siteLoginFailures } from "@/lib/ratelimit";
 import { isOwner, requireOwner } from "@/lib/viewer";
 import { extractSkills } from "@/lib/skills";
 import { sanitizeFilters } from "@/lib/filters";
@@ -35,20 +35,21 @@ const badId = (id: unknown) => typeof id !== "string" || !ID_RE.test(id);
 // ── Owner sign-in ───────────────────────────────────────────────────────────
 export async function login(_prev: { error?: string } | null, form: FormData): Promise<{ error?: string }> {
   const ip = clientIp(await headers());
-  // Only FAILED attempts count, so nobody can lock the owner out by spamming the form. 5 failures / 15 min per IP
-  // blocks that IP; past 30 failures / 15 min site-wide (a spread-out guessing run) every attempt is slowed to ~3 s
-  // instead of refused — a correct password still works.
-  const mine = peekLimit(`login-fail:${ip}`, 5);
+  // Each attempt is counted BEFORE the password check and refunded only if it was right, so parallel requests
+  // can't race past the limit. 5 failures / 15 min per IP blocks that IP. Site-wide failures (a guessing run
+  // spread over many IPs) make every attempt slower — 0.4 s, growing to ~10 s — rather than refusing outright,
+  // so spamming the form can't lock the owner out; with a long random OWNER_PASSWORD that rate is hopeless.
+  const mine = rateLimit(`login-fail:${ip}`, 5, 15 * 60_000);
   if (!mine.ok) return { error: `Too many attempts — try again in ${Math.ceil(mine.retryAfterS / 60)} min.` };
+  rateLimit("login-fail:*", 1e9, 15 * 60_000);
+  const siteFails = siteLoginFailures();
   if (!ownerPassword()) return { error: "Owner sign-in isn't set up on this deployment (OWNER_PASSWORD)." };
   const ok = await passwordMatches(String(form.get("password") ?? ""));
-  const busy = !peekLimit("login-fail:*", 30).ok;
-  await new Promise((r) => setTimeout(r, (busy ? 2500 : 400) + Math.random() * 400)); // flatten timing, slow guessing
-  if (!ok) {
-    rateLimit(`login-fail:${ip}`, 5, 15 * 60_000);
-    rateLimit("login-fail:*", 30, 15 * 60_000);
-    return { error: "Wrong password." };
-  }
+  const slow = Math.min(10_000, 400 * 2 ** Math.max(0, Math.floor(siteFails / 30)));
+  await new Promise((r) => setTimeout(r, slow + Math.random() * 400)); // flatten timing, slow guessing
+  if (!ok) return { error: "Wrong password." };
+  refund(`login-fail:${ip}`);
+  refund("login-fail:*");
   const session = await createSession();
   (await cookies()).set(OWNER_COOKIE, session!, {
     httpOnly: true,

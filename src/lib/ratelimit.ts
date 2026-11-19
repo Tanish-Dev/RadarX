@@ -5,6 +5,7 @@
  */
 const buckets = new Map<string, { n: number; reset: number }>();
 const MAX_BUCKETS = 10_000;
+const PROTECTED = "login-fail:";
 
 function bucket(key: string, windowMs: number, now: number) {
   let b = buckets.get(key);
@@ -12,10 +13,12 @@ function bucket(key: string, windowMs: number, now: number) {
   if (!b) {
     if (buckets.size >= MAX_BUCKETS) {
       for (const [k, v] of buckets) if (v.reset < now) buckets.delete(k);
-      // still full: evict the oldest windows (Map keeps insertion order) — memory stays bounded whatever the keys
+      // still full: evict the oldest windows (Map keeps insertion order) — but never a live sign-in lockout, or an
+      // attacker could flush their own failure count by flooding other keys. Lockout keys are one per real client
+      // IP (unforgeable, see clientIp), so they stay bounded on their own.
       for (const k of buckets.keys()) {
         if (buckets.size < MAX_BUCKETS * 0.9) break;
-        buckets.delete(k);
+        if (!k.startsWith(PROTECTED)) buckets.delete(k);
       }
     }
     b = { n: 0, reset: now + windowMs };
@@ -31,24 +34,34 @@ export function rateLimit(key: string, max: number, windowMs: number, now = Date
   return b.n <= max ? { ok: true, retryAfterS: 0 } : { ok: false, retryAfterS: Math.ceil((b.reset - now) / 1000) };
 }
 
-/** Check without counting (count separately with rateLimit, e.g. only on failures). */
-export function peekLimit(key: string, max: number, now = Date.now()): { ok: boolean; retryAfterS: number } {
-  const b = buckets.get(key);
-  if (!b || b.reset < now || b.n < max) return { ok: true, retryAfterS: 0 };
-  return { ok: false, retryAfterS: Math.ceil((b.reset - now) / 1000) };
+/**
+ * Client IP from a header the client can't forge. On Vercel (and only there), `x-vercel-forwarded-for` /
+ * `x-real-ip` are set by the edge, which overwrites any client-sent copy. Anywhere else those headers are just
+ * client input, so only the LAST x-forwarded-for hop is used — the one our own reverse proxy appended — or
+ * TRUSTED_PROXY_HOPS hops from the right when there are several proxies. The first entry is never used.
+ */
+export function clientIp(h: Headers, env: Record<string, string | undefined> = process.env): string {
+  if (env.VERCEL) {
+    const v = h.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip")?.trim();
+    if (v) return v.slice(0, 64);
+  }
+  const hops = (h.get("x-forwarded-for") ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+  const n = Math.max(1, Math.min(5, Number(env.TRUSTED_PROXY_HOPS) || 1));
+  return (hops.at(-n) ?? hops[0] ?? "local").slice(0, 64);
 }
 
-/**
- * Client IP from a header the client can't forge. On Vercel, `x-vercel-forwarded-for` / `x-real-ip` are set by
- * the edge (any client-sent copy is overwritten). Elsewhere, the LAST x-forwarded-for hop is the one our own
- * reverse proxy appended — the first entry is whatever the client claimed, so it's never used.
- */
-export function clientIp(h: Headers): string {
-  const trusted = h.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip")?.trim();
-  const lastHop = h.get("x-forwarded-for")?.split(",").at(-1)?.trim();
-  return (trusted || lastHop || "local").slice(0, 64);
+/** Take back one hit (e.g. an attempt reserved up front that turned out fine). */
+export function refund(key: string) {
+  const b = buckets.get(key);
+  if (b && b.n > 0) b.n--;
 }
 
 export function _resetRateLimits() {
   buckets.clear();
+}
+
+/** Failed sign-ins site-wide in the current window (drives the growing delay in `login`). */
+export function siteLoginFailures(now = Date.now()): number {
+  const b = buckets.get("login-fail:*");
+  return b && b.reset >= now ? b.n : 0;
 }

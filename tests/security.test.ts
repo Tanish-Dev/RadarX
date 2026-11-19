@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { middleware, buildCsp } from "../src/middleware";
 import { safeHttpUrl } from "../src/lib/url";
 import { OWNER_COOKIE, createSession, openDevMode, passwordMatches, safeNext, verifySession } from "../src/lib/owner";
-import { _resetRateLimits, clientIp, peekLimit, rateLimit } from "../src/lib/ratelimit";
+import { _resetRateLimits, clientIp, rateLimit, refund } from "../src/lib/ratelimit";
 import { parseFilters, sanitizeFilters } from "../src/lib/filters";
 import { parseVisitorProfile } from "../src/lib/visitorProfile";
 
@@ -108,27 +108,31 @@ describe("rate limit", () => {
     expect(rateLimit("k", 5, 60_000, t + 61_000).ok).toBe(true);
   });
   it("uses a client ip the client can't forge", () => {
-    // Vercel's own header wins over anything the client put in x-forwarded-for
-    expect(clientIp(new Headers({ "x-vercel-forwarded-for": "198.51.100.7", "x-forwarded-for": "1.2.3.4" }))).toBe("198.51.100.7");
-    // otherwise the last hop (appended by our proxy), never the client-claimed first entry
-    expect(clientIp(new Headers({ "x-forwarded-for": "1.2.3.4, 203.0.113.9" }))).toBe("203.0.113.9");
-    expect(clientIp(new Headers())).toBe("local");
+    const onVercel = { VERCEL: "1" };
+    // on Vercel, the edge's own header wins over anything the client put in x-forwarded-for
+    expect(clientIp(new Headers({ "x-vercel-forwarded-for": "198.51.100.7", "x-forwarded-for": "1.2.3.4" }), onVercel)).toBe("198.51.100.7");
+    // off Vercel those headers are client input → ignored; only the last (proxy-appended) hop counts
+    expect(clientIp(new Headers({ "x-vercel-forwarded-for": "6.6.6.6", "x-real-ip": "6.6.6.6", "x-forwarded-for": "1.2.3.4, 203.0.113.9" }), {})).toBe("203.0.113.9");
+    expect(clientIp(new Headers({ "x-forwarded-for": "1.2.3.4, 203.0.113.9, 10.0.0.2" }), { TRUSTED_PROXY_HOPS: "2" })).toBe("203.0.113.9");
+    expect(clientIp(new Headers(), {})).toBe("local");
   });
-  it("peekLimit checks without counting, and memory stays bounded", () => {
+  it("refund takes back a reserved hit; flooding other keys never evicts a live lockout", () => {
     const t = 2_000_000;
-    for (let i = 0; i < 3; i++) rateLimit("fail", 3, 60_000, t);
-    expect(peekLimit("fail", 3, t).ok).toBe(false);
-    expect(peekLimit("fresh", 3, t).ok).toBe(true);
-    expect(peekLimit("fresh", 3, t).ok).toBe(true); // peeking never counts
-    for (let i = 0; i < 12_000; i++) rateLimit(`flood${i}`, 1, 60_000, t);
-    expect(peekLimit("flood11999", 1, t).ok).toBe(false); // newest kept, oldest evicted
+    for (let i = 0; i < 5; i++) rateLimit("login-fail:9.9.9.9", 5, 60_000, t);
+    rateLimit("ok", 1, 60_000, t);
+    refund("ok");
+    expect(rateLimit("ok", 1, 60_000, t).ok).toBe(true);
+    for (let i = 0; i < 25_000; i++) rateLimit(`flood${i}`, 1, 60_000, t);
+    expect(rateLimit("login-fail:9.9.9.9", 5, 60_000, t).ok).toBe(false); // still locked
+    expect(rateLimit("flood24999", 1, 60_000, t).ok).toBe(false); // newest kept
   });
-  it("login only counts failures (no owner lockout by spam)", async () => {
+  it("login reserves the attempt before checking the password (no parallel race), refunds on success", async () => {
     const { readFileSync } = await import("node:fs");
     const src = readFileSync(new URL("../src/app/actions.ts", import.meta.url), "utf8");
     const login = src.slice(src.indexOf("export async function login"), src.indexOf("export async function logout"));
-    expect(login).not.toMatch(/rateLimit\("login:\*"/);
-    expect(login.indexOf("passwordMatches")).toBeLessThan(login.indexOf('rateLimit(`login-fail'));
+    expect(login.indexOf('rateLimit(`login-fail:${ip}`')).toBeGreaterThan(-1);
+    expect(login.indexOf('rateLimit(`login-fail:${ip}`')).toBeLessThan(login.indexOf("passwordMatches"));
+    expect(login.indexOf("refund(`login-fail:${ip}`)")).toBeGreaterThan(login.indexOf("passwordMatches"));
   });
 });
 
