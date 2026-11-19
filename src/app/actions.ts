@@ -3,7 +3,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { OWNER_COOKIE, SESSION_DAYS, createSession, ownerPassword, passwordMatches, safeNext } from "@/lib/owner";
-import { clientIp, rateLimit } from "@/lib/ratelimit";
+import { clientIp, peekLimit, rateLimit } from "@/lib/ratelimit";
 import { isOwner, requireOwner } from "@/lib/viewer";
 import { extractSkills } from "@/lib/skills";
 import { sanitizeFilters } from "@/lib/filters";
@@ -16,7 +16,7 @@ import { db, kvGet, kvSet } from "@/lib/db";
 import type { JobFilters } from "@/lib/filters";
 import { rescoreAll } from "@/lib/jobs";
 import { companyKey } from "@/lib/normalize";
-import { ResumeError, VISITOR_RESUME_BYTES, readResumeFile, saveResume, withTimeout } from "@/lib/resume";
+import { ResumeError, VISITOR_RESUME_BYTES, readResumeFile, saveResume } from "@/lib/resume";
 import { getProfile, getRules, setProfile, setRules, type AlertRules } from "@/lib/settings";
 import { slugify } from "@/lib/text";
 import { configFromUrl, discoverAts } from "@/sources/discover";
@@ -35,14 +35,20 @@ const badId = (id: unknown) => typeof id !== "string" || !ID_RE.test(id);
 // ── Owner sign-in ───────────────────────────────────────────────────────────
 export async function login(_prev: { error?: string } | null, form: FormData): Promise<{ error?: string }> {
   const ip = clientIp(await headers());
-  // 5 tries / 15 min per IP, and 30 / 15 min overall so a botnet can't brute-force either
-  const mine = rateLimit(`login:${ip}`, 5, 15 * 60_000);
-  const all = rateLimit("login:*", 30, 15 * 60_000);
-  if (!mine.ok || !all.ok) return { error: `Too many attempts — try again in ${Math.ceil(Math.max(mine.retryAfterS, all.retryAfterS) / 60)} min.` };
+  // Only FAILED attempts count, so nobody can lock the owner out by spamming the form. 5 failures / 15 min per IP
+  // blocks that IP; past 30 failures / 15 min site-wide (a spread-out guessing run) every attempt is slowed to ~3 s
+  // instead of refused — a correct password still works.
+  const mine = peekLimit(`login-fail:${ip}`, 5);
+  if (!mine.ok) return { error: `Too many attempts — try again in ${Math.ceil(mine.retryAfterS / 60)} min.` };
   if (!ownerPassword()) return { error: "Owner sign-in isn't set up on this deployment (OWNER_PASSWORD)." };
   const ok = await passwordMatches(String(form.get("password") ?? ""));
-  await new Promise((r) => setTimeout(r, 400 + Math.random() * 300)); // flatten timing, slow guessing
-  if (!ok) return { error: "Wrong password." };
+  const busy = !peekLimit("login-fail:*", 30).ok;
+  await new Promise((r) => setTimeout(r, (busy ? 2500 : 400) + Math.random() * 400)); // flatten timing, slow guessing
+  if (!ok) {
+    rateLimit(`login-fail:${ip}`, 5, 15 * 60_000);
+    rateLimit("login-fail:*", 30, 15 * 60_000);
+    return { error: "Wrong password." };
+  }
   const session = await createSession();
   (await cookies()).set(OWNER_COOKIE, session!, {
     httpOnly: true,
@@ -64,7 +70,7 @@ export async function logout(): Promise<void> {
 // ── Visitor: skills from pasted text (nothing is stored server-side) ────────
 export async function extractVisitorSkills(text: string): Promise<Result & { skills?: string[] }> {
   const ip = clientIp(await headers());
-  if (!rateLimit(`skills:${ip}`, 20, 10 * 60_000).ok) return { ok: false, error: "Too many requests — try again in a few minutes." };
+  if (!rateLimit(`skills:${ip}`, 20, 10 * 60_000).ok || !rateLimit("skills:*", 600, 10 * 60_000).ok) return { ok: false, error: "Too many requests — try again in a few minutes." };
   if (typeof text !== "string" || !text.trim()) return { ok: false, error: "Paste your resume text or a list of skills." };
   const skills = extractSkills(text.slice(0, 30_000)).slice(0, 40);
   return skills.length ? { ok: true, skills } : { ok: false, error: "No skills recognised — try listing them, e.g. “Python, React, SQL”." };
@@ -77,14 +83,14 @@ export async function extractVisitorSkills(text: string): Promise<Result & { ski
  */
 export async function extractVisitorResume(form: FormData): Promise<Result & { skills?: string[] }> {
   const ip = clientIp(await headers());
-  if (!rateLimit(`resume:${ip}`, 8, 10 * 60_000).ok || !rateLimit("resume:*", 200, 10 * 60_000).ok)
+  if (!rateLimit(`resume:${ip}`, 6, 10 * 60_000).ok || !rateLimit("resume:*", 60, 10 * 60_000).ok)
     return { ok: false, error: "Too many uploads — try again in a few minutes." };
   const file = form.get("file");
   if (!(file instanceof File) || file.size === 0) return { ok: false, error: "Choose a PDF or .txt resume." };
   if (file.size > VISITOR_RESUME_BYTES) return { ok: false, error: "That file is over 3 MB — export a smaller PDF or paste the text." };
   try {
     const buf = new Uint8Array(await file.arrayBuffer());
-    const text = await withTimeout(readResumeFile(buf, file.name), 10_000);
+    const text = await readResumeFile(buf, file.name, { deadlineMs: 8_000 });
     const skills = extractSkills(text.slice(0, 50_000)).slice(0, 40);
     return skills.length ? { ok: true, skills } : { ok: false, error: "No skills recognised in that file — try pasting the text." };
   } catch (e) {
@@ -173,7 +179,7 @@ export async function sendJobToTelegram(id: string): Promise<Result> {
 /** Infinite scroll on the Feed. */
 export async function loadMoreJobs(filters: Partial<JobFilters>, offset: number) {
   const ip = clientIp(await headers());
-  if (!rateLimit(`more:${ip}`, 60, 60_000).ok) return [];
+  if (!rateLimit(`more:${ip}`, 60, 60_000).ok || !rateLimit("more:*", 1200, 60_000).ok) return [];
   const off = Number.isFinite(offset) ? Math.max(0, Math.min(5_000, Math.floor(offset))) : 0;
   const { jobs } = await getJobsFor(sanitizeFilters(filters), { offset: off, limit: 100 });
   return jobs;
@@ -201,7 +207,7 @@ export async function pollNow(): Promise<Result> {
   // public on purpose — guarded by the shared cooldown + per-IP limit below, and it takes no input
   const owner = await isOwner();
   const ip = clientIp(await headers());
-  if (!owner && !rateLimit(`poll:${ip}`, 4, 10 * 60_000).ok) return { ok: false, error: "Slow down — try again in a few minutes." };
+  if (!owner && (!rateLimit(`poll:${ip}`, 4, 10 * 60_000).ok || !rateLimit("poll:*", 200, 10 * 60_000).ok)) return { ok: false, error: "Slow down — try again in a few minutes." };
   const gap = owner ? OWNER_POLL_GAP_MS : POLL_GAP_MS;
   const since = Date.now() - (await lastPollAt());
   if (since < gap) {
@@ -241,7 +247,7 @@ export async function pollNow(): Promise<Result> {
 export async function refreshNews(): Promise<Result & { fetched?: number; checkedAt?: number }> {
   const owner = await isOwner();
   const ip = clientIp(await headers());
-  if (!owner && !rateLimit(`news:${ip}`, 10, 10 * 60_000).ok) return { ok: false, error: "Slow down — try again in a few minutes." };
+  if (!owner && (!rateLimit(`news:${ip}`, 10, 10 * 60_000).ok || !rateLimit("news:*", 300, 10 * 60_000).ok)) return { ok: false, error: "Slow down — try again in a few minutes." };
   try {
     const { checkNews } = await import("@/worker/news");
     const rows = await checkNews({ minGapMs: owner ? 2 * 60_000 : 10 * 60_000 });
