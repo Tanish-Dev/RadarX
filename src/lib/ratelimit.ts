@@ -49,11 +49,11 @@ function bucket(key: string, max: number, windowMs: number, now: number): Bucket
       if (failClosed) {
         evictInactive(map, cap * 0.9);
         if (map.size >= cap) {
-          // all live lockouts: share a coarse network bucket (kept in the never-evicted site-wide store)
-          // derived from the value itself, so unrelated networks never share one catch-all bucket
-          const coarse = key.startsWith("login-fail:net:")
-            ? `login-fail:netof:${key.slice("login-fail:net:".length).split(/[.:]/)[0]}`
-            : `login-fail:netof:${coarseNet(key.slice("login-fail:".length))}`;
+          const coarse = overflowKey(key);
+          // network store full of live lockouts: no hard network limit for a new network (the per-IP limit and the
+          // site-wide slow-down still apply) — never a bucket coarser than the network itself
+          if (!coarse) return b;
+          // per-IP store full: share that IP's own network bucket (never-evicted store), so a limit still applies
           let c = sitewide.get(coarse);
           if (!c || c.reset < now) sitewide.set(coarse, (c = { n: 0, reset: now + windowMs, max }));
           return c;
@@ -77,10 +77,24 @@ export function rateLimit(key: string, max: number, windowMs: number, now = Date
   return b.n <= max ? { ok: true, retryAfterS: 0 } : { ok: false, retryAfterS: Math.ceil((b.reset - now) / 1000) };
 }
 
+/** Where a key overflows to when its store is full of live lockouts (null = no fallback bucket). */
+function overflowKey(key: string): string | null {
+  if (key.startsWith("login-fail:net:")) return null;
+  if (key.startsWith("login-fail:")) return `login-fail:netof:${coarseNet(key.slice("login-fail:".length))}`;
+  return null;
+}
+
 /** Take back one hit (e.g. an attempt reserved up front that turned out fine). */
 export function refund(key: string) {
   const { map } = storeFor(key);
   const b = map.get(key);
+  if (!b) {
+    // the hit may have gone to the overflow bucket
+    const o = overflowKey(key);
+    const ob = o ? sitewide.get(o) : undefined;
+    if (ob && ob.n > 0) ob.n--;
+    return;
+  }
   if (b && b.n > 0) b.n--;
   if (b && b.n === 0 && !key.endsWith(":*")) map.delete(key); // successful sign-ins leave nothing behind
 }
