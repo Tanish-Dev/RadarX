@@ -3,7 +3,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { OWNER_COOKIE, SESSION_DAYS, createSession, ownerPassword, passwordMatches, safeNext } from "@/lib/owner";
-import { clientIp, rateLimit, refund, siteLoginFailures } from "@/lib/ratelimit";
+import { clientIp, isSharedIp, rateLimit, refund, siteLoginFailures } from "@/lib/ratelimit";
 import { isOwner, requireOwner } from "@/lib/viewer";
 import { extractSkills } from "@/lib/skills";
 import { sanitizeFilters } from "@/lib/filters";
@@ -39,7 +39,9 @@ export async function login(_prev: { error?: string } | null, form: FormData): P
   // can't race past the limit. 5 failures / 15 min per IP blocks that IP. Site-wide failures (a guessing run
   // spread over many IPs) make every attempt slower — 0.4 s, growing to ~10 s — rather than refusing outright,
   // so spamming the form can't lock the owner out; with a long random OWNER_PASSWORD that rate is hopeless.
-  const mine = rateLimit(`login-fail:${ip}`, 5, 15 * 60_000);
+  // no trusted client IP (self-hosted without TRUSTED_PROXY_HOPS): skip the hard per-IP block — a shared bucket
+  // would let anyone lock everyone out — and rely on the site-wide slow-down below
+  const mine = isSharedIp(ip) ? { ok: true, retryAfterS: 0 } : rateLimit(`login-fail:${ip}`, 5, 15 * 60_000);
   if (!mine.ok) return { error: `Too many attempts — try again in ${Math.ceil(mine.retryAfterS / 60)} min.` };
   rateLimit("login-fail:*", 1e9, 15 * 60_000);
   const siteFails = siteLoginFailures();

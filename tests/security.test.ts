@@ -126,10 +126,13 @@ describe("rate limit", () => {
     for (let i = 0; i < 25_000; i++) rateLimit(`flood${i}`, 1, 60_000, t);
     expect(rateLimit("login-fail:9.9.9.9", 5, 60_000, t).ok).toBe(false); // still locked
     expect(rateLimit("flood24999", 1, 60_000, t).ok).toBe(false); // newest kept
-    // lockout store full → new clients are refused, existing lockouts untouched
+    // lockout store full of single failures → those are evicted first; live lockouts stay; nobody is refused
     for (let i = 0; i < 20_000; i++) rateLimit(`login-fail:ip${i}`, 5, 60_000, t);
-    expect(rateLimit("login-fail:brand-new", 5, 60_000, t).ok).toBe(false);
+    expect(rateLimit("login-fail:brand-new", 5, 60_000, t).ok).toBe(true);
     expect(rateLimit("login-fail:9.9.9.9", 5, 60_000, t).ok).toBe(false);
+    // IPv6 clients share their /64
+    expect(clientIp(new Headers({ "x-vercel-forwarded-for": "2001:db8:abcd:12:1::7" }), { VERCEL: "1" })).toBe("2001:db8:abcd:12::/64");
+    expect(clientIp(new Headers({ "x-vercel-forwarded-for": "2001:db8:abcd:12:ffff::9" }), { VERCEL: "1" })).toBe("2001:db8:abcd:12::/64");
     // site-wide counters live apart and are never evicted
     rateLimit("x:*", 1, 60_000, t);
     expect(rateLimit("x:*", 1, 60_000, t).ok).toBe(false);
