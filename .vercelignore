@@ -1,0 +1,13 @@
+# never upload local data, secrets, builds or private working docs with `vercel deploy`
+/data/
+.env
+.env.*
+!.env.example
+.next/
+.next-e2e/
+node_modules/
+MASTER_PROMPT.md
+CLAUDE.md
+design-refs/
+*.db
+*.db-*
