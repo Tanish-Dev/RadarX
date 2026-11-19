@@ -111,10 +111,11 @@ describe("rate limit", () => {
     const onVercel = { VERCEL: "1" };
     // on Vercel, the edge's own header wins over anything the client put in x-forwarded-for
     expect(clientIp(new Headers({ "x-vercel-forwarded-for": "198.51.100.7", "x-forwarded-for": "1.2.3.4" }), onVercel)).toBe("198.51.100.7");
-    // off Vercel those headers are client input → ignored; only the last (proxy-appended) hop counts
-    expect(clientIp(new Headers({ "x-vercel-forwarded-for": "6.6.6.6", "x-real-ip": "6.6.6.6", "x-forwarded-for": "1.2.3.4, 203.0.113.9" }), {})).toBe("203.0.113.9");
+    // off Vercel those headers are client input → ignored unless a proxy is configured
+    expect(clientIp(new Headers({ "x-vercel-forwarded-for": "6.6.6.6", "x-real-ip": "6.6.6.6", "x-forwarded-for": "1.2.3.4" }), {})).toBe("direct");
+    expect(clientIp(new Headers({ "x-forwarded-for": "1.2.3.4, 203.0.113.9" }), { TRUSTED_PROXY_HOPS: "1" })).toBe("203.0.113.9");
     expect(clientIp(new Headers({ "x-forwarded-for": "1.2.3.4, 203.0.113.9, 10.0.0.2" }), { TRUSTED_PROXY_HOPS: "2" })).toBe("203.0.113.9");
-    expect(clientIp(new Headers(), {})).toBe("local");
+    expect(clientIp(new Headers(), {})).toBe("direct");
   });
   it("refund takes back a reserved hit; flooding other keys never evicts a live lockout", () => {
     const t = 2_000_000;
@@ -125,6 +126,13 @@ describe("rate limit", () => {
     for (let i = 0; i < 25_000; i++) rateLimit(`flood${i}`, 1, 60_000, t);
     expect(rateLimit("login-fail:9.9.9.9", 5, 60_000, t).ok).toBe(false); // still locked
     expect(rateLimit("flood24999", 1, 60_000, t).ok).toBe(false); // newest kept
+    // lockout store full → new clients are refused, existing lockouts untouched
+    for (let i = 0; i < 20_000; i++) rateLimit(`login-fail:ip${i}`, 5, 60_000, t);
+    expect(rateLimit("login-fail:brand-new", 5, 60_000, t).ok).toBe(false);
+    expect(rateLimit("login-fail:9.9.9.9", 5, 60_000, t).ok).toBe(false);
+    // site-wide counters live apart and are never evicted
+    rateLimit("x:*", 1, 60_000, t);
+    expect(rateLimit("x:*", 1, 60_000, t).ok).toBe(false);
   });
   it("login reserves the attempt before checking the password (no parallel race), refunds on success", async () => {
     const { readFileSync } = await import("node:fs");

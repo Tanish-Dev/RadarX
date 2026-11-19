@@ -37,44 +37,57 @@ export async function resumeText(input: { pdf?: Uint8Array; text?: string }, opt
   if (!input.pdf) return "";
   if (!isPdf(input.pdf)) throw new ResumeError("That doesn't look like a PDF.");
   const pdf = input.pdf;
-  let release: (() => void) | null = null;
-  const free = () => (release?.(), (release = null));
-  let task: { destroy: () => Promise<void> } | null = null;
   let cancelled = false;
+  let task: { destroy: () => Promise<void> } | null = null;
   const tooSlow = () => new ResumeError("That file took too long to read — paste the text instead.");
+  const stop = () => {
+    cancelled = true;
+    void task?.destroy().catch(() => null); // also aborts a document that is still loading
+  };
   let timer: ReturnType<typeof setTimeout> | undefined;
 
+  // The concurrency slot is held until the parse has really ended (not just until the caller gave up), so a
+  // hostile file can't free its slot early and let more parses pile up; teardown makes that end come quickly.
   const work = (async () => {
-    release = await slot();
-    if (cancelled) return (free(), ""); // the deadline fired while queued — hand the slot straight on
-    const { getResolvedPDFJS } = await import("unpdf");
-    const { getDocument } = await getResolvedPDFJS();
-    const t = getDocument({ data: pdf, disableFontFace: true, useSystemFonts: false, stopAtErrors: true });
-    task = t;
-    const doc = await t.promise;
-    if (doc.numPages > MAX_RESUME_PAGES) throw new ResumeError(`That PDF has ${doc.numPages} pages — a resume should be a few.`);
-    const out: string[] = [];
-    let chars = 0;
-    for (let i = 1; i <= doc.numPages && chars < 100_000 && !cancelled; i++) {
-      const tc = await (await doc.getPage(i)).getTextContent();
-      const text = tc.items.map((it) => ("str" in it ? it.str : "")).join(" ");
-      out.push(text);
-      chars += text.length;
+    const release = await slot();
+    try {
+      if (cancelled) return "";
+      const { getResolvedPDFJS } = await import("unpdf");
+      if (cancelled) return "";
+      const { getDocument } = await getResolvedPDFJS();
+      if (cancelled) return "";
+      const t = getDocument({ data: pdf, disableFontFace: true, useSystemFonts: false, stopAtErrors: true });
+      task = t;
+      const doc = await t.promise;
+      if (cancelled) return "";
+      if (doc.numPages > MAX_RESUME_PAGES) throw new ResumeError(`That PDF has ${doc.numPages} pages — a resume should be a few.`);
+      const out: string[] = [];
+      let chars = 0;
+      for (let i = 1; i <= doc.numPages && chars < 100_000; i++) {
+        const page = await doc.getPage(i);
+        if (cancelled) return "";
+        const tc = await page.getTextContent();
+        if (cancelled) return "";
+        const text = tc.items.map((it) => ("str" in it ? it.str : "")).join(" ");
+        out.push(text);
+        chars += text.length;
+      }
+      return out.join("\n");
+    } finally {
+      void task?.destroy().catch(() => null);
+      release();
     }
-    return out.join("\n");
   })();
+  work.catch(() => null); // an abandoned parse may reject after teardown
 
   const deadline = opts.deadlineMs
-    ? new Promise<never>((_, rej) => (timer = setTimeout(() => rej(tooSlow()), opts.deadlineMs)))
+    ? new Promise<never>((_, rej) => (timer = setTimeout(() => (stop(), rej(tooSlow())), opts.deadlineMs)))
     : null;
   try {
     return await (deadline ? Promise.race([work, deadline]) : work);
   } finally {
     clearTimeout(timer);
     cancelled = true;
-    free();
-    void (task as { destroy: () => Promise<void> } | null)?.destroy().catch(() => null);
-    work.catch(() => null); // the abandoned parse may reject after teardown
   }
 }
 
