@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { middleware, buildCsp } from "../src/middleware";
 import { safeHttpUrl } from "../src/lib/url";
 import { OWNER_COOKIE, createSession, openDevMode, passwordMatches, safeNext, verifySession } from "../src/lib/owner";
-import { _resetRateLimits, clientIp, enter, group, isSharedIp, rateLimit, refund } from "../src/lib/ratelimit";
+import { _inflightSize, _resetRateLimits, clientIp, enter, group, isSharedIp, rateLimit, refund } from "../src/lib/ratelimit";
 import { parseFilters, sanitizeFilters } from "../src/lib/filters";
 import { parseVisitorProfile } from "../src/lib/visitorProfile";
 
@@ -136,7 +136,15 @@ describe("rate limit", () => {
     const a = enter("t", 1)!;
     expect(enter("t", 1)).toBeNull();
     a();
-    expect(enter("t", 1)).not.toBeNull();
+    const b2 = enter("t", 1)!;
+    expect(b2).not.toBeNull();
+    b2();
+    expect(_inflightSize()).toBe(0); // idle keys are deleted
+    // per-network keys have their own store: flooding per-IP keys never touches them
+    for (let i = 0; i < 101; i++) rateLimit("login-fail:net:198.51.0.0/16", 100, 60_000, t);
+    for (let i = 0; i < 25_000; i++) rateLimit(`login-fail:x${i}`, 5, 60_000, t);
+    expect(rateLimit("login-fail:net:198.51.0.0/16", 100, 60_000, t).ok).toBe(false);
+    expect(rateLimit("login-fail:net:203.0.0.0/16", 100, 60_000, t).ok).toBe(true);
     // lockout store full of single failures → those are evicted first; live lockouts stay; nobody is refused
     for (let i = 0; i < 20_000; i++) rateLimit(`login-fail:ip${i}`, 5, 60_000, t);
     expect(rateLimit("login-fail:brand-new", 5, 60_000, t).ok).toBe(true);

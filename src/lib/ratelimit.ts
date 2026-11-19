@@ -15,12 +15,16 @@ import { isIP } from "node:net";
 type Bucket = { n: number; reset: number; max: number };
 const general = new Map<string, Bucket>();
 const lockouts = new Map<string, Bucket>();
+const netLockouts = new Map<string, Bucket>();
 const sitewide = new Map<string, Bucket>();
 const MAX_GENERAL = 10_000;
 const MAX_LOCKOUTS = 20_000;
+const MAX_NET_LOCKOUTS = 50_000;
 
 function storeFor(key: string) {
   if (key.endsWith(":*")) return { map: sitewide, max: Infinity, failClosed: false };
+  // per-network sign-in counts live apart from per-IP ones, so neither can crowd out or collide with the other
+  if (key.startsWith("login-fail:net:")) return { map: netLockouts, max: MAX_NET_LOCKOUTS, failClosed: true };
   if (key.startsWith("login-fail:")) return { map: lockouts, max: MAX_LOCKOUTS, failClosed: true };
   return { map: general, max: MAX_GENERAL, failClosed: false };
 }
@@ -46,7 +50,10 @@ function bucket(key: string, max: number, windowMs: number, now: number): Bucket
         evictInactive(map, cap * 0.9);
         if (map.size >= cap) {
           // all live lockouts: share a coarse network bucket (kept in the never-evicted site-wide store)
-          const coarse = `${key.split(":")[0]}:net:${coarseNet(key.slice(key.indexOf(":") + 1))}`;
+          // derived from the value itself, so unrelated networks never share one catch-all bucket
+          const coarse = key.startsWith("login-fail:net:")
+            ? `login-fail:netof:${key.slice("login-fail:net:".length).split(/[.:]/)[0]}`
+            : `login-fail:netof:${coarseNet(key.slice("login-fail:".length))}`;
           let c = sitewide.get(coarse);
           if (!c || c.reset < now) sitewide.set(coarse, (c = { n: 0, reset: now + windowMs, max }));
           return c;
@@ -141,21 +148,28 @@ export function siteLoginFailures(now = Date.now()): number {
 
 /** In-flight counter (per instance) — caps how many of something run at once, regardless of who sends them. */
 const inflight = new Map<string, number>();
+const MAX_INFLIGHT_KEYS = 10_000;
 export function enter(key: string, max: number): (() => void) | null {
   const n = inflight.get(key) ?? 0;
   if (n >= max) return null;
+  if (n === 0 && inflight.size >= MAX_INFLIGHT_KEYS) return null; // fail closed: bounded memory
   inflight.set(key, n + 1);
   let done = false;
   return () => {
     if (done) return;
     done = true;
-    inflight.set(key, Math.max(0, (inflight.get(key) ?? 1) - 1));
+    const m = (inflight.get(key) ?? 1) - 1;
+    if (m <= 0) inflight.delete(key); // idle keys leave nothing behind
+    else inflight.set(key, m);
   };
 }
+
+export const _inflightSize = () => inflight.size;
 
 export function _resetRateLimits() {
   inflight.clear();
   general.clear();
   lockouts.clear();
+  netLockouts.clear();
   sitewide.clear();
 }
