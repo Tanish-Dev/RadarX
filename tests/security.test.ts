@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { middleware, buildCsp } from "../src/middleware";
 import { safeHttpUrl } from "../src/lib/url";
 import { OWNER_COOKIE, createSession, openDevMode, passwordMatches, safeNext, verifySession } from "../src/lib/owner";
-import { _resetRateLimits, clientIp, rateLimit, refund } from "../src/lib/ratelimit";
+import { _resetRateLimits, clientIp, enter, group, isSharedIp, rateLimit, refund } from "../src/lib/ratelimit";
 import { parseFilters, sanitizeFilters } from "../src/lib/filters";
 import { parseVisitorProfile } from "../src/lib/visitorProfile";
 
@@ -126,6 +126,17 @@ describe("rate limit", () => {
     for (let i = 0; i < 25_000; i++) rateLimit(`flood${i}`, 1, 60_000, t);
     expect(rateLimit("login-fail:9.9.9.9", 5, 60_000, t).ok).toBe(false); // still locked
     expect(rateLimit("flood24999", 1, 60_000, t).ok).toBe(false); // newest kept
+    // IPv4-mapped IPv6 is the same client as its IPv4; malformed input never collides with real clients
+    expect(group("::ffff:203.0.113.5")).toBe("203.0.113.5");
+    expect(group("::ffff:0:203.0.113.5")).toBe("203.0.113.5");
+    expect(group("2001:db8::1")).toBe("2001:db8:0:0::/64");
+    expect(group("not-an-ip")).toBe("invalid");
+    expect(isSharedIp(group("not-an-ip"))).toBe(true);
+    // the in-flight cap
+    const a = enter("t", 1)!;
+    expect(enter("t", 1)).toBeNull();
+    a();
+    expect(enter("t", 1)).not.toBeNull();
     // lockout store full of single failures → those are evicted first; live lockouts stay; nobody is refused
     for (let i = 0; i < 20_000; i++) rateLimit(`login-fail:ip${i}`, 5, 60_000, t);
     expect(rateLimit("login-fail:brand-new", 5, 60_000, t).ok).toBe(true);
@@ -133,6 +144,11 @@ describe("rate limit", () => {
     // IPv6 clients share their /64
     expect(clientIp(new Headers({ "x-vercel-forwarded-for": "2001:db8:abcd:12:1::7" }), { VERCEL: "1" })).toBe("2001:db8:abcd:12::/64");
     expect(clientIp(new Headers({ "x-vercel-forwarded-for": "2001:db8:abcd:12:ffff::9" }), { VERCEL: "1" })).toBe("2001:db8:abcd:12::/64");
+    // all-live-lockout overflow still enforces a limit via the coarse network bucket
+    for (let i = 0; i < 20_000; i++) for (let j = 0; j < 6; j++) rateLimit(`login-fail:10.${(i >> 8) & 255}.${i & 255}.1`, 5, 60_000, t);
+    let blocked = false;
+    for (let j = 0; j < 7; j++) blocked = !rateLimit("login-fail:172.16.9.9", 5, 60_000, t).ok;
+    expect(blocked).toBe(true);
     // site-wide counters live apart and are never evicted
     rateLimit("x:*", 1, 60_000, t);
     expect(rateLimit("x:*", 1, 60_000, t).ok).toBe(false);
@@ -143,7 +159,7 @@ describe("rate limit", () => {
     const login = src.slice(src.indexOf("export async function login"), src.indexOf("export async function logout"));
     expect(login.indexOf('rateLimit(`login-fail:${ip}`')).toBeGreaterThan(-1);
     expect(login.indexOf('rateLimit(`login-fail:${ip}`')).toBeLessThan(login.indexOf("passwordMatches"));
-    expect(login.indexOf("refund(`login-fail:${ip}`)")).toBeGreaterThan(login.indexOf("passwordMatches"));
+    expect(login.lastIndexOf("refund(`login-fail:${ip}`)")).toBeGreaterThan(login.indexOf("passwordMatches"));
   });
 });
 

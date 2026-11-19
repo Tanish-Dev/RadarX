@@ -1,3 +1,5 @@
+import { isIP } from "node:net";
+
 /**
  * Small in-memory fixed-window rate limiter (per server instance). Good enough to blunt password guessing and
  * scripted abuse of the few public server actions on a free-tier deployment; a determined attacker spreading
@@ -6,8 +8,8 @@
  * Three separate stores, so flooding one can never flush another:
  *  - site-wide keys (`…:*`): a handful, never evicted;
  *  - sign-in lockouts (`login-fail:<ip>`): capped; when full, entries that aren't an active lockout are evicted
- *    first (fewest failures, oldest first). If every slot is a live lockout, a new client gets no per-IP limit
- *    (only the site-wide slow-down) rather than being refused — so filling the store can't lock anyone out;
+ *    first (fewest failures, oldest first). If every slot is a live lockout, a new client falls back to a coarse
+ *    network bucket (IPv4 /16, IPv6 /48) that still enforces a limit — never "no limit", never everyone refused;
  *  - everything else: capped; oldest windows evicted.
  */
 type Bucket = { n: number; reset: number; max: number };
@@ -42,7 +44,13 @@ function bucket(key: string, max: number, windowMs: number, now: number): Bucket
     if (map.size >= cap) {
       if (failClosed) {
         evictInactive(map, cap * 0.9);
-        if (map.size >= cap) return b; // all live lockouts: untracked bucket (no per-IP limit), never a refusal
+        if (map.size >= cap) {
+          // all live lockouts: share a coarse network bucket (kept in the never-evicted site-wide store)
+          const coarse = `${key.split(":")[0]}:net:${coarseNet(key.slice(key.indexOf(":") + 1))}`;
+          let c = sitewide.get(coarse);
+          if (!c || c.reset < now) sitewide.set(coarse, (c = { n: 0, reset: now + windowMs, max }));
+          return c;
+        }
       } else {
         for (const k of map.keys()) {
           if (map.size < cap * 0.9) break;
@@ -91,18 +99,38 @@ export function clientIp(h: Headers, env: Record<string, string | undefined> = p
   return env.VERCEL ? "unknown" : "direct";
 }
 
-/** "direct"/"unknown" = no trusted client IP: callers must not apply hard per-IP refusals to that shared bucket. */
-export const isSharedIp = (ip: string) => ip === "direct" || ip === "unknown";
+/** "direct"/"unknown" = no trusted client IP: every client shares one bucket, so callers use a looser limit. */
+export const isSharedIp = (ip: string) => ip === "direct" || ip === "unknown" || ip === "invalid";
 
-/** IPv6 clients are grouped by /64 (one subscriber's block) so a single host can't mint endless keys. */
-function group(ip: string): string {
-  const v = ip.trim().slice(0, 64);
-  if (!v.includes(":") || /^[\d.]+$/.test(v)) return v;
-  const parts = v.split("%")[0].split("::");
-  const head = parts[0] ? parts[0].split(":") : [];
-  const tail = parts.length > 1 && parts[1] ? parts[1].split(":") : [];
-  const full = parts.length > 1 ? [...head, ...Array(Math.max(0, 8 - head.length - tail.length)).fill("0"), ...tail] : head;
-  return `${full.slice(0, 4).map((x) => x.toLowerCase().replace(/^0+(?=.)/, "")).join(":")}::/64`;
+/** IPv6 address → its 8 hextets (validated by node:net, so malformed input never gets here). */
+function hextets(v: string): string[] {
+  const [head, tail = ""] = v.split("::");
+  const h = head ? head.split(":") : [];
+  const t = tail ? tail.split(":") : [];
+  const full = v.includes("::") ? [...h, ...Array(8 - h.length - t.length).fill("0"), ...t] : h;
+  return full.map((x) => parseInt(x, 16).toString(16));
+}
+
+/**
+ * Normalise a client IP into a rate-limit key. IPv4 as-is; IPv4-mapped/compatible IPv6 (::ffff:1.2.3.4) → the
+ * embedded IPv4 (so one client can't get two keys, and unrelated clients never collide); other IPv6 grouped by
+ * /64 (one subscriber's block). Anything unparseable → a single "invalid" bucket.
+ */
+export function group(raw: string): string {
+  const v = raw.trim().replace(/^\[|\]$/g, "").split("%")[0].slice(0, 64);
+  const kind = isIP(v);
+  if (kind === 4) return v;
+  if (kind !== 6) return "invalid";
+  const mapped = v.match(/^(?:::(?:ffff(?::0{1,4})?:)?)((?:\d{1,3}\.){3}\d{1,3})$/i);
+  if (mapped && isIP(mapped[1]) === 4) return mapped[1];
+  return `${hextets(v).slice(0, 4).join(":")}::/64`;
+}
+
+/** Coarser network for overflow buckets: IPv4 /16, IPv6 /48. */
+function coarseNet(key: string): string {
+  if (isIP(key) === 4) return key.split(".").slice(0, 2).join(".") + ".0.0/16";
+  if (key.endsWith("::/64")) return key.split(":").slice(0, 3).join(":") + "::/48";
+  return "other";
 }
 
 /** Failed sign-ins site-wide in the current window (drives the growing delay in `login`). */
@@ -111,7 +139,22 @@ export function siteLoginFailures(now = Date.now()): number {
   return b && b.reset >= now ? b.n : 0;
 }
 
+/** In-flight counter (per instance) — caps how many of something run at once, regardless of who sends them. */
+const inflight = new Map<string, number>();
+export function enter(key: string, max: number): (() => void) | null {
+  const n = inflight.get(key) ?? 0;
+  if (n >= max) return null;
+  inflight.set(key, n + 1);
+  let done = false;
+  return () => {
+    if (done) return;
+    done = true;
+    inflight.set(key, Math.max(0, (inflight.get(key) ?? 1) - 1));
+  };
+}
+
 export function _resetRateLimits() {
+  inflight.clear();
   general.clear();
   lockouts.clear();
   sitewide.clear();

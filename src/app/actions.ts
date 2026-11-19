@@ -3,7 +3,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { OWNER_COOKIE, SESSION_DAYS, createSession, ownerPassword, passwordMatches, safeNext } from "@/lib/owner";
-import { clientIp, isSharedIp, rateLimit, refund, siteLoginFailures } from "@/lib/ratelimit";
+import { clientIp, enter, isSharedIp, rateLimit, refund, siteLoginFailures } from "@/lib/ratelimit";
 import { isOwner, requireOwner } from "@/lib/viewer";
 import { extractSkills } from "@/lib/skills";
 import { sanitizeFilters } from "@/lib/filters";
@@ -35,23 +35,33 @@ const badId = (id: unknown) => typeof id !== "string" || !ID_RE.test(id);
 // ── Owner sign-in ───────────────────────────────────────────────────────────
 export async function login(_prev: { error?: string } | null, form: FormData): Promise<{ error?: string }> {
   const ip = clientIp(await headers());
-  // Each attempt is counted BEFORE the password check and refunded only if it was right, so parallel requests
-  // can't race past the limit. 5 failures / 15 min per IP blocks that IP. Site-wide failures (a guessing run
-  // spread over many IPs) make every attempt slower — 0.4 s, growing to ~10 s — rather than refusing outright,
-  // so spamming the form can't lock the owner out; with a long random OWNER_PASSWORD that rate is hopeless.
-  // no trusted client IP (self-hosted without TRUSTED_PROXY_HOPS): skip the hard per-IP block — a shared bucket
-  // would let anyone lock everyone out — and rely on the site-wide slow-down below
-  const mine = isSharedIp(ip) ? { ok: true, retryAfterS: 0 } : rateLimit(`login-fail:${ip}`, 5, 15 * 60_000);
-  if (!mine.ok) return { error: `Too many attempts — try again in ${Math.ceil(mine.retryAfterS / 60)} min.` };
-  rateLimit("login-fail:*", 1e9, 15 * 60_000);
-  const siteFails = siteLoginFailures();
-  if (!ownerPassword()) return { error: "Owner sign-in isn't set up on this deployment (OWNER_PASSWORD)." };
-  const ok = await passwordMatches(String(form.get("password") ?? ""));
-  const slow = Math.min(10_000, 400 * 2 ** Math.max(0, Math.floor(siteFails / 30)));
-  await new Promise((r) => setTimeout(r, slow + Math.random() * 400)); // flatten timing, slow guessing
-  if (!ok) return { error: "Wrong password." };
-  refund(`login-fail:${ip}`);
-  refund("login-fail:*");
+  // Layered, so neither guessing nor lockout spam wins:
+  //  1. at most 8 sign-in checks run at once per instance (parallel floods can't outrun the counters);
+  //  2. each attempt is counted BEFORE the password check and refunded only if it was right — 5 failures /
+  //     15 min per client IP (or 50 for the shared bucket when there is no trusted IP);
+  //  3. site-wide failures slow every attempt (0.4 s → 10 s) and a hard 500 / 15 min cap stops a botnet run.
+  //     Reaching that cap takes a sustained attack; with a long random OWNER_PASSWORD guessing is hopeless anyway.
+  const leave = enter("login", 8);
+  if (!leave) return { error: "Sign-in is busy — try again in a moment." };
+  try {
+    const mine = rateLimit(`login-fail:${ip}`, isSharedIp(ip) ? 50 : 5, 15 * 60_000);
+    if (!mine.ok) return { error: `Too many attempts — try again in ${Math.ceil(mine.retryAfterS / 60)} min.` };
+    const site = rateLimit("login-fail:*", 500, 15 * 60_000);
+    if (!site.ok) {
+      refund(`login-fail:${ip}`);
+      return { error: `Sign-in is paused after too many failed attempts — try again in ${Math.ceil(site.retryAfterS / 60)} min.` };
+    }
+    const siteFails = siteLoginFailures();
+    if (!ownerPassword()) return { error: "Owner sign-in isn't set up on this deployment (OWNER_PASSWORD)." };
+    const ok = await passwordMatches(String(form.get("password") ?? ""));
+    const slow = Math.min(10_000, 400 * 2 ** Math.max(0, Math.floor(siteFails / 30)));
+    await new Promise((r) => setTimeout(r, slow + Math.random() * 400)); // flatten timing, slow guessing
+    if (!ok) return { error: "Wrong password." };
+    refund(`login-fail:${ip}`);
+    refund("login-fail:*");
+  } finally {
+    leave();
+  }
   const session = await createSession();
   (await cookies()).set(OWNER_COOKIE, session!, {
     httpOnly: true,
