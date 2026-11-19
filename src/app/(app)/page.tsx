@@ -1,4 +1,4 @@
-import { ChevronRight, ClipboardList, Clock3 } from "lucide-react";
+import { ChevronRight, ClipboardList, Clock3, Globe2 } from "lucide-react";
 import Link from "next/link";
 import { telegramConfigured } from "@/alerts/channels";
 import { FilterBar } from "@/components/app/FilterBar";
@@ -7,12 +7,16 @@ import { MapCanvas, MapViewPills, MapZoomControls, NewsTicker } from "@/componen
 import { BriefingCarousel, NewsRow } from "@/components/app/NewsCards";
 import { JobsView } from "@/components/app/JobsView";
 import { PanelSlot } from "@/components/app/PanelSlot";
+import { CountrySlot } from "@/components/app/CountryBriefing";
+import { WorldSections } from "@/components/app/WorldSections";
+import { Suspense } from "react";
 import { MiniJobCard, VolumeHistogram } from "@/components/app/widgets";
 import { AlertRow } from "@/components/ui/cards";
 import { cn } from "@/components/ui/primitives";
 import { parseFilters, type RawParams } from "@/lib/filters";
 import { getBriefing, getNewsPoints } from "@/lib/newsQueries";
 import { getHazards } from "@/lib/worldQueries";
+import { getOutages, getServiceStatus, mapOutages } from "@/lib/signalQueries";
 import { getStocks } from "@/lib/stockQueries";
 import { NewsFresh } from "@/components/app/NewsFresh";
 import { StockMini } from "@/components/app/Stocks";
@@ -25,7 +29,7 @@ import {
   getSourceCounts,
   getVolumeBuckets,
 } from "@/lib/queries";
-import { getProfile } from "@/lib/settings";
+import { getViewer } from "@/lib/viewer";
 import { ago } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
@@ -36,34 +40,40 @@ const CARD_GRID = "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-
 
 export default async function Home({ searchParams }: { searchParams: Promise<RawParams> }) {
   const sp = await searchParams;
-  const profile = await getProfile();
-  const hasResume = profile.skills.length > 0;
+  const viewer = await getViewer();
+  const owner = viewer.owner;
+  const hasResume = !!viewer.profile; // the owner's resume, or a visitor's own skills
   const early = ["intern", "newgrad", "research"];
   const f = parseFilters(sp, { within: "7d", sort: hasResume ? "match" : "new", level: early });
+  const country = (Array.isArray(sp.country) ? sp.country[0] : sp.country)?.toUpperCase().match(/^[A-Z]{2}$/)?.[0] ?? null;
 
-  const [rec, topPick, attention, map, india, programs, kpis, stocks, volume, sources, top4, brief, newsPoints, hazards] = await Promise.all([
-    getJobs(f, { limit: 9 }),
-    getJobs({ ...f, within: "24h", sort: hasResume ? "match" : "new" }, { limit: 1 }),
+  const [rec, topPick, attention, map, india, programs, kpis, stocks, volume, sources, top4, brief, newsPoints, hazards, { outages }, { services }] = await Promise.all([
+    getJobs(f, { limit: 9 }, viewer),
+    getJobs({ ...f, within: "24h", sort: hasResume ? "match" : "new" }, { limit: 1 }, viewer),
     getAttention(),
     getMapPoints(24),
-    getJobs({ region: ["india"], level: early, within: "7d", sort: hasResume ? "match" : "new", tech: true }, { limit: 8 }),
+    getJobs({ region: ["india"], level: early, within: "7d", sort: hasResume ? "match" : "new", tech: true }, { limit: 8 }, viewer),
     getPrograms(),
     getHomeKpis(),
-    getStocks(),
+    owner ? getStocks() : Promise.resolve(null),
     getVolumeBuckets(),
     getSourceCounts(),
-    getJobs({ level: early, within: "24h", sort: hasResume ? "match" : "new", tech: true }, { limit: 4 }),
+    getJobs({ level: early, within: "24h", sort: hasResume ? "match" : "new", tech: true }, { limit: 4 }, viewer),
     getBriefing(),
     getNewsPoints(48),
     getHazards(48, 5),
+    getOutages(),
+    getServiceStatus(),
   ]);
+  const incidents = services.filter((sv) => sv.state === "degraded");
+  const indiaOutage = outages.find((o) => o.iso === "IN" && o.ongoing);
   const pick = topPick.jobs[0] ?? rec.jobs[0];
   const recommended = pick ? [pick, ...rec.jobs.filter((j) => j.id !== pick.id)].slice(0, 8) : [];
   const telegram = telegramConfigured();
   const closing = programs.filter((v) => v.status.status === "closing");
   const updated = programs.filter((v) => v.recentlyChanged && v.status.status !== "closing");
   const indiaOpen = programs.filter((v) => v.p.india && (v.status.status === "open" || v.status.status === "closing")).length;
-  const attentionCount = closing.length + updated.length + attention.failing.length + (attention.matchCount ? 1 : 0);
+  const attentionCount = closing.length + updated.length + (owner ? attention.failing.length + (attention.matchCount ? 1 : 0) : 0) + incidents.length + (indiaOutage ? 1 : 0);
 
   /** Floating glass widget (hero). */
   const G = ({ title, href, note, children, className }: { title: string; href?: string; note?: React.ReactNode; children: React.ReactNode; className?: string }) => (
@@ -86,9 +96,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
   // the three numbers that decide what to do today: what's new, what fits, what's about to close
   const kpiCells: { v: number | string; label: string; sub: string; href: string; tone?: string }[] = [
     { v: kpis.new24, label: "New roles · 24h", sub: `${kpis.india24} in India`, href: "/feed?within=24h&level=intern,newgrad,research" },
-    kpis.hasResume
+    owner && kpis.hasResume
       ? { v: kpis.strong7 ?? 0, label: "Strong matches", sub: kpis.strong24 ? `≥80% · ${kpis.strong24} today` : "≥80% · last 7d", href: "/for-you", tone: "text-good" }
-      : { v: "—", label: "Strong matches", sub: "upload resume", href: "/settings#resume", tone: "text-ink-3" },
+      : owner
+        ? { v: "—", label: "Strong matches", sub: "upload resume", href: "/settings#resume", tone: "text-ink-3" }
+        : { v: "—", label: "Your matches", sub: hasResume ? "see For You" : "add your skills", href: "/for-you#skills", tone: "text-ink-3" },
     { v: kpis.closing, label: "Closing · 7d", sub: kpis.closing48 ? `${kpis.closing48} within 48h` : "none within 48h", href: "/feed?sort=new&level=intern,newgrad,research", tone: kpis.closing48 ? "text-warn" : undefined },
   ];
 
@@ -162,21 +174,39 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
           <Clock3 size={12} /> Matches & sources
         </p>
         <div className="flex flex-col gap-1.5">
-          {attention.topMatch && (
+          {owner && attention.topMatch && (
             <AlertRow dense severity="good" title={`${attention.matchCount} new ≥80% match${attention.matchCount === 1 ? "" : "es"}`} meta={`${attention.topMatch.title} · ${attention.topMatch.company}`} href={`/?job=${encodeURIComponent(attention.topMatch.id)}`} />
           )}
-          {attention.failing.slice(0, 2).map((s) => (
+          {owner && attention.failing.slice(0, 2).map((s) => (
             <AlertRow dense key={s.name} severity="critical" title={`${s.name} is failing`} meta={s.error} href="/settings#sources" />
           ))}
-          {!attention.topMatch && !attention.failing.length && <AlertRow dense severity="info" title="All sources healthy" meta={`${sources.ok} polling normally`} href="/settings#sources" />}
-          {!hasResume && <AlertRow dense severity="warning" title="Upload your resume" meta="Unlocks match scores and For You" href="/settings#resume" />}
-          {!telegram && <AlertRow dense severity="warning" title="Connect Telegram" meta="Instant alerts for new postings" href="/settings#channels" />}
+          {owner && !attention.topMatch && !attention.failing.length && <AlertRow dense severity="info" title="All sources healthy" meta={`${sources.ok} polling normally`} href="/settings#sources" />}
+          {owner && !hasResume && <AlertRow dense severity="warning" title="Upload your resume" meta="Unlocks match scores and For You" href="/settings#resume" />}
+          {owner && !telegram && <AlertRow dense severity="warning" title="Connect Telegram" meta="Instant alerts for new postings" href="/settings#channels" />}
+          {!owner && <AlertRow dense severity="info" title={`${sources.ok} sources polling live`} meta="Company career sites, checked every few minutes" href="/about" />}
+          {!owner && !hasResume && <AlertRow dense severity="warning" title="Add your skills" meta="Ranks every role by how well it fits you — stays in your browser" href="/for-you#skills" />}
         </div>
+        {(incidents.length > 0 || indiaOutage) && (
+          <>
+            <p className="flex items-center gap-1.5 text-[11px] text-ink-2">
+              <Globe2 size={12} /> World signals
+            </p>
+            <div className="flex flex-col gap-1.5">
+              {indiaOutage && <AlertRow dense severity="critical" title="Internet disruption in India" meta={`${indiaOutage.level} · ${indiaOutage.hours}h · IODA`} href="/?country=IN" />}
+              {incidents.slice(0, 2).map((sv) => (
+                <AlertRow dense key={sv.id} severity="warning" title={`${sv.name} incident`} meta={sv.open[0]?.title ?? "see status page"} href="#world" />
+              ))}
+            </div>
+          </>
+        )}
       </G>
 
-      <G title="Stocks" href="/market#stocks" note={stocks.lastCheck ? `updated ${stocks.lastCheck}` : undefined}>
-        <StockMini limit={6} items={stocks.items} configured={stocks.configured} />
-      </G>
+      {/* stock quotes come from a personal-use API plan — shown to the owner only */}
+      {stocks && (
+        <G title="Stocks" href="/market#stocks" note={stocks.lastCheck ? `updated ${stocks.lastCheck}` : undefined}>
+          <StockMini limit={6} items={stocks.items} configured={stocks.configured} />
+        </G>
+      )}
 
       <G title="Posting volume" href="/market" note={`${volume.perDay.toLocaleString("en-IN")} / day`}>
         <VolumeHistogram bars={volume.bars} weeks={volume.weeks} className="h-[78px]" />
@@ -203,10 +233,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
       */}
       <section className="relative mt-4 xl:h-[calc(100dvh-84px)] xl:min-h-[820px]">
         <div className="relative h-[420px] overflow-hidden rounded-card ring-1 ring-line md:h-[520px] xl:absolute xl:-top-[84px] xl:bottom-0 xl:left-[calc(50%-50vw)] xl:z-0 xl:h-auto xl:w-screen xl:rounded-none xl:ring-0">
-          <MapCanvas points={map.points} news={newsPoints} hazards={hazards} hero />
+          <MapCanvas points={map.points} news={newsPoints} hazards={hazards} outages={mapOutages(outages)} selected={country} hero />
           {/* fades: keep the top bar readable and melt the map into the page below */}
           <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] hidden h-44 bg-linear-to-b from-canvas/90 to-transparent xl:block" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] hidden h-28 bg-linear-to-t from-canvas to-transparent xl:block" />
+          {/* the bottom fade takes pointer events: two-finger scrolling there moves the page, not the map */}
+          <div className="absolute inset-x-0 bottom-0 z-[1] hidden h-28 bg-linear-to-t from-canvas to-transparent xl:block" />
           <div className="pointer-events-none absolute left-5 top-5 z-10 xl:hidden">{titleAndPills}</div>
           <div className="absolute inset-x-5 bottom-5 z-10 flex items-center gap-3 xl:hidden">
             <MapZoomControls />
@@ -300,7 +331,16 @@ export default async function Home({ searchParams }: { searchParams: Promise<Raw
         </div>
       </section>
 
+      <Suspense fallback={<div className="mt-14 h-40 animate-pulse rounded-card bg-card" aria-hidden />}>
+        <WorldSections />
+      </Suspense>
+
       <PanelSlot id={f.job} />
+      {country && !f.job && (
+        <Suspense fallback={null}>
+          <CountrySlot iso={country} />
+        </Suspense>
+      )}
     </>
   );
 }

@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { isOwner } from "@/lib/viewer";
 import type { Metadata } from "next";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Specimen } from "./Specimen";
@@ -5,7 +7,8 @@ import { Specimen } from "./Specimen";
 export const metadata: Metadata = { title: "Design system · RadarX" };
 
 /** Every component, in both themes, for review against design-refs/ref-00 (light) and ref-01 (dark). */
-export default function DesignPage() {
+export default async function DesignPage() {
+  if (!(await isOwner())) redirect("/login?next=/design"); // internal style sheet — owner only
   return (
     <main className="mx-auto max-w-[1600px] px-4 pb-24 pt-8 md:px-8">
       <header className="mb-8 flex flex-wrap items-center justify-between gap-4">

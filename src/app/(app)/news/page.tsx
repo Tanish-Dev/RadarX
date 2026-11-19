@@ -36,15 +36,16 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
   const india = one(sp.india) === "1";
   const topic = one(sp.topic) || undefined;
   const place = one(sp.place) || undefined;
+  const search = one(sp.q).trim().slice(0, 60) || undefined;
   const sort = one(sp.sort) === "latest" ? "latest" : "top";
   const within = (one(sp.within) in HOURS ? one(sp.within) : "3d") as keyof typeof HOURS;
-  const f: NewsFilters = { kind, india, topic, place, sort, hours: HOURS[within] };
+  const f: NewsFilters = { kind, india, topic, place, q: search, sort, hours: HOURS[within] };
 
   const [news, points, checkedAt] = await Promise.all([getNews(f, 60), getNewsPoints(HOURS[within], { kind, india, topic }), kvGet<number>("news_checked_at")]);
 
   /** Same page with some params changed ("" removes one). */
   const href = (patch: Record<string, string>) => {
-    const cur: Record<string, string> = { kind: kind ?? "", india: india ? "1" : "", topic: topic ?? "", place: place ?? "", sort: sort === "top" ? "" : sort, within: within === "3d" ? "" : within };
+    const cur: Record<string, string> = { kind: kind ?? "", india: india ? "1" : "", topic: topic ?? "", place: place ?? "", q: search ?? "", sort: sort === "top" ? "" : sort, within: within === "3d" ? "" : within };
     const q = new URLSearchParams(Object.entries({ ...cur, ...patch }).filter(([, v]) => v));
     return `/news${q.size ? `?${q}` : ""}`;
   };
@@ -93,6 +94,11 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
       </nav>
 
       <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0">
+        {search && (
+          <Link href={href({ q: "" })} className="flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-active px-4 text-[13px] text-active-ink">
+            “{search}” <X size={13} />
+          </Link>
+        )}
         {place && (
           <Link href={href({ place: "" })} className="flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-active px-4 text-[13px] text-active-ink">
             <MapPin size={13} /> {place} <X size={13} />
@@ -116,7 +122,7 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
       </div>
       {!news.items.length && (
         <div className="card p-10 text-center text-ink-2">
-          No stories match. {place || topic ? <Link href={href({ place: "", topic: "" })} className="underline">Clear filters</Link> : <>Run <code>npm run worker -- --news</code> to fetch headlines.</>}
+          No stories match. {place || topic || search ? <Link href={href({ place: "", topic: "", q: "" })} className="underline">Clear filters</Link> : <>Run <code>npm run worker -- --news</code> to fetch headlines.</>}
         </div>
       )}
       <p className="mt-8 flex items-center gap-1.5 text-[13px] text-ink-3">

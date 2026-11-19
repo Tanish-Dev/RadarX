@@ -2,14 +2,14 @@ import { FilterBar } from "@/components/app/FilterBar";
 import { JobsView } from "@/components/app/JobsView";
 import { PanelSlot } from "@/components/app/PanelSlot";
 import { parseFilters, type RawParams } from "@/lib/filters";
-import { getJobs } from "@/lib/queries";
+import { getJobsFor } from "@/lib/jobsForViewer";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Feed · RadarX" };
 
 export default async function FeedPage({ searchParams }: { searchParams: Promise<RawParams> }) {
   const f = parseFilters(await searchParams, { view: "list", sort: "new" });
-  const { jobs, total } = await getJobs(f);
+  const { jobs, total } = await getJobsFor(f);
   return (
     <>
       <header className="mt-10 flex flex-wrap items-end justify-between gap-4 lg:mt-14">

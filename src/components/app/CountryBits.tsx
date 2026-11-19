@@ -41,7 +41,7 @@ export function ScoreMeter({ row, size = "md" }: { row: Pick<BoardRow, "score">;
 /** Compact country tile for the /world board: flag, score, why, and what it means for the user's roles. */
 export function CountryTile({ row }: { row: BoardRow }) {
   return (
-    <Link href={`/world/${row.country.iso}`} className="card rx-lift flex min-w-0 flex-col gap-3 p-4">
+    <Link href={`/?country=${row.country.iso}`} scroll={false} className="card rx-lift flex min-w-0 flex-col gap-3 p-4">
       <div className="flex items-center justify-between gap-2">
         <span className="flex min-w-0 items-center gap-2 text-[15px]">
           <span aria-hidden className="text-[20px] leading-none">{row.country.flag}</span>

@@ -1,14 +1,16 @@
 "use client";
+import { safeHttpUrl } from "@/lib/url";
 import { CalendarClock, ChevronLeft, ChevronRight, Globe2, LocateFixed, Minus, Plus } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FilterPill } from "@/components/ui/FilterPill";
 import { IconButton, cn } from "@/components/ui/primitives";
 import { MapBackdrop } from "@/components/ui/map";
 import type { NewsItem, NewsPoint } from "@/lib/newsQueries";
 import type { MapPoint } from "@/lib/queries";
 import type { HazardView } from "@/lib/worldQueries";
+import type { OutageView } from "@/lib/signalQueries";
 import { mapStore, type MapLayer } from "./mapStore";
 
 const LiveMap = dynamic(() => import("./LiveMap").then((m) => m.LiveMap), { ssr: false, loading: () => <MapBackdrop /> });
@@ -17,7 +19,19 @@ const LiveMap = dynamic(() => import("./LiveMap").then((m) => m.LiveMap), { ssr:
  * Map canvas filling its (positioned) parent. `hero` = full-screen background on wide screens:
  * India is framed in the gap between the floating widget columns.
  */
-export function MapCanvas({ points, news, hazards, view, panelInset = 380, hero = false }: { points: MapPoint[]; news?: NewsPoint[]; hazards?: HazardView[]; view?: "india" | "world"; panelInset?: number; hero?: boolean }) {
+/** Keep the previous reference while the content is equal — server refreshes send fresh arrays, which would rebuild the map (and lose the user's zoom). */
+function useStable<T>(v: T): T {
+  const ref = useRef<{ key: string; v: T } | null>(null);
+  const key = JSON.stringify(v ?? null);
+  if (!ref.current || ref.current.key !== key) ref.current = { key, v };
+  return ref.current.v;
+}
+
+export function MapCanvas({ points: rawPoints, news: rawNews, hazards: rawHazards, outages: rawOutages, view, panelInset = 380, hero = false, selected = null }: { points: MapPoint[]; news?: NewsPoint[]; hazards?: HazardView[]; outages?: OutageView[]; view?: "india" | "world"; panelInset?: number; hero?: boolean; selected?: string | null }) {
+  const points = useStable(rawPoints);
+  const news = useStable(rawNews);
+  const hazards = useStable(rawHazards);
+  const outages = useStable(rawOutages);
   const [wide, setWide] = useState<boolean | null>(null);
   // the widget columns sit inside the 1920px content column; the hero map spans the whole viewport
   const [gutter, setGutter] = useState(0);
@@ -39,6 +53,8 @@ export function MapCanvas({ points, news, hazards, view, panelInset = 380, hero 
       points={points}
       news={news}
       hazards={hazards}
+      outages={outages}
+      selected={selected}
       view={view}
       pad={pad}
       rightInset={wide && !hero ? panelInset : 0}
@@ -81,6 +97,8 @@ export function MapViewPills({ withLayers = true }: { withLayers?: boolean }) {
               { value: "tech", label: "Tech" },
               { value: "world", label: "World" },
               { value: "hazards", label: "Hazards" },
+              { value: "outages", label: "Internet outages" },
+              { value: "cables", label: "Undersea cables" },
             ]}
             onChange={(v) => mapStore.setLayers(v as MapLayer[])}
           />
@@ -139,7 +157,7 @@ export function NewsTicker({ items, className }: { items: Pick<NewsItem, "id" | 
         <span className={cn("block size-2 rotate-45 rounded-[1px]", it.kind === "tech" ? "bg-accent" : "bg-[#b18cff]")} />
         {it.kind === "tech" ? "Tech" : "World"}
       </span>
-      <a key={it.id} href={it.url} target="_blank" rel="noreferrer" className="rx-fade-up min-w-0 flex-1 truncate text-[14px] hover:underline">
+      <a key={it.id} href={safeHttpUrl(it.url) ?? "#"} target="_blank" rel="noreferrer" className="rx-fade-up min-w-0 flex-1 truncate text-[14px] hover:underline">
         {it.title}
       </a>
       <span className="num hidden shrink-0 text-[12px] text-ink-2 2xl:inline">

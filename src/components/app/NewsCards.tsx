@@ -1,4 +1,5 @@
 "use client";
+import { safeHttpUrl } from "@/lib/url";
 import { ArrowUpRight, ChevronLeft, ChevronRight, MapPin, Newspaper, Pause, Play } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -61,7 +62,7 @@ export function Coverage({ n, className }: { n: NewsItem; className?: string }) 
 /** Big story at the top of a briefing card. */
 export function NewsLead({ n }: { n: NewsItem }) {
   return (
-    <a href={n.url} target="_blank" rel="noreferrer" className="group flex flex-col gap-3">
+    <a href={safeHttpUrl(n.url) ?? "#"} target="_blank" rel="noreferrer" className="group flex flex-col gap-3">
       <div className="relative aspect-[16/7] overflow-hidden rounded-[14px]">
         <Thumb src={n.image} className="size-full transition-transform duration-500 group-hover:scale-[1.03]" />
         <span className="absolute left-3 top-3 flex gap-1.5">
@@ -83,7 +84,7 @@ export function NewsLead({ n }: { n: NewsItem }) {
 /** Compact headline row. */
 export function NewsRow({ n, thumb = true, dense }: { n: NewsItem; thumb?: boolean; dense?: boolean }) {
   return (
-    <a href={n.url} target="_blank" rel="noreferrer" className={cn("group flex items-center border-t border-line first:border-t-0", dense ? "gap-2 py-1.5" : "gap-3 py-2.5")}>
+    <a href={safeHttpUrl(n.url) ?? "#"} target="_blank" rel="noreferrer" className={cn("group flex items-center border-t border-line first:border-t-0", dense ? "gap-2 py-1.5" : "gap-3 py-2.5")}>
       {thumb && <Thumb src={n.image} className={cn("shrink-0 rounded-[10px]", dense ? "size-10" : "size-12")} />}
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className={cn("line-clamp-2 leading-snug group-hover:underline", dense ? "text-[12.5px]" : "text-[14px]")}>{n.title}</span>
@@ -98,7 +99,7 @@ export function NewsRow({ n, thumb = true, dense }: { n: NewsItem; thumb?: boole
 export function NewsCard({ n }: { n: NewsItem }) {
   return (
     <article className="card rx-lift flex min-w-0 flex-col overflow-hidden">
-      <a href={n.url} target="_blank" rel="noreferrer" className="group flex flex-1 flex-col">
+      <a href={safeHttpUrl(n.url) ?? "#"} target="_blank" rel="noreferrer" className="group flex flex-1 flex-col">
         <div className="relative aspect-[16/9] overflow-hidden">
           <Thumb src={n.image} className="size-full transition-transform duration-500 group-hover:scale-[1.03]" />
           <span className="glass absolute left-3 top-3 flex items-center gap-1.5 !rounded-full px-2.5 py-1 text-[11px]">
@@ -191,7 +192,7 @@ export function BriefingCarousel({ tech, world, india, interval = 9000, classNam
         />
       </div>
 
-      <a key={n.id} href={n.url} target="_blank" rel="noreferrer" className="rx-fade-up group flex min-h-0 flex-1 flex-col gap-3 p-4">
+      <a key={n.id} href={safeHttpUrl(n.url) ?? "#"} target="_blank" rel="noreferrer" className="rx-fade-up group flex min-h-0 flex-1 flex-col gap-3 p-4">
         <div className="relative min-h-[220px] flex-1 overflow-hidden rounded-[14px]">
           <Thumb src={n.image} className="absolute inset-0 size-full transition-transform duration-700 group-hover:scale-[1.03]" />
           <span className="glass absolute left-3 top-3 flex items-center gap-1.5 !rounded-full px-2.5 py-1 text-[11px]">

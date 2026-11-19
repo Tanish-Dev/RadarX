@@ -15,7 +15,7 @@ function since(ts: number | null, now: number) {
 
 /**
  * "Updated 4 min ago · Refresh". Keeps the page live without a worker: if the stories are older than 10 minutes
- * it pulls the feeds itself on load and every 5 minutes while the tab is visible, then re-renders the page.
+ * it pulls the feeds itself on load (the server allows one pull per 10 min site-wide) and every 5 minutes while the tab is visible, then re-renders the page.
  */
 export function NewsFresh({ checkedAt, className }: { checkedAt: number | null; className?: string }) {
   const router = useRouter();

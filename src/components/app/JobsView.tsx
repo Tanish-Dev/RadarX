@@ -11,6 +11,8 @@ import { Chip, cn, IconButton, MatchRing } from "@/components/ui/primitives";
 import type { JobFilters } from "@/lib/filters";
 import type { JobRow } from "@/lib/queries";
 import { useToast } from "./Toast";
+import { local, snapOf, useLocal } from "./localStore";
+import { useViewer } from "./viewer";
 
 const LEVEL_LABEL: Record<string, string> = { intern: "Intern", newgrad: "New grad", research: "Research", experienced: "Experienced" };
 const TYPE_LABEL: Record<string, string> = { intern: "Internship", research: "Internship", newgrad: "Full-time", experienced: "Full-time" };
@@ -50,9 +52,52 @@ export function toCard(j: JobRow, withMatched = false): JobCardData {
 }
 
 /** Shared job actions: optimistic dismiss with undo, star, apply → "Mark as applied?". */
-export function useJobActions(onRemove: (id: string) => void, onRestore: () => void) {
+export function useJobActions(onRemove: (id: string) => void, onRestore: () => void, lookup?: (id: string) => JobRow | undefined) {
   const toast = useToast();
   const [, start] = useTransition();
+  const { owner } = useViewer();
+  if (!owner) {
+    // visitors: everything stays in their own browser
+    return {
+      star: (id: string, starred: boolean) => {
+        const j = lookup?.(id);
+        if (!j) return;
+        local.star(snapOf(j), starred);
+        if (starred) toast({ text: "Saved to your Pipeline (this browser)", tone: "ok" }, 2500);
+      },
+      dismiss: (id: string, company?: string) => {
+        onRemove(id);
+        local.dismiss(id);
+        toast(
+          {
+            text: "Hidden",
+            tone: "ok",
+            actions: [
+              { label: "Undo", onClick: () => (onRestore(), local.undismiss(id)) },
+              ...(company ? [{ label: `Hide all ${company}`, onClick: () => local.hideCompany(company) }] : []),
+            ],
+          },
+          6000,
+        );
+      },
+      applied: (id: string) => {
+        const j = lookup?.(id);
+        if (!j) return;
+        setTimeout(
+          () =>
+            toast({
+              text: "Mark as applied?",
+              tone: "ask",
+              actions: [
+                { label: "Yes", onClick: () => (local.setStage(id, "applied", snapOf(j)), toast({ text: "Moved to your Pipeline · Applied", tone: "ok" })) },
+                { label: "Not yet", onClick: () => {} },
+              ],
+            }),
+          400,
+        );
+      },
+    };
+  }
   return {
     star: (id: string, starred: boolean) => {
       start(() => void starJob(id, starred));
@@ -233,7 +278,12 @@ export function JobsView({
         return r.slice(0, -1);
       });
     },
+    (id) => jobs.find((j) => j.id === id) ?? removed.find((j) => j.id === id),
   );
+  // visitors: overlay their own stars, drop what they hid (empty on the server render → no hydration mismatch)
+  const { owner } = useViewer();
+  const mine = useLocal();
+  const shown = owner ? jobs : jobs.filter((j) => !mine.dismissed[j.id] && !mine.hiddenCompanies.includes(j.company)).map((j) => (j.starred === !!mine.starred[j.id] ? j : { ...j, starred: !!mine.starred[j.id] }));
 
   // infinite scroll
   useEffect(() => {
@@ -255,12 +305,12 @@ export function JobsView({
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement;
       if (t.closest("input, textarea, select, [contenteditable]") || e.metaKey || e.ctrlKey || e.altKey) return;
-      const cur = jobs[cursor];
+      const cur = shown[cursor];
       if (e.key === "j" || e.key === "k") {
         e.preventDefault();
-        const next = Math.max(0, Math.min(jobs.length - 1, cursor + (e.key === "j" ? 1 : -1)));
+        const next = Math.max(0, Math.min(shown.length - 1, cursor + (e.key === "j" ? 1 : -1)));
         setCursor(next);
-        document.querySelector(`[data-job="${CSS.escape(jobs[next]?.id ?? "")}"]`)?.scrollIntoView({ block: "nearest" });
+        document.querySelector(`[data-job="${CSS.escape(shown[next]?.id ?? "")}"]`)?.scrollIntoView({ block: "nearest" });
       } else if (e.key === "o" && cur) {
         const u = safeHttpUrl(cur.url);
         if (u) window.open(u, "_blank", "noopener");
@@ -279,9 +329,9 @@ export function JobsView({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [jobs, cursor, actions, openPanel]);
+  }, [shown, cursor, actions, openPanel]);
 
-  if (!jobs.length) {
+  if (!shown.length) {
     return <div className="card px-8 py-16 text-center text-[15px] font-light text-ink-2">{emptyText}</div>;
   }
 
@@ -289,7 +339,7 @@ export function JobsView({
     <>
       {view === "cards" ? (
         <div className={gridClassName}>
-          {jobs.map((j, i) => (
+          {shown.map((j, i) => (
             <div key={j.id} data-job={j.id} className={cn("rounded-card", i === cursor && "ring-2 ring-accent ring-offset-2 ring-offset-canvas")}>
               <JobCard
                 job={toCard(j, withMatched)}
@@ -305,7 +355,7 @@ export function JobsView({
         </div>
       ) : (
         <ul className="card overflow-hidden rounded-3xl! p-1.5">
-          {jobs.map((j, i) => (
+          {shown.map((j, i) => (
             <ListRow
               key={j.id}
               j={j}

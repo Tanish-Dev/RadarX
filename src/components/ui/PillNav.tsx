@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, FlaskConical, Home, KanbanSquare, Globe2, LineChart, Newspaper, Sparkles, type LucideIcon } from "lucide-react";
+import { Briefcase, FlaskConical, Home, KanbanSquare, LineChart, Newspaper, Sparkles, type LucideIcon } from "lucide-react";
 import { cn } from "./primitives";
 
 export const NAV: { href: string; label: string; icon: LucideIcon }[] = [
@@ -11,7 +11,6 @@ export const NAV: { href: string; label: string; icon: LucideIcon }[] = [
   { href: "/research", label: "Research", icon: FlaskConical },
   { href: "/news", label: "News", icon: Newspaper },
   { href: "/market", label: "Market", icon: LineChart },
-  { href: "/world", label: "World", icon: Globe2 },
   { href: "/pipeline", label: "Pipeline", icon: KanbanSquare },
 ];
 

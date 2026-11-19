@@ -10,12 +10,23 @@ let pad: Pad | number = 8;
 let view: "india" | "world" = "india";
 const listeners = new Set<Listener>();
 
-/** Which marker layers are visible: job pins, tech headlines, world-affairs headlines, natural hazards. */
-export type MapLayer = "jobs" | "tech" | "world" | "hazards";
-let layers = new Set<MapLayer>(["jobs", "tech", "world", "hazards"]);
+/** Which layers are visible: job pins, tech headlines, world-affairs headlines, natural hazards, internet outages, submarine cables. */
+export type MapLayer = "jobs" | "tech" | "world" | "hazards" | "outages" | "cables";
+// cables are a dense line layer — opt-in
+let layers = new Set<MapLayer>(["jobs", "tech", "world", "hazards", "outages"]);
 const layerListeners = new Set<(l: Set<MapLayer>) => void>();
 
+/** Last camera per page, so a map rebuilt by a server refresh (or reopened) keeps where the user panned/zoomed. */
+const cameras = new Map<string, { center: [number, number]; zoom: number; view: "india" | "world" }>();
+
 export const mapStore = {
+  camera(page: string) {
+    return cameras.get(page) ?? null;
+  },
+  saveCamera(page: string, m: maplibregl.Map) {
+    const c = m.getCenter();
+    cameras.set(page, { center: [c.lng, c.lat], zoom: m.getZoom(), view });
+  },
   set(m: maplibregl.Map, padding: Pad | number) {
     current = m;
     pad = padding;
@@ -31,6 +42,7 @@ export const mapStore = {
   },
   setView(v: "india" | "world") {
     view = v;
+    cameras.clear(); // an explicit region pick (or Recenter) wins over a remembered camera
     if (v === "india") current?.fitBounds([[68, 6], [98, 36]], { padding: pad, duration: 900 });
     else current?.fitBounds([[-125, -40], [150, 62]], { padding: pad, duration: 900 });
     listeners.forEach((l) => l(v));

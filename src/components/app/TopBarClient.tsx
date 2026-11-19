@@ -15,12 +15,12 @@ export function RefreshButton({ lastSync }: { lastSync: string }) {
     <IconButton
       tone="glass"
       size={48}
-      label={`Poll now — last sync ${lastSync}`}
+      label={`Check for new roles now — last check ${lastSync}`}
       onClick={() =>
         start(async () => {
           const r = await pollNow();
           show(r);
-          if (r.ok) setTimeout(() => router.refresh(), 70_000);
+          if (r.ok && /now/.test(r.message ?? "")) setTimeout(() => router.refresh(), 90_000);
         })
       }
     >

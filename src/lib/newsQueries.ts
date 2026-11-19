@@ -1,11 +1,14 @@
 /** Server reads for tech & world news (Home briefing, /news, the map's news layer). */
 import "server-only";
+import { cached } from "./cache";
 import { FEEDS, type NewsKind } from "../data/news";
 import { db, kvGet } from "./db";
 import { storyScore, topicLabel } from "./news";
 import { ago, agoShort } from "./time";
 
 const H = 3_600_000;
+/** Publisher thumbnails are hot-linked from their servers — off on the public site unless NEWS_IMAGES=1 (on in local dev). */
+const SHOW_IMAGES = process.env.NEWS_IMAGES === "1" || (process.env.NEWS_IMAGES !== "0" && !process.env.VERCEL && process.env.NODE_ENV !== "production");
 const FEED = new Map(FEEDS.map((f) => [f.id, f]));
 
 export interface NewsItem {
@@ -70,7 +73,7 @@ function toStories(rows: Row[], now: number): NewsItem[] {
       title: String(rep.title),
       url: String(rep.url),
       summary: String(rep.summary ?? ""),
-      image: rep.image == null ? null : String(rep.image),
+      image: SHOW_IMAGES && rep.image != null ? String(rep.image) : null,
       source: String(rep.source),
       sourceName: f?.name ?? String(rep.source),
       domain: f?.domain ?? "",
@@ -101,7 +104,7 @@ export async function loadStories(hours: number, now = Date.now()): Promise<News
   return toStories(r.rows as Row[], now);
 }
 
-export async function getNews(f: NewsFilters = {}, limit = 60): Promise<{ items: NewsItem[]; total: number; topics: { id: string; label: string; n: number }[] }> {
+async function getNewsRaw(f: NewsFilters = {}, limit = 60): Promise<{ items: NewsItem[]; total: number; topics: { id: string; label: string; n: number }[] }> {
   const all = await loadStories(f.hours ?? 72);
   const q = f.q?.toLowerCase().trim();
   const base = all.filter(
@@ -131,7 +134,7 @@ export interface NewsPoint {
 }
 
 /** Stories of the last `hours`, grouped by place, for the map's news layer. */
-export async function getNewsPoints(hours = 48, f: { kind?: NewsKind; india?: boolean; topic?: string } = {}): Promise<NewsPoint[]> {
+async function getNewsPointsRaw(hours = 48, f: { kind?: NewsKind; india?: boolean; topic?: string } = {}): Promise<NewsPoint[]> {
   const now = Date.now();
   const stories = (await loadStories(hours, now)).filter(
     (s) => s.lat != null && s.lon != null && (!f.kind || s.kind === f.kind) && (!f.india || s.india) && (!f.topic || s.topics.some((t) => t.id === f.topic)),
@@ -157,7 +160,7 @@ export async function getNewsPoints(hours = 48, f: { kind?: NewsKind; india?: bo
 }
 
 /** Home briefing: top tech, top world, India, and job-market signals (layoffs / hiring / funding). */
-export async function getBriefing() {
+async function getBriefingRaw() {
   const stories = await loadStories(48);
   const top = (xs: NewsItem[], n: number) => [...xs].sort((a, b) => b.score - a.score).slice(0, n);
   const signals = stories.filter((s) => s.kind === "tech" && s.topics.some((t) => t.id === "layoffs" || t.id === "hiring" || t.id === "funding"));
@@ -178,3 +181,9 @@ export async function getBriefing() {
     checkedAt: checked ?? null,
   };
 }
+
+export const getNews = cached("getNews", getNewsRaw);
+
+export const getNewsPoints = cached("getNewsPoints", getNewsPointsRaw);
+
+export const getBriefing = cached("getBriefing", getBriefingRaw);

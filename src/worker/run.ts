@@ -9,6 +9,7 @@ import { dispatchAlerts, type DispatchResult } from "../alerts/dispatch";
 import { classifyPending, rescoreIfProfileChanged } from "../lib/jobs";
 import { checkNews, type NewsCheck } from "./news";
 import { checkStocks } from "./stocks";
+import { checkSignals } from "./signals";
 import { checkWorld } from "./world";
 import { checkPrograms, sendProgramAlerts, type ProgramCheck } from "./programs";
 import { ENRICHABLE, fetchDetail, fetchSource } from "../sources/fetchers";
@@ -384,6 +385,7 @@ export async function runOnce(opts: { only?: string[] } = {}): Promise<RunSummar
   const news = await checkNews().catch(soft("news", null));
   await checkStocks().catch(soft("stocks", null));
   await checkWorld().then((w) => w?.errors.forEach((e) => console.warn(`[world] ${e}`))).catch(soft("world", null));
+  await checkSignals().then((r) => r?.errors.forEach((e) => console.warn(`[signals] ${e}`))).catch(soft("signals", null));
 
   const finishedAt = Date.now();
   const newJobs = results.reduce((n, r) => n + r.newJobs, 0);

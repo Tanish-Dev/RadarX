@@ -1,5 +1,6 @@
 /** Server reads for world signals (quakes, natural events, FX) — shown on the map, Home and /world. */
 import "server-only";
+import { cached } from "./cache";
 import { db, kvGet } from "./db";
 import { getMapPoints } from "./queries";
 import { ago, agoShort } from "./time";
@@ -22,7 +23,7 @@ export interface HazardView {
 
 const severity = (kind: HazardKind, mag: number | null): 1 | 2 | 3 => (kind === "quake" ? ((mag ?? 0) >= 6 ? 3 : (mag ?? 0) >= 5.2 ? 2 : 1) : kind === "volcano" || kind === "storm" ? 2 : 1);
 
-export async function getHazards(hours = 72, minMag = 4.5): Promise<HazardView[]> {
+async function getHazardsRaw(hours = 72, minMag = 4.5): Promise<HazardView[]> {
   const c = await db();
   const now = Date.now();
   const r = await c.execute({
@@ -65,3 +66,5 @@ export async function getFx(): Promise<{ fx: FxSeries | null; at: string | null 
   const [fx, at] = await Promise.all([kvGet<FxSeries>("fx"), kvGet<number>("fx_at")]);
   return { fx, at: at ? ago(at) : null };
 }
+
+export const getHazards = cached("getHazards", getHazardsRaw);

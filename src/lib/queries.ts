@@ -7,7 +7,8 @@ import { programStatus, windowLabel, type StatusInfo } from "./programs";
 import { db, kvGet } from "./db";
 import { WITHIN_MS, type JobFilters } from "./filters";
 import { companyKey } from "./normalize";
-import { scoreJob } from "./score";
+import { cached } from "./cache";
+import { scoreJob, type Profile } from "./score";
 import { getProfile } from "./settings";
 import { ago, agoShort } from "./time";
 
@@ -78,9 +79,19 @@ function workplace(location: string): JobRow["workplace"] {
 
 const NEW_MS = 3_600_000;
 
-function toRow(r: any, domains: Map<string, string>, mySkills: Set<string>, now: number): JobRow {
+/** A visitor sees no owner state (stars, pipeline, owner-resume scores); `profile` = their own skills, if any. */
+export interface ViewerScope {
+  owner: boolean;
+  profile: Profile | null;
+}
+
+function toRow(r: any, domains: Map<string, string>, mySkills: Set<string>, now: number, visitor?: ViewerScope): JobRow {
   const skills: string[] = JSON.parse(String(r.skills ?? "[]"));
   const freshTs = r.fresh_ts == null ? null : Number(r.fresh_ts);
+  const visitorScore =
+    visitor && visitor.profile
+      ? scoreJob({ skills, titleSkills: JSON.parse(String(r.title_skills ?? "[]")), level: r.level ?? null, region: r.region ?? null, is_tech: Number(r.is_tech) === 1 }, visitor.profile)?.score ?? null
+      : null;
   return {
     id: String(r.id),
     title: String(r.title),
@@ -94,19 +105,31 @@ function toRow(r: any, domains: Map<string, string>, mySkills: Set<string>, now:
     level: r.level == null ? null : String(r.level),
     region: r.region == null ? null : String(r.region),
     workplace: workplace(String(r.location ?? "")),
-    score: r.score == null ? null : Number(r.score),
+    score: visitor ? visitorScore : r.score == null ? null : Number(r.score),
     freshTs,
     ago: freshTs ? ago(freshTs, now) : "earlier",
     agoShort: freshTs ? agoShort(freshTs, now) : "–",
     isNew: freshTs != null && now - freshTs < NEW_MS,
-    starred: Number(r.starred) === 1,
-    status: r.status == null ? null : String(r.status),
+    starred: visitor ? false : Number(r.starred) === 1,
+    status: visitor ? null : r.status == null ? null : String(r.status),
     skills,
     matched: skills.filter((s) => mySkills.has(s)),
   };
 }
 
-const LIST_COLS = `id, title, company, company_key, url, location, level, region, score, skills, starred, status, logo, stipend, deadline, ${FRESH_TS} AS fresh_ts`;
+const LIST_COLS = `id, title, company, company_key, url, location, level, region, score, skills, title_skills, is_tech, starred, status, logo, stipend, deadline, ${FRESH_TS} AS fresh_ts`;
+
+/** libSQL rows → plain objects (cacheable). */
+const plain = (r: { columns: string[]; rows: any[] }) => r.rows.map((row) => Object.fromEntries(r.columns.map((c, i) => [c, row[i]])));
+
+const readJobRows = cached("jobRows", async (sql: string, args: (string | number)[], order: string, limit: number, offset: number) => {
+  const c = await db();
+  const [rows, total] = await Promise.all([
+    c.execute({ sql: `SELECT ${LIST_COLS} FROM jobs WHERE ${sql} ORDER BY ${order} LIMIT ? OFFSET ?`, args: [...args, limit, offset] }),
+    c.execute({ sql: `SELECT COUNT(*) AS n FROM jobs WHERE ${sql}`, args }),
+  ]);
+  return { rows: plain(rows), total: Number(total.rows[0].n) };
+});
 
 /**
  * One row per role: hide a posting when another active copy with the same dedupe_key
@@ -163,30 +186,41 @@ function where(f: Partial<JobFilters>, now: number, hidden: string[]) {
 
 export const PAGE_SIZE = 100;
 
-export async function getJobs(f: Partial<JobFilters>, opts: { limit?: number; offset?: number } = {}) {
-  const now = Date.now();
-  const c = await db();
-  const [domains, profile, hidden] = await Promise.all([domainMap(), getProfile(), kvGet<string[]>("hidden_companies")]);
+/** Candidate pool a visitor's "best match" ranking is computed over (newest first). */
+const VISITOR_MATCH_POOL = 600;
+
+/**
+ * Job list. Without `viewer` (or for the owner) it is the owner's view: DB scores from the owner's resume and
+ * the owner's stars. For a visitor, owner state is stripped and "match" ranks the newest postings by the
+ * visitor's own skills.
+ */
+export async function getJobs(f: Partial<JobFilters>, opts: { limit?: number; offset?: number } = {}, viewer?: ViewerScope) {
+  // whole-minute "now" so identical requests share a cache entry
+  const now = Math.floor(Date.now() / 60_000) * 60_000;
+  const visitor = viewer && !viewer.owner ? viewer : undefined;
+  const [domains, ownerProfile, hidden] = await Promise.all([domainMap(), visitor ? Promise.resolve(null) : getProfile(), kvGet<string[]>("hidden_companies")]);
+  const profile = visitor ? visitor.profile : ownerProfile;
   const { sql, args } = where(f, now, hidden ?? []);
-  const order =
-    f.sort === "match"
-      ? `score IS NULL, score DESC, fresh_ts IS NULL, fresh_ts DESC`
-      : `fresh_ts IS NULL, fresh_ts DESC, first_seen_at DESC`;
-  const limit = opts.limit ?? PAGE_SIZE;
+  const byFresh = `fresh_ts IS NULL, fresh_ts DESC, first_seen_at DESC`;
+  const limit = Math.min(opts.limit ?? PAGE_SIZE, 200);
   const offset = opts.offset ?? ((f.page ?? 1) - 1) * limit;
-  const [rows, total] = await Promise.all([
-    c.execute({ sql: `SELECT ${LIST_COLS} FROM jobs WHERE ${sql} ORDER BY ${order} LIMIT ? OFFSET ?`, args: [...args, limit, offset] }),
-    c.execute({ sql: `SELECT COUNT(*) AS n FROM jobs WHERE ${sql}`, args }),
-  ]);
-  const mine = new Set(profile.skills);
+  const mine = new Set(profile?.skills ?? []);
+
+  if (visitor && f.sort === "match" && visitor.profile) {
+    const pool = await readJobRows(sql, args, byFresh, VISITOR_MATCH_POOL, 0);
+    const rows = pool.rows.map((r) => toRow(r, domains, mine, Date.now(), visitor)).sort((a, b) => (b.score ?? -1) - (a.score ?? -1) || (b.freshTs ?? 0) - (a.freshTs ?? 0));
+    return { jobs: rows.slice(offset, offset + limit), total: Math.min(pool.total, pool.rows.length), hasResume: true };
+  }
+  const order = !visitor && f.sort === "match" ? `score IS NULL, score DESC, fresh_ts IS NULL, fresh_ts DESC` : byFresh;
+  const { rows, total } = await readJobRows(sql, args, order, limit, offset);
   return {
-    jobs: rows.rows.map((r) => toRow(r, domains, mine, now)),
-    total: Number(total.rows[0].n),
-    hasResume: profile.skills.length > 0,
+    jobs: rows.map((r) => toRow(r, domains, mine, Date.now(), visitor)),
+    total,
+    hasResume: (profile?.skills.length ?? 0) > 0,
   };
 }
 
-export async function getJob(id: string): Promise<JobDetail | null> {
+export async function getJob(id: string, viewer?: ViewerScope): Promise<JobDetail | null> {
   const c = await db();
   const r = await c.execute({
     sql: `SELECT j.*, ${FRESH_TS} AS fresh_ts, s.name AS source_name FROM jobs j LEFT JOIN sources s ON s.key = j.source WHERE j.id = ?`,
@@ -194,12 +228,13 @@ export async function getJob(id: string): Promise<JobDetail | null> {
   });
   const row: any = r.rows[0];
   if (!row) return null;
-  const [domains, profile] = await Promise.all([domainMap(), getProfile()]);
-  const base = toRow(row, domains, new Set(profile.skills), Date.now());
-  const s = scoreJob(
-    { skills: base.skills, titleSkills: JSON.parse(String(row.title_skills ?? "[]")), level: row.level, region: row.region, is_tech: Number(row.is_tech) === 1 },
-    profile,
-  );
+  const visitor = viewer && !viewer.owner ? viewer : undefined;
+  const [domains, ownerProfile] = await Promise.all([domainMap(), visitor ? Promise.resolve(null) : getProfile()]);
+  const profile = visitor ? visitor.profile : ownerProfile;
+  const base = toRow(row, domains, new Set(profile?.skills ?? []), Date.now(), visitor);
+  const s = profile
+    ? scoreJob({ skills: base.skills, titleSkills: JSON.parse(String(row.title_skills ?? "[]")), level: row.level, region: row.region, is_tech: Number(row.is_tech) === 1 }, profile)
+    : null;
   return {
     ...base,
     description: String(row.description ?? ""),
@@ -207,11 +242,12 @@ export async function getJob(id: string): Promise<JobDetail | null> {
     sourceName: String(row.source_name ?? row.source),
     postedAt: row.posted_at == null ? null : Number(row.posted_at),
     firstSeenAt: Number(row.first_seen_at),
-    alertedAt: row.alerted_at == null ? null : Number(row.alerted_at),
-    alertStatus: row.alert_status == null ? null : String(row.alert_status),
+    // the owner's alert history and applications are private
+    alertedAt: visitor || row.alerted_at == null ? null : Number(row.alerted_at),
+    alertStatus: visitor || row.alert_status == null ? null : String(row.alert_status),
     missing: s?.missing ?? [],
     category: row.category == null ? null : String(row.category),
-    appliedAt: row.applied_at == null ? null : Number(row.applied_at),
+    appliedAt: visitor || row.applied_at == null ? null : Number(row.applied_at),
   };
 }
 
@@ -219,7 +255,7 @@ export async function getJob(id: string): Promise<JobDetail | null> {
 const H = 3_600_000;
 const D = 24 * H;
 
-export async function getHomeStats() {
+async function getHomeStatsRaw() {
   const c = await db();
   const now = Date.now();
   const q = async (sql: string, args: (string | number)[] = []) => (await c.execute({ sql, args })).rows;
@@ -268,7 +304,7 @@ export async function getHomeStats() {
   };
 }
 
-export async function getVolume(days = 30) {
+async function getVolumeRaw(days = 30) {
   const c = await db();
   const now = Date.now();
   const r = await c.execute({
@@ -286,7 +322,7 @@ export async function getVolume(days = 30) {
 }
 
 /** Alert latency: posted (or first seen) → alerted, for alerts in the last 7 days. */
-export async function getFreshness() {
+async function getFreshnessRaw() {
   const c = await db();
   const r = await c.execute({
     sql: `SELECT title, company, alerted_at, COALESCE(posted_at, first_seen_at) AS t0, first_seen_at, posted_at
@@ -451,7 +487,7 @@ export async function getPipeline(): Promise<PipelineCard[]> {
 }
 
 // ── Market insights ─────────────────────────────────────────────────────────
-export async function getMarket(days: 30 | 90 = 30) {
+async function getMarketRaw(days: 30 | 90 = 30) {
   const c = await db();
   const now = Date.now();
   const W = 30 * D;
@@ -528,7 +564,7 @@ export interface MapPoint {
 }
 
 /** Tech postings first seen / posted in the last `hours`, grouped by city. */
-export async function getMapPoints(hours = 24): Promise<{ points: MapPoint[]; remote: number; total: number }> {
+async function getMapPointsRaw(hours = 24): Promise<{ points: MapPoint[]; remote: number; total: number }> {
   const c = await db();
   const now = Date.now();
   const [domains, hidden] = await Promise.all([domainMap(), kvGet<string[]>("hidden_companies")]);
@@ -592,7 +628,7 @@ export interface ClosingItem {
  * Applications closing in the next `days`: early-career tech postings with a known deadline
  * (Unstop gives one) plus programs whose official page shows a deadline. Programs first, then best match.
  */
-export async function getClosingSoon(days = 7, limit = 5): Promise<{ items: ClosingItem[]; total: number; within48h: number }> {
+async function getClosingSoonRaw(days = 7, limit = 5): Promise<{ items: ClosingItem[]; total: number; within48h: number }> {
   const c = await db();
   const now = Date.now();
   const [hidden, programs] = await Promise.all([kvGet<string[]>("hidden_companies"), getPrograms()]);
@@ -628,7 +664,7 @@ export async function getClosingSoon(days = 7, limit = 5): Promise<{ items: Clos
  * Detection lag: how long after a company posted a role RadarX first saw it. Only sources that
  * give a precise timestamp count (not Workday's "Posted Today"), and not rows from a silent first import.
  */
-export async function getDetection() {
+async function getDetectionRaw() {
   const c = await db();
   const now = Date.now();
   const precise = (await c.execute(`SELECT key FROM sources WHERE config LIKE '%"greenhouse"%' OR config LIKE '%"lever"%' OR config LIKE '%"ashby"%' OR config LIKE '%"smartrecruiters"%' OR config LIKE '%"unstop"%'`)).rows.map((r) => String(r.key));
@@ -661,7 +697,7 @@ export async function getDetection() {
 }
 
 /** 6-hour buckets over 28 days + weekly totals, for the dense volume histogram. */
-export async function getVolumeBuckets() {
+async function getVolumeBucketsRaw() {
   const c = await db();
   const now = Date.now();
   const B = 6 * H, N = 112;
@@ -674,7 +710,7 @@ export async function getVolumeBuckets() {
   return { bars, weeks, perDay: Math.round(bars.slice(-28).reduce((s, n) => s + n, 0) / 7) };
 }
 
-export async function getSourceCounts() {
+async function getSourceCountsRaw() {
   const c = await db();
   const r = await c.execute(`SELECT status, COUNT(*) AS n FROM sources GROUP BY status`);
   const m = Object.fromEntries(r.rows.map((x) => [String(x.status), Number(x.n)]));
@@ -682,7 +718,7 @@ export async function getSourceCounts() {
 }
 
 // ── Home hero KPIs: the three numbers that decide what to do today ──────────
-export async function getHomeKpis() {
+async function getHomeKpisRaw() {
   const c = await db();
   const now = Date.now();
   const hidden = (await kvGet<string[]>("hidden_companies")) ?? [];
@@ -703,7 +739,7 @@ export async function getHomeKpis() {
 }
 
 /** Top skills asked for in open early-career tech roles vs the resume: what to learn next. */
-export async function getSkillDemand(limit = 6) {
+async function getSkillDemandRaw(limit = 6) {
   const c = await db();
   const profile = await getProfile();
   const early = `is_tech = 1 AND active = 1 AND dismissed = 0 AND level IN ('intern','newgrad','research')`;
@@ -723,3 +759,25 @@ export async function getSkillDemand(limit = 6) {
     hasResume: profile.skills.length > 0,
   };
 }
+
+export const getHomeStats = cached("getHomeStats", getHomeStatsRaw);
+
+export const getHomeKpis = cached("getHomeKpis", getHomeKpisRaw);
+
+export const getMapPoints = cached("getMapPoints", getMapPointsRaw);
+
+export const getVolumeBuckets = cached("getVolumeBuckets", getVolumeBucketsRaw);
+
+export const getSourceCounts = cached("getSourceCounts", getSourceCountsRaw);
+
+export const getMarket = cached("getMarket", getMarketRaw);
+
+export const getClosingSoon = cached("getClosingSoon", getClosingSoonRaw);
+
+export const getDetection = cached("getDetection", getDetectionRaw);
+
+export const getVolume = cached("getVolume", getVolumeRaw);
+
+export const getFreshness = cached("getFreshness", getFreshnessRaw);
+
+export const getSkillDemand = cached("getSkillDemand", getSkillDemandRaw);

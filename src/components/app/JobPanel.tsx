@@ -8,6 +8,8 @@ import { Chip, cn, IconButton, KeyValueRow, MatchRing } from "@/components/ui/pr
 import type { JobDetail } from "@/lib/queries";
 import { usePanel, toCard } from "./JobsView";
 import { useResultToast } from "./Toast";
+import { local, snapOf, useLocal } from "./localStore";
+import { useViewer } from "./viewer";
 
 const fmt = (t: number | null) =>
   t == null ? "—" : new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Kolkata" }) + " IST";
@@ -23,6 +25,11 @@ export function JobPanel({ job, hasResume }: { job: JobDetail; hasResume: boolea
   const [status, setStatus] = useState(job.status);
   const [pending, start] = useTransition();
   const [expanded, setExpanded] = useState(false);
+  const { owner } = useViewer();
+  const mine = useLocal();
+  // visitors: Save / Applied come from (and go to) their own browser
+  const isStarred = owner ? starred : !!mine.starred[job.id];
+  const isApplied = owner ? status === "applied" : mine.stages[job.id]?.stage === "applied";
 
   useEffect(() => {
     setStarred(job.starred);
@@ -83,7 +90,7 @@ export function JobPanel({ job, hasResume }: { job: JobDetail; hasResume: boolea
               {hasResume ? (
                 <>
                   <p className="text-[15px]">
-                    {job.matched.length ? `You have ${job.matched.length} of the ${job.skills.length} skills this role mentions` : job.skills.length ? "None of this role's listed skills are on your resume yet" : "This posting lists no recognisable skills — score is based on level and location"}
+                    {job.matched.length ? `You have ${job.matched.length} of the ${job.skills.length} skills this role mentions` : job.skills.length ? `None of this role's listed skills are on your ${owner ? "resume" : "skill list"} yet` : "This posting lists no recognisable skills — score is based on level and location"}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {job.matched.map((s) => (
@@ -100,7 +107,7 @@ export function JobPanel({ job, hasResume }: { job: JobDetail; hasResume: boolea
                 </>
               ) : (
                 <>
-                  <p className="text-[15px]">Upload your resume in Settings to see your match.</p>
+                  <p className="text-[15px]">{owner ? "Upload your resume in Settings to see your match." : <>Add your skills on <a href="/for-you" className="text-accent underline">For You</a> to see how well you match.</>}</p>
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {job.skills.map((s) => (
                       <Chip key={s} className="h-7 text-[12px]">
@@ -122,8 +129,8 @@ export function JobPanel({ job, hasResume }: { job: JobDetail; hasResume: boolea
             {job.deadline && <KeyValueRow k="Apply by" v={fmt(job.deadline)} />}
             <KeyValueRow k="Level" v={job.level ? LEVEL[job.level] : "—"} />
             <KeyValueRow k="Source" v={job.sourceName} />
-            <KeyValueRow k="Alerted at" v={job.alertedAt ? fmt(job.alertedAt) : job.alertStatus === "seed" ? "initial import (silent)" : job.alertStatus ?? "pending"} />
-            {job.appliedAt && <KeyValueRow k="Applied" v={fmt(job.appliedAt)} />}
+            {owner && <KeyValueRow k="Alerted at" v={job.alertedAt ? fmt(job.alertedAt) : job.alertStatus === "seed" ? "initial import (silent)" : job.alertStatus ?? "pending"} />}
+            {owner && job.appliedAt && <KeyValueRow k="Applied" v={fmt(job.appliedAt)} />}
           </section>
 
           <a
@@ -137,20 +144,22 @@ export function JobPanel({ job, hasResume }: { job: JobDetail; hasResume: boolea
           <div className="mt-3 grid grid-cols-3 gap-2">
             <button
               type="button"
-              aria-pressed={starred}
+              aria-pressed={isStarred}
               onClick={() => {
+                if (!owner) return local.star(snapOf(job), !isStarred);
                 setStarred(!starred);
                 start(() => void starJob(job.id, !starred));
               }}
-              className={cn("flex h-12 items-center justify-center gap-2 rounded-[14px] border border-line bg-card text-[14px] hover:bg-raised", starred && "text-warn")}
+              className={cn("flex h-12 items-center justify-center gap-2 rounded-[14px] border border-line bg-card text-[14px] hover:bg-raised", isStarred && "text-warn")}
             >
-              <Star size={15} fill={starred ? "currentColor" : "none"} /> {starred ? "Saved" : "Save"}
+              <Star size={15} fill={isStarred ? "currentColor" : "none"} /> {isStarred ? "Saved" : "Save"}
             </button>
             <button
               type="button"
-              disabled={status === "applied" || pending}
+              disabled={isApplied || pending}
               onClick={() =>
-                start(async () => {
+                owner
+                  ? start(async () => {
                   const r = await markApplied(job.id);
                   show(r);
                   if (r.ok) {
@@ -158,19 +167,34 @@ export function JobPanel({ job, hasResume }: { job: JobDetail; hasResume: boolea
                     setStarred(true);
                   }
                 })
+                  : (local.setStage(job.id, "applied", snapOf(job)), show({ ok: true, message: "Moved to your Pipeline · Applied" }))
               }
               className="flex h-12 items-center justify-center gap-2 rounded-[14px] border border-line bg-card text-[14px] hover:bg-raised disabled:text-good"
             >
-              <Check size={15} /> {status === "applied" ? "Applied" : "Mark applied"}
+              <Check size={15} /> {isApplied ? "Applied" : "Mark applied"}
             </button>
-            <button
-              type="button"
-              disabled={pending}
-              onClick={() => start(async () => show(await sendJobToTelegram(job.id)))}
-              className="flex h-12 items-center justify-center gap-2 rounded-[14px] border border-line bg-card text-[14px] hover:bg-raised"
-            >
-              <Send size={15} /> Telegram
-            </button>
+            {owner ? (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => start(async () => show(await sendJobToTelegram(job.id)))}
+                className="flex h-12 items-center justify-center gap-2 rounded-[14px] border border-line bg-card text-[14px] hover:bg-raised"
+              >
+                <Send size={15} /> Telegram
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  const u = safeHttpUrl(job.url);
+                  if (!u) return;
+                  navigator.clipboard?.writeText(u).then(() => show({ ok: true, message: "Apply link copied" }), () => {});
+                }}
+                className="flex h-12 items-center justify-center gap-2 rounded-[14px] border border-line bg-card text-[14px] hover:bg-raised"
+              >
+                <Send size={15} /> Copy link
+              </button>
+            )}
           </div>
 
           <section className="mt-8">

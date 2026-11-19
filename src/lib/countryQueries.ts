@@ -5,7 +5,7 @@ import { COUNTRIES, countryByIso, countryOfLocation, countryOfPoint, type Countr
 import { db, kvGet } from "./db";
 import { hazardWeight, isUnrest, scoreOf, storyWeight, type Score, type Signals } from "./instability";
 import { loadStories, type NewsItem } from "./newsQueries";
-import { ONE_PER_ROLE, getJobs } from "./queries";
+import { ONE_PER_ROLE, getJobs, type ViewerScope } from "./queries";
 import type { FxSeries } from "./world";
 import { getHazards, type HazardView } from "./worldQueries";
 
@@ -104,7 +104,7 @@ export interface Briefing {
   fx: { currency: string; perUsd: number; inr: number | null; history: number[] } | null;
 }
 
-export async function getCountryBriefing(iso: string): Promise<Briefing | null> {
+export async function getCountryBriefing(iso: string, viewer?: ViewerScope): Promise<Briefing | null> {
   const country = countryByIso(iso);
   if (!country) return null;
   const snap = await snapshot();
@@ -129,7 +129,7 @@ export async function getCountryBriefing(iso: string): Promise<Briefing | null> 
   // Feed filter: the country's name + the geocoder cities that fall inside it
   const cityNames = CITIES.filter((ci) => countryOfPoint(ci[1], ci[2])?.iso === country.iso).map((ci) => ci[0]).slice(0, 60);
   const loc = [country.name, ...cityNames].join("|");
-  const jobs = await getJobs({ loc, level: ["intern", "newgrad", "research"], tech: true, sort: "new", within: "30d" }, { limit: 6 });
+  const jobs = await getJobs({ loc, level: ["intern", "newgrad", "research"], tech: true, sort: "new", within: "30d" }, { limit: 6 }, viewer);
 
   const fx = await kvGet<FxSeries>("fx");
   const perUsd = fx ? (country.currency === "USD" ? 1 : fx.rates[country.currency]) : undefined;

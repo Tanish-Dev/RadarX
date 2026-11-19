@@ -1,3 +1,4 @@
+import { safeHttpUrl } from "@/lib/url";
 import { ChevronRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { Chip, cn, HeroTitle, KeyValueRow } from "@/components/ui/primitives";
@@ -87,7 +88,7 @@ function ProgramCard({ v, flip }: { v: ProgramView; flip: boolean }) {
         </div>
       </div>
       <a
-        href={p.url}
+        href={safeHttpUrl(p.url) ?? "#"}
         target="_blank"
         rel="noreferrer"
         className="flex items-center justify-center gap-2 border-t border-line py-4 text-[13px] tracking-[0.08em] text-ink transition-colors hover:bg-raised md:order-3 md:border-l md:border-t-0 md:py-0"

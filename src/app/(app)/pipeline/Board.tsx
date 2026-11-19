@@ -1,7 +1,9 @@
 "use client";
+import { safeHttpUrl } from "@/lib/url";
 import { ChevronLeft, ChevronRight, ExternalLink, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { setStage } from "@/app/actions";
+import { local, useLocal } from "@/components/app/localStore";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { Chip, cn } from "@/components/ui/primitives";
 import type { PipelineCard, Stage } from "@/lib/queries";
@@ -17,7 +19,33 @@ const STAGES: { id: Stage; label: string; dot: string }[] = [
 const fmtSpeed = (m: number) => (m < 60 ? `${Math.round(m)} min` : m < 48 * 60 ? `${Math.round(m / 60)} h` : `${Math.round(m / 1440)} d`);
 const fmtDate = (t: number) => new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 
-export function Board({ initial }: { initial: PipelineCard[] }) {
+/** Visitor pipeline: built from this browser's own saved roles (src/components/app/localStore.ts). */
+export function LocalBoard() {
+  const mine = useLocal();
+  const cards: PipelineCard[] = Object.values(mine.stages).map((x) => ({
+    id: x.snap.id,
+    title: x.snap.title,
+    company: x.snap.company,
+    domain: x.snap.domain,
+    logo: x.snap.logo,
+    url: x.snap.url,
+    stage: x.stage,
+    postedTs: x.snap.postedTs ?? x.at,
+    statusAt: x.at,
+    appliedAt: x.appliedAt,
+    speedMin: x.appliedAt && x.snap.postedTs ? Math.max(0, (x.appliedAt - x.snap.postedTs) / 60_000) : null,
+    active: true,
+    deadline: x.snap.deadline,
+  }));
+  return (
+    <>
+      <p className="mb-4 text-[13px] text-ink-3">Your pipeline is saved in this browser only. Star a role or mark it applied anywhere on RadarX to add it here.</p>
+      <Board key={cards.map((c) => `${c.id}:${c.stage}`).join(",")} initial={cards} onMove={(id, stage) => local.setStage(id, stage)} />
+    </>
+  );
+}
+
+export function Board({ initial, onMove }: { initial: PipelineCard[]; onMove?: (id: string, stage: Stage | null) => void }) {
   const [cards, setCards] = useState(initial);
   const [dragId, setDragId] = useState<string | null>(null);
   const [over, setOver] = useState<Stage | null>(null);
@@ -29,7 +57,8 @@ export function Board({ initial }: { initial: PipelineCard[] }) {
         ? cs.filter((c) => c.id !== id)
         : cs.map((c) => (c.id === id ? { ...c, stage, statusAt: Date.now(), appliedAt: c.appliedAt ?? (stage !== "saved" ? Date.now() : null) } : c)),
     );
-    start(() => void setStage(id, stage));
+    if (onMove) onMove(id, stage);
+    else start(() => void setStage(id, stage));
   };
 
   return (
@@ -88,7 +117,7 @@ export function Board({ initial }: { initial: PipelineCard[] }) {
                   <button type="button" aria-label="Move right" disabled={si === STAGES.length - 1} onClick={() => move(c.id, STAGES[si + 1].id)} className="flex size-8 items-center justify-center rounded-full text-ink-2 hover:bg-raised disabled:opacity-30">
                     <ChevronRight size={16} />
                   </button>
-                  <a href={c.url} target="_blank" rel="noreferrer" aria-label="Open posting" className="ml-auto flex size-8 items-center justify-center rounded-full text-ink-2 hover:bg-raised">
+                  <a href={safeHttpUrl(c.url) ?? "#"} target="_blank" rel="noreferrer" aria-label="Open posting" className="ml-auto flex size-8 items-center justify-center rounded-full text-ink-2 hover:bg-raised">
                     <ExternalLink size={14} />
                   </a>
                   <button type="button" aria-label="Remove from pipeline" onClick={() => move(c.id, null)} className="flex size-8 items-center justify-center rounded-full text-ink-2 hover:bg-raised hover:text-bad">

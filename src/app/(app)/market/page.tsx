@@ -1,5 +1,6 @@
 import { StockCard } from "@/components/app/Stocks";
 import { getStocks } from "@/lib/stockQueries";
+import { getViewer } from "@/lib/viewer";
 import Link from "next/link";
 import { VolumeChart } from "@/components/app/charts";
 import { Chip, cn, HeroTitle } from "@/components/ui/primitives";
@@ -93,7 +94,13 @@ const SECTIONS = [
 export default async function MarketPage({ searchParams }: { searchParams: Promise<RawParams> }) {
   const sp = await searchParams;
   const days = sp.days === "90" ? 90 : 30;
-  const [m, stocks, { fx }] = await Promise.all([getMarket(days), getStocks(), getFx()]);
+  const viewer = await getViewer();
+  // stock quotes come from a personal-use API plan → owner only; visitors see the rupee rate
+  const [m, stocks, { fx }] = await Promise.all([getMarket(days), viewer.owner ? getStocks() : Promise.resolve(null), getFx()]);
+  // skill gap against the viewer's own skills (visitors never see the owner's resume gap)
+  const mySkills = new Set(viewer.profile?.skills ?? []);
+  const gap = viewer.owner ? m.gap : m.demanded.filter((d) => !mySkills.has(d.skill)).slice(0, 8);
+  const hasSkills = viewer.owner ? m.hasResume : mySkills.size > 0;
   const sign = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
   const inr = fx?.rates.INR;
   const inrHist = fx?.history.INR ?? [];
@@ -160,10 +167,10 @@ export default async function MarketPage({ searchParams }: { searchParams: Promi
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <Card title="Most-demanded skills" note="last 30 days"><Bars rows={m.demanded.slice(0, 10).map((s) => ({ label: s.skill, n: s.n }))} /></Card>
           <Card title="Your skill gap" note="in demand, missing from your resume">
-            {m.hasResume ? (
-              m.gap.length ? <Bars rows={m.gap.map((g) => ({ label: g.skill, n: g.n }))} tone="accent" /> : <p className="text-[14px] text-ink-2">No gaps in the top skills — nice.</p>
+            {hasSkills ? (
+              gap.length ? <Bars rows={gap.map((g) => ({ label: g.skill, n: g.n }))} tone="accent" /> : <p className="text-[14px] text-ink-2">No gaps in the top skills — nice.</p>
             ) : (
-              <p className="text-[14px] font-light text-ink-2"><Link href="/settings#resume" className="text-accent">Upload your resume</Link> to see which in-demand skills you&apos;re missing.</p>
+              <p className="text-[14px] font-light text-ink-2"><Link href={viewer.owner ? "/settings#resume" : "/for-you#skills"} className="text-accent">{viewer.owner ? "Upload your resume" : "Add your skills"}</Link> to see which in-demand skills you&apos;re missing.</p>
             )}
           </Card>
           <Card title="Rising skills" note="this 30 days vs previous 30">
@@ -194,12 +201,12 @@ export default async function MarketPage({ searchParams }: { searchParams: Promi
 
       <Section
         id="stocks"
-        title="Stocks & currency"
-        lead="The companies you're applying to, plus the rupee."
-        aside={<span className="text-[12px] text-ink-3">Twelve Data · every {Number(process.env.STOCK_INTERVAL_MIN) || 30} min{stocks.lastCheck ? ` · last check ${stocks.lastCheck}` : ""} · free-plan quotes can lag</span>}
+        title={stocks ? "Stocks & currency" : "Currency"}
+        lead={stocks ? "The companies you're applying to, plus the rupee." : "The rupee against the dollar, for judging stipends abroad."}
+        aside={stocks ? <span className="text-[12px] text-ink-3">Twelve Data · every {Number(process.env.STOCK_INTERVAL_MIN) || 30} min{stocks.lastCheck ? ` · last check ${stocks.lastCheck}` : ""} · free-plan quotes can lag</span> : undefined}
       >
         {inr && (
-          <Link href="/world" className="card rx-lift mb-4 flex items-center justify-between gap-4 p-5">
+          <Link href="/#world" className="card rx-lift mb-4 flex items-center justify-between gap-4 p-5">
             <div>
               <p className="text-[13px] text-ink-2">USD → INR (ECB)</p>
               <p className="num mt-1 text-[32px] font-light leading-none tracking-[-0.04em]">₹{inr.toFixed(2)}</p>
@@ -207,7 +214,7 @@ export default async function MarketPage({ searchParams }: { searchParams: Promi
             <Sparkline values={inrHist} width={160} height={44} />
           </Link>
         )}
-        {!stocks.configured && (
+        {stocks && !stocks.configured && (
           <div className="card mb-4 flex flex-col gap-2 p-5 text-[13px] text-ink-2">
             <p className="text-[15px] text-ink">Add a free Twelve Data key to track all {stocks.items.length} stocks</p>
             <ol className="list-decimal space-y-1 pl-5">
@@ -218,7 +225,7 @@ export default async function MarketPage({ searchParams }: { searchParams: Promi
             <p className="text-[12px] text-ink-3">Until then only Apple shows, via Twelve Data&apos;s public demo key.</p>
           </div>
         )}
-        {(["AI & chips", "Big Tech", "India"] as const).map((g) => (
+        {stocks && (["AI & chips", "Big Tech", "India"] as const).map((g) => (
           <div key={g} className="mb-5">
             <p className="mb-2 text-[12px] text-ink-2">{g}</p>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

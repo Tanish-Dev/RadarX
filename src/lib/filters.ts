@@ -21,29 +21,62 @@ export interface JobFilters {
 
 export type RawParams = Record<string, string | string[] | undefined>;
 
-const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? "";
+const one = (v: string | string[] | undefined) => ((Array.isArray(v) ? v[0] : v) ?? "").slice(0, 1000);
 const list = (v: string | string[] | undefined) =>
   one(v)
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
 
+// Hard caps: these values reach SQL (always as bound parameters) — the caps stop a crafted URL from building
+// a huge query (thousands of LIKE terms) that would tie up the database.
+const LEVELS = ["intern", "newgrad", "research", "experienced"];
+const REGIONS = ["india", "remote", "abroad", "global"];
+const DOMAINS = ["ai", "software", "data", "hardware", "quant", "security", "design", "other"];
+const pick = (xs: unknown, allowed: string[]) => (Array.isArray(xs) ? [...new Set(xs.filter((x): x is string => typeof x === "string" && allowed.includes(x)))] : []);
+const str = (v: unknown, max: number) => (typeof v === "string" ? v.replace(/[\u0000-\u001f]/g, "").trim().slice(0, max) : "");
+/** `loc` is "City|Alias|…" — at most 80 terms of 60 chars (a country briefing sends ~60 cities). */
+const locTerms = (v: unknown) =>
+  str(v, 3000)
+    .split("|")
+    .map((x) => x.trim().slice(0, 60))
+    .filter(Boolean)
+    .slice(0, 80)
+    .join("|");
+
+/** Validate a filter object that came from the client (server actions) — never trust its shape. */
+export function sanitizeFilters(f: unknown): Partial<JobFilters> {
+  const o = (f && typeof f === "object" ? f : {}) as Record<string, unknown>;
+  return {
+    q: str(o.q, 80),
+    loc: locTerms(o.loc),
+    level: pick(o.level, LEVELS),
+    region: pick(o.region, REGIONS),
+    domain: pick(o.domain, DOMAINS),
+    group: str(o.group, 60),
+    company: str(o.company, 120),
+    within: (["1h", "24h", "7d", "30d"].includes(o.within as string) ? o.within : "") as JobFilters["within"],
+    tech: o.tech !== false,
+    sort: o.sort === "match" ? "match" : "new",
+  };
+}
+
 export function parseFilters(sp: RawParams, defaults: Partial<JobFilters> = {}): JobFilters {
   const has = (k: string) => sp[k] !== undefined;
   return {
-    q: one(sp.q),
-    loc: one(sp.loc),
-    level: has("level") ? list(sp.level) : (defaults.level ?? []),
-    region: has("region") ? list(sp.region) : (defaults.region ?? []),
-    domain: list(sp.domain),
-    group: one(sp.group),
-    company: one(sp.company),
+    q: str(one(sp.q), 80),
+    loc: locTerms((Array.isArray(sp.loc) ? sp.loc[0] : sp.loc) ?? ""),
+    level: has("level") ? pick(list(sp.level), LEVELS) : (defaults.level ?? []),
+    region: has("region") ? pick(list(sp.region), REGIONS) : (defaults.region ?? []),
+    domain: pick(list(sp.domain), DOMAINS),
+    group: str(one(sp.group), 60),
+    company: str(one(sp.company), 120),
     within: (["1h", "24h", "7d", "30d"].includes(one(sp.within)) ? one(sp.within) : (defaults.within ?? "")) as JobFilters["within"],
     tech: has("tech") ? one(sp.tech) !== "0" : (defaults.tech ?? true),
     sort: (one(sp.sort) === "match" ? "match" : one(sp.sort) === "new" ? "new" : (defaults.sort ?? "new")) as Sort,
-    page: Math.max(1, Number(one(sp.page)) || 1),
+    page: Math.min(200, Math.max(1, Math.floor(Number(one(sp.page))) || 1)),
     view: (one(sp.view) === "cards" ? "cards" : one(sp.view) === "list" ? "list" : (defaults.view ?? "list")) as "list" | "cards",
-    job: one(sp.job),
+    job: /^[\w.:\-]{1,200}$/.test(one(sp.job)) ? one(sp.job) : "",
   };
 }
 
