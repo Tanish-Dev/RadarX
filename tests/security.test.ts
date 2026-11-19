@@ -153,13 +153,16 @@ describe("rate limit", () => {
     rateLimit("x:*", 1, 60_000, t);
     expect(rateLimit("x:*", 1, 60_000, t).ok).toBe(false);
   });
-  it("login reserves the attempt before checking the password (no parallel race), refunds on success", async () => {
+  it("login: reserved before the check, refunded on success, no site-wide refusal, slot covers only the check", async () => {
     const { readFileSync } = await import("node:fs");
     const src = readFileSync(new URL("../src/app/actions.ts", import.meta.url), "utf8");
     const login = src.slice(src.indexOf("export async function login"), src.indexOf("export async function logout"));
-    expect(login.indexOf('rateLimit(`login-fail:${ip}`')).toBeGreaterThan(-1);
-    expect(login.indexOf('rateLimit(`login-fail:${ip}`')).toBeLessThan(login.indexOf("passwordMatches"));
-    expect(login.lastIndexOf("refund(`login-fail:${ip}`)")).toBeGreaterThan(login.indexOf("passwordMatches"));
+    const check = login.indexOf("passwordMatches");
+    expect(login.indexOf("reserve(`login-fail:${ip}`")).toBeGreaterThan(-1);
+    expect(login.indexOf("reserve(`login-fail:${ip}`")).toBeLessThan(check);
+    expect(login.lastIndexOf("giveBack()")).toBeGreaterThan(check);
+    expect(login).not.toMatch(/Sign-in is paused/); // site-wide is a slow-down only
+    expect(login.indexOf("leave()")).toBeLessThan(login.indexOf("setTimeout")); // delay runs outside the slot
   });
 });
 

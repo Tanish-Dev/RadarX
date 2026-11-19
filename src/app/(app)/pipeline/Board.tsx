@@ -17,7 +17,7 @@ const STAGES: { id: Stage; label: string; dot: string }[] = [
 ];
 
 const fmtSpeed = (m: number) => (m < 60 ? `${Math.round(m)} min` : m < 48 * 60 ? `${Math.round(m / 60)} h` : `${Math.round(m / 1440)} d`);
-const fmtDate = (t: number) => new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+const fmtDate = (t: number) => new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "Asia/Kolkata" });
 
 /** Visitor pipeline: built from this browser's own saved roles (src/components/app/localStore.ts). */
 export function LocalBoard() {

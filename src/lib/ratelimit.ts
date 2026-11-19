@@ -126,8 +126,8 @@ export function group(raw: string): string {
   return `${hextets(v).slice(0, 4).join(":")}::/64`;
 }
 
-/** Coarser network for overflow buckets: IPv4 /16, IPv6 /48. */
-function coarseNet(key: string): string {
+/** Coarser network (IPv4 /16, IPv6 /48) — overflow buckets and per-network sign-in limits. */
+export function coarseNet(key: string): string {
   if (isIP(key) === 4) return key.split(".").slice(0, 2).join(".") + ".0.0/16";
   if (key.endsWith("::/64")) return key.split(":").slice(0, 3).join(":") + "::/48";
   return "other";

@@ -28,7 +28,7 @@ export function toCard(j: JobRow, withMatched = false): JobCardData {
   const closing = j.deadline && j.deadline > Date.now() && j.deadline - Date.now() < 7 * 86_400_000;
   const chips = [
     j.stipend,
-    closing ? `Closes ${new Date(j.deadline!).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}` : null,
+    closing ? `Closes ${new Date(j.deadline!).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "Asia/Kolkata" })}` : null,
     j.level ? TYPE_LABEL[j.level] : null,
     j.level ? LEVEL_LABEL[j.level] : null,
     shortLocation(j.location) || null,

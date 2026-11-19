@@ -105,7 +105,7 @@ export function ResumeCard({ skills: initial, levels: initLevels, regions: initR
           </button>
         </div>
         <input ref={fileRef} type="file" accept=".pdf,.txt,.md" hidden onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
-        {updatedAt && <p className="num text-[12px] text-ink-3">Last updated {new Date(updatedAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</p>}
+        {updatedAt && <p className="num text-[12px] text-ink-3">Last updated {new Date(updatedAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}</p>}
       </div>
       {paste && (
         <div className="mt-4 flex flex-col gap-3">
